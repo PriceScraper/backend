@@ -5,19 +5,21 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
+import java.sql.Timestamp;
 import lombok.RequiredArgsConstructor;
 
-import java.sql.Timestamp;
-
+/**
+ * The price linked to an {@link Item} at a specific timestamp.
+ */
 @RequiredArgsConstructor
 @Entity
 public class ItemPrice {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private Timestamp timestamp;
-    private double price;
-    @OneToOne
-    private Item item;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int id;
+  private Timestamp timestamp;
+  private double price;
+  @OneToOne
+  private Item item;
 
 }
