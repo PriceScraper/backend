@@ -1,23 +1,20 @@
-package be.xplore.pricescraper.domain.shopping;
+package be.xplore.pricescraper.domain.shops;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 /**
- * A scraped item specific to a shop.
+ * The shop that a {@link TrackedItem} is linked to.
  */
-@RequiredArgsConstructor
+@NoArgsConstructor
 @Entity
-public class Item {
+public class Shop {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int id;
   private String name;
-  private String description;
-  @ManyToOne
-  private Shop shop;
+  private String url;
 }
