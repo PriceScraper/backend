@@ -3,6 +3,7 @@ package be.xplore.pricescraper.domain.users;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.util.List;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
  */
 @NoArgsConstructor
 @Entity
+@Table(name = "ApplicationUsers")
 public class User {
   @Id
   private String email;

@@ -2,10 +2,15 @@ package be.xplore.pricescraper.utils;
 
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
+/**
+ * This utility class contains logic for matching products to each other.
+ * Products are matched based on their characteristics (ingredients, name, unit, ...)
+ */
 public class ProductMatcher {
 
   private final int matchThreshold;
-  private static LevenshteinDistance levenshteinDistance = LevenshteinDistance.getDefaultInstance();
+  private static final LevenshteinDistance levenshteinDistance =
+      LevenshteinDistance.getDefaultInstance();
 
   public ProductMatcher(int threshold) {
     this.matchThreshold = threshold;
@@ -13,8 +18,10 @@ public class ProductMatcher {
 
 
   /**
-   * Match 2 products by passing their ingredient strings. Shops often desribe product names slightly different,
-   * by checking the ingredient list we can verify that two products are the same as these should be described
+   * Match 2 products by passing their ingredient strings.
+   * Shops often desribe product names slightly different,
+   * by checking the ingredient list we can verify that two products
+   * are the same as these should be described.
    * accurately by the vendors.
    *
    * @return boolean is same product
@@ -24,8 +31,10 @@ public class ProductMatcher {
   }
 
   /**
-   * Match 2 products by passing their ingredient strings. Shops often desribe product names slightly different,
-   * by checking the ingredient list we can verify that two products are the same as these should be described
+   * Match 2 products by passing their ingredient strings.
+   * Shops often desribe product names slightly different,
+   * by checking the ingredient list we can verify that two products
+   * are the same as these should be described.
    * accurately by the vendors.
    *
    * @return degree matched (lower is better)
@@ -48,10 +57,11 @@ public class ProductMatcher {
   }
 
   /**
-   * Characters like "(", ")", ":", "," and whitespaces as well as plural forms of words will only obfscate the
-   * fuzzy matching algorithm and should be removed
+   * Removes obfuscating characters from a string.
+   * Characters like "(", ")", ":", "," and whitespaces as well as plural forms of words will
+   * only obfscate the fuzzy matching algorithm and should be removed
    *
-   * @param ingredients
+   * @param ingredients ingredient contents as found on the product source (webpage)
    * @return sanitized ingredients string
    */
   private String removeObfuscatingCharacters(String ingredients) {
@@ -60,6 +70,7 @@ public class ProductMatcher {
   }
 
   /**
+   * Removes plurals of words.
    * remove (dutch) plurals
    * uienpoeder -> uipoeder
    * kinderen -> kind
