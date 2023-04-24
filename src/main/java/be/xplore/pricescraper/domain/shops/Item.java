@@ -1,6 +1,7 @@
 package be.xplore.pricescraper.domain.shops;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.List;
@@ -25,6 +26,6 @@ public class Item {
   private int quantity;
   private ItemUnit unit;
   private String ingredients;
-  @OneToMany
+  @OneToMany(fetch = FetchType.LAZY)
   private List<TrackedItem> trackedItems;
 }
