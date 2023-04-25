@@ -1,45 +1,48 @@
-package be.xplore.pricescraper.utils;
+package be.xplore.pricescraper.utils.matchers;
 
+import be.xplore.pricescraper.domain.shops.Item;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
 /**
- * This utility class contains logic for matching products to each other.
- * Products are matched based on their characteristics (ingredients, name, unit, ...)
+ * This is an {@link ItemMatcher} implementation.
+ * The implmentation is based on {@link be.xplore.pricescraper.domain.shops.Item} ingredients.
  */
-public class ProductMatcher {
+public class IngredientMatcher extends ItemMatcher {
 
   private final int matchThreshold;
   private static final LevenshteinDistance levenshteinDistance =
       LevenshteinDistance.getDefaultInstance();
 
-  public ProductMatcher(int threshold) {
+  public IngredientMatcher(int threshold, Item itemA, Item itemB) {
+    super(itemA, itemB);
     this.matchThreshold = threshold;
   }
 
-
   /**
-   * Match 2 products by passing their ingredient strings.
+   * Match 2 items by passing their ingredient strings.
    * Shops often desribe product names slightly different,
-   * by checking the ingredient list we can verify that two products
+   * by checking the ingredient list we can verify that two items
    * are the same as these should be described.
    * accurately by the vendors.
    *
    * @return boolean is same product
    */
-  public boolean isSameProductByIngredients(String ingredients1, String ingredients2) {
-    return matchProductsByIngredients(ingredients1, ingredients2) < matchThreshold;
+  @Override
+  public boolean isMatching() {
+    return matchitemsByIngredients(getItemA().getIngredients(), getItemB().getIngredients())
+        < matchThreshold;
   }
 
   /**
-   * Match 2 products by passing their ingredient strings.
+   * Match 2 items by passing their ingredient strings.
    * Shops often desribe product names slightly different,
-   * by checking the ingredient list we can verify that two products
+   * by checking the ingredient list we can verify that two items
    * are the same as these should be described.
    * accurately by the vendors.
    *
    * @return degree matched (lower is better)
    */
-  public int matchProductsByIngredients(String ingredients1, String ingredients2) {
+  private int matchitemsByIngredients(String ingredients1, String ingredients2) {
     ingredients1 = normalizeIngredientsString(ingredients1);
     ingredients2 = normalizeIngredientsString(ingredients2);
     return levenshteinDistance.apply(ingredients1, ingredients2);
@@ -75,9 +78,12 @@ public class ProductMatcher {
    * uienpoeder -> uipoeder
    * kinderen -> kind
    * varkens -> varken
+   * At the moment this couples us tightly to the dutch language and could be abstracted in the
+   * future if needed.
    */
   private String removePlurals(String ingredients) {
     return ingredients.replaceAll("(s\\b)|(en)|(eren)", "");
   }
+
 
 }
