@@ -61,9 +61,9 @@ public class JwtProvider {
   /**
    * Finds the User Id from a JWT string.
    */
-  public int getUserIdFromToken(String token) {
+  public long getUserIdFromToken(String token) {
     var claims = getAllClaimsFromToken(token);
-    return Integer.parseInt(String.valueOf(claims.get("id")));
+    return Long.parseLong(String.valueOf(claims.get("id")));
   }
 
   /**

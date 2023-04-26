@@ -1,7 +1,7 @@
 package be.xplore.pricescraper.exceptions;
 
 /**
- * Exception thrown when user was not found.
+ * Exception thrown when the requested {@link UserNotFoundException} was not found.
  */
 public class UserNotFoundException extends RuntimeException {
 }
