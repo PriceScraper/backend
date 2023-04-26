@@ -6,13 +6,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import java.sql.Timestamp;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * The price linked to an {@link Item} at a specific timestamp.
+ * The price linked to an {@link TrackedItem} at a specific timestamp.
  */
 @NoArgsConstructor
 @Entity
+@Getter
 public class ItemPrice {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,5 +23,4 @@ public class ItemPrice {
   private double price;
   @ManyToOne
   private TrackedItem trackedItem;
-
 }
