@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import be.xplore.pricescraper.config.FrontendConfig;
 import be.xplore.pricescraper.config.JwtConfig;
-import be.xplore.pricescraper.util.JwtProvider;
-import be.xplore.pricescraper.util.JwtSuccessHandler;
+import be.xplore.pricescraper.utils.security.JwtProvider;
+import be.xplore.pricescraper.utils.security.JwtSuccessHandler;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 

@@ -1,14 +1,13 @@
 package be.xplore.pricescraper.config;
 
-import be.xplore.pricescraper.util.JwtRequestFilter;
-import be.xplore.pricescraper.util.JwtSuccessHandler;
+import be.xplore.pricescraper.utils.security.JwtRequestFilter;
+import be.xplore.pricescraper.utils.security.JwtSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -36,14 +35,16 @@ public class SecurityConfig {
     return http
         .cors()
         .and()
-        .csrf(c -> c
-            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-        )
+        .csrf()
+        .disable()
         .authorizeHttpRequests(auth -> auth
             .anyRequest().authenticated()
         )
         .oauth2Login(e -> e.successHandler(jwtSuccessHandler))
         .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+        .logout()
+        .logoutSuccessUrl(frontendConfig.getUrl() + "/logout")
+        .and()
         .build();
   }
 

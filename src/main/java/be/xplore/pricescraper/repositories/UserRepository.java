@@ -1,4 +1,4 @@
-package be.xplore.pricescraper.repository;
+package be.xplore.pricescraper.repositories;
 
 import be.xplore.pricescraper.domain.users.User;
 import java.util.Optional;

@@ -3,9 +3,9 @@ package be.xplore.pricescraper.repositories;
 import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.domain.shops.ItemPrice;
 import be.xplore.pricescraper.domain.shops.TrackedItem;
+import be.xplore.pricescraper.dtos.ItemSearchDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
@@ -26,48 +26,43 @@ public class CustomItemRepositoryImpl implements CustomItemRepository {
    * @param name name of {@link Item}
    * @return list of {@link Item}
    */
-  public List<Item> findItemsWithTrackedItemsAndLastPriceByNameLike(String name) {
-    List<Item> items = fetchItemsLikeName(name);
-    List<ItemPrice> itemPrices = fetchPricesForTrackedItems(items);
-    assignPricesToTrackedItemsOfItems(items, itemPrices);
-    return items;
+  public List<ItemSearchDto> findItemsByNameLike(String name) {
+    return entityManager.createQuery("""
+                    SELECT NEW be.xplore.pricescraper.dtos.ItemSearchDto(i.id, i.name, i.image)
+                     from Item i
+                    WHERE LOWER(i.name) LIKE CONCAT('%', LOWER(:name), '%')
+            """, ItemSearchDto.class)
+        .setParameter("name", name).getResultList();
+
   }
 
-  private List<Item> fetchItemsLikeName(String name) {
+  /**
+   * Find items including tracked items and their last prices.
+   *
+   * @param id id of {@link Item}
+   * @return {@link Item}
+   */
+  public Item findItemWithTrackedItemsById(int id) {
     return entityManager.createQuery("""
                     SELECT i from Item i
                     LEFT JOIN FETCH i.trackedItems
-                    WHERE LOWER(i.name) LIKE CONCAT('%', LOWER(:name), '%')
+                    WHERE i.id = :id
             """, Item.class)
-        .setParameter("name", name).getResultList();
+        .setParameter("id", id).getSingleResult();
   }
 
-  //fetch a single ItemPrice to reduce processing overhead, the mapping of itemprices to
-  //trackeditems will occur in memory but this approach outweighs possibly fetching thousands of
-  //prices when there will only ever be a few trackeditems
-  private List<ItemPrice> fetchPricesForTrackedItems(List<Item> items) {
-    //get flat list of all tracked items
-    List<TrackedItem> trackedItems = flattenTrackedItems(items);
+  /**
+   * Fetch a single ItemPrice per TrackedItem to reduce data overhead.
+   */
+  public List<ItemPrice> findLatestPricesForTrackedItems(List<TrackedItem> trackedItems) {
     return entityManager.createQuery("""
                     SELECT DISTINCT ip from ItemPrice ip
                     WHERE ip.trackedItem in :trackedItems
-                    GROUP BY ip.trackedItem, ip.id
-                    HAVING ip.timestamp = max(ip.timestamp)
+                    AND ip.timestamp = (SELECT MAX(ip2.timestamp)
+                     FROM ItemPrice ip2
+                    WHERE ip2.trackedItem = ip.trackedItem)
             """, ItemPrice.class)
         .setParameter("trackedItems", trackedItems).getResultList();
-  }
-
-  private List<TrackedItem> flattenTrackedItems(List<Item> items) {
-    List<TrackedItem> trackedItems = new ArrayList<>();
-    items.stream().map(Item::getTrackedItems).toList().forEach(trackedItems::addAll);
-    return trackedItems;
-  }
-
-  //mapping of itemprices in memory
-  private void assignPricesToTrackedItemsOfItems(List<Item> items, List<ItemPrice> itemPrices) {
-    itemPrices.forEach(itemPrice -> items.forEach(item -> item.getTrackedItems().stream()
-        .filter(trackedItem -> trackedItem.getUrl().equals(itemPrice.getTrackedItem().getUrl()))
-        .findFirst().ifPresent(trackedItem -> trackedItem.setItemPrices(List.of(itemPrice)))));
   }
 
 }

@@ -1,8 +1,9 @@
 package be.xplore.pricescraper.utils.scrapers;
 
-import be.xplore.pricescraper.dto.ShopItem;
+import be.xplore.pricescraper.dtos.ShopItem;
 import java.io.IOException;
 import java.util.Optional;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -27,6 +28,7 @@ public abstract class Scraper {
   /**
    * Url to the website to scrape.
    */
+  @Getter
   protected String baseUrl;
 
   public Scraper(String baseUrl) {
@@ -39,25 +41,32 @@ public abstract class Scraper {
    */
   protected boolean hasArgumentFailed(Elements elements, int expected, String identifier) {
     if (elements.size() != expected) {
-      System.out.println(
+      log.debug(
           "Expected " + expected + " element in " + identifier + ", had: " + elements.size());
     }
     return elements.size() != expected;
   }
 
   /**
-   * Scape a certain item by combining the baseURL with the identifier.
-   * The derived classes contain the functionality to find the attributes for the item.
+   * Scrape a certain item by combining the baseURL with the identifier.
    */
   public Optional<ShopItem> scrape(String itemIdentifier) throws IOException {
-    var document = getDocument(itemIdentifier);
+    return scrapeFromFullUrl(baseUrl + itemIdentifier);
+  }
+
+  /**
+   * Scrape a certain item by the full URL of the item.
+   * The derived classes contain the functionality to find the attributes for the item.
+   */
+  public Optional<ShopItem> scrapeFromFullUrl(String url) throws IOException {
+    var document = getDocument(url);
     var title = getItemTitle(document);
     var price = getItemPrice(document);
     if (title.isEmpty() || price.isEmpty()) {
       log.warn("Scraped "
           + baseUrl
           + ", and failed to fetch item by '"
-          + itemIdentifier + "'. Title: "
+          + url + "'. Title: "
           + title.orElse("")
           + ", Price: "
           + price.orElse(-1.0));
@@ -65,14 +74,14 @@ public abstract class Scraper {
     }
 
     var item = new ShopItem(title.get(), price.get());
-    log.info("Scraped " + baseUrl + " to find item: " + item);
+    log.debug("Scraped " + baseUrl + " to find item: " + item);
     return Optional.of(item);
   }
 
   /**
    * Basic implementation to get the HTML tree of an item detail page.
    */
-  protected Document getDocument(String itemIdentifier) throws IOException {
-    return Jsoup.connect(baseUrl + itemIdentifier).get();
+  protected Document getDocument(String url) throws IOException {
+    return Jsoup.connect(url).get();
   }
 }

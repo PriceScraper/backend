@@ -2,7 +2,7 @@ package be.xplore.pricescraper.utils;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import be.xplore.pricescraper.util.JwtRequestFilter;
+import be.xplore.pricescraper.utils.security.JwtRequestFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
