@@ -18,6 +18,11 @@ public class LidlBeScraperTests {
   }
 
   @Test
+  void constructed() {
+    assertNotNull(scraper);
+  }
+
+  @Test
   void getItemResults() throws IOException {
     var response = scraper.scrape("bleekwater/p740192819");
     assertTrue(response.isPresent());

@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 /**
- * The entry point of the scraper application.
+ * Entrypoint of the shop scraper application.
  */
 @SpringBootApplication
 @ConfigurationPropertiesScan("be.xplore.pricescraper.config")

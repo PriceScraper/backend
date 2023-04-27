@@ -18,6 +18,11 @@ public class AhBeScraperTests {
   }
 
   @Test
+  void constructed() {
+    assertNotNull(scraper);
+  }
+
+  @Test
   void getItemResults() throws IOException {
     var response = scraper.scrape("wi445543/duvel-blond-4-pack");
     assertTrue(response.isPresent());
