@@ -1,5 +1,6 @@
 package be.xplore.pricescraper.domain.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,6 +36,7 @@ public class User implements UserDetails {
   @Column()
   private String provider;
   @OneToMany
+  @JsonIgnore
   private List<ShoppingList> shoppingLists;
 
   public User(String username, String provider) {
