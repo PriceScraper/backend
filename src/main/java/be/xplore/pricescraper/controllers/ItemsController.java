@@ -1,9 +1,12 @@
 package be.xplore.pricescraper.controllers;
 
 import be.xplore.pricescraper.domain.shops.Item;
+import be.xplore.pricescraper.dtos.ItemSearchDto;
 import be.xplore.pricescraper.services.ItemService;
 import java.util.List;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "items", produces = "application/json")
+@CrossOrigin("http://localhost:3000")
 public class ItemsController {
 
   private ItemService itemService;
@@ -21,9 +25,14 @@ public class ItemsController {
     this.itemService = itemService;
   }
 
-  @GetMapping
-  public List<Item> findItemByNameWithLatestPrices(@RequestParam String name) {
-    return itemService.findItemsWithTrackedItemsByNameLike(name);
+  @GetMapping("/{id}")
+  public Item findItemByIdWithLatestPrices(@PathVariable int id) {
+    return itemService.findItemWithTrackedItemsAndLatestPricesById(id);
+  }
+
+  @GetMapping("")
+  public List<ItemSearchDto> findItemsByNameLike(@RequestParam String name) {
+    return itemService.findItemByNameLike(name);
   }
 
 }
