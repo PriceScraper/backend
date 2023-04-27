@@ -18,6 +18,11 @@ public class AldiBeScraperTests {
   }
 
   @Test
+  void constructed() {
+    assertNotNull(scraper);
+  }
+
+  @Test
   void getItemResults() throws IOException {
     var response = scraper.scrape("jupiler-15-st-3001592-1-0.article.html");
     assertTrue(response.isPresent());

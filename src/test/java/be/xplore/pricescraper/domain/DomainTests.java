@@ -1,5 +1,6 @@
 package be.xplore.pricescraper.domain;
 
+import be.xplore.pricescraper.config.JwtConfigTests;
 import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.domain.shops.ItemPrice;
 import be.xplore.pricescraper.domain.shops.ItemUnit;
@@ -20,6 +21,7 @@ public class DomainTests {
     new ItemPrice();
     new ShoppingList();
     new User();
+    new JwtConfigTests();
   }
 
 }
