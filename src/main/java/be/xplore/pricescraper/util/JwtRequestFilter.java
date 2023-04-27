@@ -1,6 +1,6 @@
 package be.xplore.pricescraper.util;
 
-import be.xplore.pricescraper.domain.users.User;
+import be.xplore.pricescraper.exceptions.UserNotFoundException;
 import be.xplore.pricescraper.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -39,8 +39,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
       if (StringUtils.hasText(jwt) && jwtProvider.validateToken(jwt)) {
         var userId = jwtProvider.getUserIdFromToken(jwt);
-
-        var user = getUserDetails(userId);
+        var user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         setSecurityContext(request, user);
       }
     } catch (Exception ex) {
@@ -50,17 +49,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     removeCookie(response);
 
     filterChain.doFilter(request, response);
-  }
-
-  /**
-   * Retrieves the User.
-   */
-  private User getUserDetails(int userId) {
-    var userDetails = userRepository.findById(userId).orElse(null);
-    if (userDetails == null) {
-      throw new IllegalArgumentException("No user found by id " + userId);
-    }
-    return userDetails;
   }
 
   /**
