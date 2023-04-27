@@ -37,4 +37,4 @@ jobs:
         run: |
           mvn jacoco:prepare-agent
           mvn jacoco:report
-          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=PriceScraper_backend
+          mvn checkstyle:check -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=PriceScraper_backend
