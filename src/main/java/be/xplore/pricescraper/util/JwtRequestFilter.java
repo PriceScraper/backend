@@ -8,13 +8,11 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.jwt.JwtValidationException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -60,7 +58,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
   private User getUserDetails(int userId) {
     var userDetails = userRepository.findById(userId).orElse(null);
     if (userDetails == null) {
-      throw new JwtValidationException("No user found by id " + userId, new ArrayList<>());
+      throw new IllegalArgumentException("No user found by id " + userId);
     }
     return userDetails;
   }
