@@ -19,10 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
  * The REST controller for {@link be.xplore.pricescraper.domain.shops.Item}.
  */
 @RestController
-@AllArgsConstructor
 @RequestMapping("/items")
+@AllArgsConstructor
 public class ItemsController {
   private final ItemService itemService;
+
+  @GetMapping("/{id}")
+  public Item findItemByIdWithLatestPrices(@PathVariable int id) {
+    return itemService.findItemWithTrackedItemsAndLatestPricesById(id);
+  }
 
   @GetMapping("/{id}")
   public Item findItemByIdWithLatestPrices(@PathVariable int id) {
