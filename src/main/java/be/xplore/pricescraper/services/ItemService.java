@@ -78,111 +78,116 @@ public class ItemService {
 
   public List<ItemSearchDto> findItemByNameLike(String name) {
     return itemRepository.findItemsByNameLike(name);
-    /**
-     * Modify tracked item price.
-     * Set last attempt time to now.
-     */
-    @Transactional
-    public void modifyTrackedItemPrice (TrackedItem trackedItem, Optional < ShopItem > shopItem){
-      if (shopItem.isPresent()) {
-        storeItemPrice(trackedItem, shopItem.get().price());
-      } else {
-        log.warn("No price found for " + trackedItem);
-        setLastAttemptToNow(trackedItem);
-      }
-    }
+  }
 
-    /**
-     * Set last attempt to now.
-     */
-    public void setLastAttemptToNow (TrackedItem trackedItem){
-      trackedItem.setLastAttempt(Timestamp.from(Instant.now()));
-      trackedItemRepository.save(trackedItem);
+  /**
+   * Modify tracked item price.
+   * Set last attempt time to now.
+   */
+  @Transactional
+  public void modifyTrackedItemPrice(TrackedItem trackedItem, Optional<ShopItem> shopItem) {
+    if (shopItem.isPresent()) {
+      storeItemPrice(trackedItem, shopItem.get().price());
+    } else {
+      log.warn("No price found for " + trackedItem);
+      setLastAttemptToNow(trackedItem);
     }
+  }
 
-    /**
-     * Store item price.
-     * Set last attempt of item to now.
-     */
-    private void storeItemPrice (TrackedItem item,double price){
-      var p = new ItemPrice();
-      p.setPrice(price);
-      p.setTrackedItem(item);
-      p.setTimestamp(Timestamp.from(Instant.now()));
-      itemPriceRepository.save(p);
-      setLastAttemptToNow(item);
-    }
+  /**
+   * Set last attempt to now.
+   */
+  public void setLastAttemptToNow(TrackedItem trackedItem) {
+    trackedItem.setLastAttempt(Timestamp.from(Instant.now()));
+    trackedItemRepository.save(trackedItem);
+  }
 
-    /**
-     * Set up item tracking by URL.
-     */
-    @Transactional
-    public ServiceResponse<TrackedItem> addTrackedItem (String urlToItem){
-      var scraperDomain = scraperService.getScraperRootDomain(urlToItem);
-      if (scraperDomain.isEmpty()) {
-        return new ServiceResponse<>(false, null, "Failed to find scraper for item.");
-      }
-      var scrapedResponse = scraperService.scrapeFullUrl(urlToItem);
-      if (scrapedResponse.isEmpty()) {
-        return new ServiceResponse<>(false, null, "Failed to scrape item.");
-      }
-      var shop = getShopFromDomain(scraperDomain.get());
-      var itemIdentifier = scraperService.getItemIdentifier(urlToItem);
-      if (itemIdentifier.isPresent()
-          &&
-          trackedItemRepository.existsByUrlIgnoreCaseAndShop_Id(itemIdentifier.get(),
-              shop.getId())) {
-        return new ServiceResponse<>(false, null, "Item already being tracked.");
-      }
-      var item = getItem(scrapedResponse.get().title(), "", 1, Optional.empty());
-      var trackedItem = getTrackedItem(urlToItem, item, shop);
-      if (trackedItem.isEmpty()) {
-        return new ServiceResponse<>(false, null, "Failed to create tracked item.");
-      }
-      storeItemPrice(trackedItem.get(), scrapedResponse.get().price());
-      return new ServiceResponse<>(true, trackedItem.get(), null);
-    }
+  /**
+   * Store item price.
+   * Set last attempt of item to now.
+   */
+  private void storeItemPrice(TrackedItem item, double price) {
+    var p = new ItemPrice();
+    p.setPrice(price);
+    p.setTrackedItem(item);
+    p.setTimestamp(Timestamp.from(Instant.now()));
+    itemPriceRepository.save(p);
+    setLastAttemptToNow(item);
+  }
 
-    /**
-     * Retrieve shop or create if does not exist.
-     */
-    private Shop getShopFromDomain (String rootDomain){
-      var shop = shopRepository.findByUrl(rootDomain);
-      if (shop.isPresent()) {
-        return shop.get();
-      }
-      var tempShop = new Shop();
-      tempShop.setUrl(rootDomain);
-      tempShop.setName(rootDomain);
-      return shopRepository.save(tempShop);
+  /**
+   * Set up item tracking by URL.
+   */
+  @Transactional
+  public ServiceResponse<TrackedItem> addTrackedItem(String urlToItem) {
+    var scraperDomain = scraperService.getScraperRootDomain(urlToItem);
+    if (scraperDomain.isEmpty()) {
+      return new ServiceResponse<>(false, null, "Failed to find scraper for item.");
     }
+    var scrapedResponse = scraperService.scrapeFullUrl(urlToItem);
+    if (scrapedResponse.isEmpty()) {
+      return new ServiceResponse<>(false, null, "Failed to scrape item.");
+    }
+    var shop = getShopFromDomain(scraperDomain.get());
+    var itemIdentifier = scraperService.getItemIdentifier(urlToItem);
+    if (itemIdentifier.isPresent()
+        &&
+        trackedItemRepository.existsByUrlIgnoreCaseAndShop_Id(itemIdentifier.get(),
+            shop.getId())) {
+      return new ServiceResponse<>(false, null, "Item already being tracked.");
+    }
+    var item = getItem(scrapedResponse.get().title(), "", 1, Optional.empty());
+    var trackedItem = getTrackedItem(urlToItem, item, shop);
+    if (trackedItem.isEmpty()) {
+      return new ServiceResponse<>(false, null, "Failed to create tracked item.");
+    }
+    storeItemPrice(trackedItem.get(), scrapedResponse.get().price());
+    return new ServiceResponse<>(true, trackedItem.get(), null);
+  }
 
-    /**
-     * Retrieve shop or create if does not exist.
-     */
-    private Item getItem (String title, String img,int quantity, Optional<String > ingredients){
-      var item = new Item();
-      item.setName(title);
-      item.setImage(img);
-      item.setQuantity(quantity);
-      item.setIngredients(ingredients.orElse(null));
-      return itemRepository.save(item);
+  /**
+   * Retrieve shop or create if does not exist.
+   */
+  private Shop getShopFromDomain(String rootDomain) {
+    var shop = shopRepository.findByUrl(rootDomain);
+    if (shop.isPresent()) {
+      return shop.get();
     }
+    var tempShop = new Shop();
+    tempShop.setUrl(rootDomain);
+    tempShop.setName(rootDomain);
+    return shopRepository.save(tempShop);
+  }
 
-    /**
-     * Create tracked item.
-     */
-    private Optional<TrackedItem> getTrackedItem (String url, Item item, Shop shop){
-      var identifier = scraperService.getItemIdentifier(url);
-      if (identifier.isEmpty()) {
-        return Optional.empty();
-      }
-      var trackedItem = new TrackedItem();
-      trackedItem.setUrl(identifier.get());
-      trackedItem.setShop(shop);
-      trackedItem.setItem(item);
-      trackedItem.setLastAttempt(Timestamp.from(Instant.MIN));
-      return Optional.of(trackedItemRepository.save(trackedItem));
+  /**
+   * Retrieve shop or create if does not exist.
+   */
+  private Item getItem(String title, String img, int quantity, Optional<String> ingredients) {
+    var item = new Item();
+    item.setName(title);
+    item.setImage(img);
+    item.setQuantity(quantity);
+    item.setIngredients(ingredients.orElse(null));
+    return itemRepository.save(item);
+  }
+
+  /**
+   * Create tracked item.
+   */
+  private Optional<TrackedItem> getTrackedItem(String url, Item item, Shop shop) {
+    var identifier = scraperService.getItemIdentifier(url);
+    if (identifier.isEmpty()) {
+      return Optional.empty();
     }
+    var trackedItem = new TrackedItem();
+    trackedItem.setUrl(identifier.get());
+    trackedItem.setShop(shop);
+    trackedItem.setItem(item);
+    trackedItem.setLastAttempt(Timestamp.from(Instant.MIN));
+    return Optional.of(trackedItemRepository.save(trackedItem));
+  }
+
+  public long trackedItemsCount() {
+    return trackedItemRepository.count();
   }
 }

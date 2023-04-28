@@ -29,11 +29,6 @@ public class ItemsController {
     return itemService.findItemWithTrackedItemsAndLatestPricesById(id);
   }
 
-  @GetMapping("/{id}")
-  public Item findItemByIdWithLatestPrices(@PathVariable int id) {
-    return itemService.findItemWithTrackedItemsAndLatestPricesById(id);
-  }
-
   @GetMapping
   public List<ItemSearchDto> findItemsByNameLike(@RequestParam String name) {
     return itemService.findItemByNameLike(name);

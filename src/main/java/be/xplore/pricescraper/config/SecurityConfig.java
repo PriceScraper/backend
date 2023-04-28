@@ -36,7 +36,9 @@ public class SecurityConfig {
         .cors()
         .and()
         .csrf()
-        .disable()
+        .ignoringRequestMatchers("/items/track")
+        .ignoringRequestMatchers("/logout")
+        .and()
         .authorizeHttpRequests(auth -> auth
             .anyRequest().authenticated()
         )
