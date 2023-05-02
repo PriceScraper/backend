@@ -1,7 +1,7 @@
-package be.xplore.pricescraper.util;
+package be.xplore.pricescraper.utils.security;
 
 import be.xplore.pricescraper.exceptions.UserNotFoundException;
-import be.xplore.pricescraper.repository.UserRepository;
+import be.xplore.pricescraper.repositories.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;

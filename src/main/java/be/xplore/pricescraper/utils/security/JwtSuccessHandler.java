@@ -1,8 +1,8 @@
-package be.xplore.pricescraper.util;
+package be.xplore.pricescraper.utils.security;
 
 import be.xplore.pricescraper.config.FrontendConfig;
 import be.xplore.pricescraper.domain.users.User;
-import be.xplore.pricescraper.repository.UserRepository;
+import be.xplore.pricescraper.repositories.UserRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

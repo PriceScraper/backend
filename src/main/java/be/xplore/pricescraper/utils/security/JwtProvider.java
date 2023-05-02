@@ -1,4 +1,4 @@
-package be.xplore.pricescraper.util;
+package be.xplore.pricescraper.utils.security;
 
 import be.xplore.pricescraper.config.JwtConfig;
 import io.jsonwebtoken.Claims;

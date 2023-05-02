@@ -28,9 +28,9 @@ public class ItemServiceTests {
   ItemService itemService;
 
   private static final TrackedItem trackedItem1 =
-      new TrackedItem("1_1", new Shop(), null, null);
+      new TrackedItem("1_1", new Shop(), null);
   private static final TrackedItem trackedItem2 =
-      new TrackedItem("1_2", new Shop(), null, null);
+      new TrackedItem("1_2", new Shop(), null);
   private static final List<TrackedItem> trackedItems = List.of(trackedItem1, trackedItem2);
   private static final Item itemFromRepository = new Item(1, "Pizza hawai", "", 1, new ItemUnit(
       ItemUnit.UnitType.KILOGRAMS, 320), "zout, peper", trackedItems);

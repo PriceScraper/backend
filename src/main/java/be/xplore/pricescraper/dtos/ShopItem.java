@@ -1,4 +1,4 @@
-package be.xplore.pricescraper.dto;
+package be.xplore.pricescraper.dtos;
 
 /**
  * Return object of the scraper.
