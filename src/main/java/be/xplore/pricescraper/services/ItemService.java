@@ -7,6 +7,7 @@ import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.dtos.ItemSearchDto;
 import be.xplore.pricescraper.dtos.ServiceResponse;
 import be.xplore.pricescraper.dtos.ShopItem;
+import be.xplore.pricescraper.exceptions.ItemNotFoundException;
 import be.xplore.pricescraper.repositories.ItemPriceRepository;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.ShopRepository;
@@ -34,6 +35,10 @@ public class ItemService {
   private final TrackedItemRepository trackedItemRepository;
   private final ShopRepository shopRepository;
   private final ScraperService scraperService;
+
+  public Item findItemById(int id) {
+    return itemRepository.findById(id).orElseThrow(ItemNotFoundException::new);
+  }
 
   /**
    * mapping of item prices in memory.
