@@ -47,7 +47,7 @@ public class ItemControllerTests {
     var body = new TrackItem(
         "https://drive.carrefour.be/nl/"
             +
-            "Baby/Babyvoeding/Snacks-%26-desserts/Desserts-met-fruit/Vanaf-6-maand/Carrefour-Baby%7CBio-Appel%2C-Aardbei-vanaf-6-Maanden-4-x-100-g/p/06358717");
+            "Kruidenierswaren/Sauzen%2C-smaakmakers-%26-kookhulp/Sauzen/Andere-koude-sauzen/Carrefour%7CSaus-Pita-300-ml/p/05307992");
     var response = itemsController.trackItem(body);
     assertNotNull(response);
     log.info(response.getBody().toString());

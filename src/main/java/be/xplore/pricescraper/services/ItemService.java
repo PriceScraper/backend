@@ -186,4 +186,8 @@ public class ItemService {
     trackedItem.setLastAttempt(Timestamp.from(Instant.MIN));
     return Optional.of(trackedItemRepository.save(trackedItem));
   }
+
+  public long trackedItemsCount() {
+    return trackedItemRepository.count();
+  }
 }
