@@ -9,9 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import be.xplore.pricescraper.RestTestConfig;
 import be.xplore.pricescraper.controllers.advice.UserActionExceptionHandler;
 import be.xplore.pricescraper.domain.users.User;
-import be.xplore.pricescraper.dtos.ShoppingListDeleteDto;
 import be.xplore.pricescraper.services.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -38,10 +36,9 @@ class ShoppingListControllerTests {
     when(userService.loadUserByUsername(any(String.class))).thenReturn(
         new User("test", "provider"));
     mockMvc.perform(
-            delete("/shoppinglists")
+            delete("/shoppinglists/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(new ShoppingListDeleteDto(1)))
         )
         .andDo(print())
         .andExpect(status().isUnauthorized());

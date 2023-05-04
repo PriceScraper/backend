@@ -31,7 +31,7 @@ public class ItemRepositoryImpl implements ItemRepository {
   @Override
   public List<ItemSearchDto> findItemsByNameLike(String name) {
     List<ItemSearchEntity> entities = itemJpaRepository.findByNameContainsIgnoreCase(name);
-    return entities.stream().map(e -> modelMapper.map(e, ItemSearchDto.class)).toList();
+    return entities.stream().map(e -> new ItemSearchDto(e.id(), e.name(), e.image())).toList();
   }
 
   /**

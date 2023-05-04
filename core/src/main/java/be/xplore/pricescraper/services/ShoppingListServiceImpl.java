@@ -7,6 +7,7 @@ import be.xplore.pricescraper.domain.users.User;
 import be.xplore.pricescraper.exceptions.ShoppingListItemNotFoundException;
 import be.xplore.pricescraper.exceptions.ShoppingListNotFoundException;
 import be.xplore.pricescraper.repositories.ShoppingListRepository;
+import be.xplore.pricescraper.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
 
   private final ShoppingListRepository shoppingListRepository;
   private final ItemService itemService;
+  private final UserRepository userRepository;
 
   public ShoppingList findShoppingListById(int id) {
     return shoppingListRepository.getShoppingListById(id)
@@ -36,10 +38,11 @@ public class ShoppingListServiceImpl implements ShoppingListService {
    */
   @Transactional
   public void createShoppingListForUser(User user, ShoppingList shoppingList) {
-    List<ShoppingList> shoppingLists =
-        user.getShoppingLists() == null ? new ArrayList<>() : user.getShoppingLists();
-    shoppingLists.add(shoppingList);
-    user.setShoppingLists(shoppingLists);
+    if (user.getShoppingLists() == null) {
+      user.setShoppingLists(new ArrayList<>());
+    }
+    user.getShoppingLists().add(shoppingList);
+    userRepository.save(user);
   }
 
   /**
@@ -53,6 +56,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     user.getShoppingLists().remove(user.getShoppingLists().stream()
         .filter(shoppingList -> shoppingList.getId() == shoppingListId).findFirst()
         .orElseThrow(ShoppingListNotFoundException::new));
+    userRepository.save(user);
   }
 
   /**

@@ -2,7 +2,7 @@ package be.xplore.pricescraper.controllers;
 
 import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.domain.shops.TrackedItem;
-import be.xplore.pricescraper.dtos.ItemSearchResponseDto;
+import be.xplore.pricescraper.dtos.ItemSearchDto;
 import be.xplore.pricescraper.dtos.TrackItem;
 import be.xplore.pricescraper.services.ItemService;
 import java.util.List;
@@ -33,10 +33,8 @@ public class ItemsController {
    * Finds items by name that includes the given string.
    */
   @GetMapping
-  public List<ItemSearchResponseDto> findItemsByNameLike(@RequestParam String name) {
-    return itemService.findItemByNameLike(name).stream().map(itemSearchDto ->
-        new ItemSearchResponseDto(itemSearchDto.getId(),
-            itemSearchDto.getName(), itemSearchDto.getImage())).toList();
+  public List<ItemSearchDto> findItemsByNameLike(@RequestParam String name) {
+    return itemService.findItemByNameLike(name);
   }
 
   /**
