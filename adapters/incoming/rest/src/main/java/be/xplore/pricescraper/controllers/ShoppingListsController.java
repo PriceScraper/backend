@@ -9,10 +9,12 @@ import be.xplore.pricescraper.exceptions.UnauthorizedActionExeption;
 import be.xplore.pricescraper.services.ShoppingListService;
 import be.xplore.pricescraper.services.UserService;
 import be.xplore.pricescraper.utils.users.UserUtils;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +30,13 @@ public class ShoppingListsController {
 
   private final UserService userService;
   private final ShoppingListService shoppingListService;
+
+  @GetMapping
+  public List<ShoppingList> getShoppingListsForUser(
+      @AuthenticationPrincipal UserDetails userDetails) {
+    User user = userService.loadUserByUsername(userDetails.getUsername());
+    return user.getShoppingLists();
+  }
 
   /**
    * Adds a {@link ShoppingList} to a {@link User}.
