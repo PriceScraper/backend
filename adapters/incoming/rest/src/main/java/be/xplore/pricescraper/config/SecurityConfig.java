@@ -2,15 +2,18 @@ package be.xplore.pricescraper.config;
 
 import be.xplore.pricescraper.utils.security.JwtRequestFilter;
 import be.xplore.pricescraper.utils.security.JwtSuccessHandler;
+import java.util.Arrays;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 /**
  * Configuring the behaviour of the web endpoints.
@@ -37,12 +40,16 @@ public class SecurityConfig {
         .and()
         .csrf()
         .ignoringRequestMatchers("/items/track")
-        .ignoringRequestMatchers("/logout")
+        .ignoringRequestMatchers("/logout", "/login", "/")
         .and()
         .authorizeHttpRequests(auth -> auth
             .anyRequest().authenticated()
         )
-        .oauth2Login(e -> e.successHandler(jwtSuccessHandler))
+        .exceptionHandling(e -> e
+            .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+        )
+        .oauth2Login(e -> e.loginProcessingUrl("/login")
+            .successHandler(jwtSuccessHandler))
         .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
         .logout()
         .logoutSuccessUrl(frontendConfig.getUrl() + "/logout")
@@ -62,14 +69,14 @@ public class SecurityConfig {
    * To allow requests from the frontend.
    */
   @Bean
-  public CorsFilter corsFilter() {
+  public CorsConfigurationSource corsConfigurationSource() {
     var config = new CorsConfiguration();
     config.setAllowCredentials(true);
     config.addAllowedOrigin(frontendConfig.getUrl());
     config.addAllowedHeader("*");
-    config.addAllowedMethod("*");
+    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
     var source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", config);
-    return new CorsFilter(source);
+    return source;
   }
 }
