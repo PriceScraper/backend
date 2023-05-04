@@ -5,11 +5,9 @@ import be.xplore.pricescraper.utils.security.JwtSuccessHandler;
 import java.util.Arrays;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -40,16 +38,13 @@ public class SecurityConfig {
         .and()
         .csrf()
         .ignoringRequestMatchers("/items/track")
-        .ignoringRequestMatchers("/logout", "/login", "/")
+        .ignoringRequestMatchers("/logout", "/")
         .and()
         .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/oauth2/authorization/github").permitAll()
             .anyRequest().authenticated()
         )
-        .exceptionHandling(e -> e
-            .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-        )
-        .oauth2Login(e -> e.loginProcessingUrl("/login")
-            .successHandler(jwtSuccessHandler))
+        .oauth2Login(e -> e.successHandler(jwtSuccessHandler))
         .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
         .logout()
         .logoutSuccessUrl(frontendConfig.getUrl() + "/logout")
