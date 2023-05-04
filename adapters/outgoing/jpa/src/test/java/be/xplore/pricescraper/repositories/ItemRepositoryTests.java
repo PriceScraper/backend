@@ -1,10 +1,10 @@
 package be.xplore.pricescraper.repositories;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import be.xplore.pricescraper.domain.shops.Item;
-import be.xplore.pricescraper.domain.shops.ItemPrice;
-import be.xplore.pricescraper.dtos.ItemSearchDto;
+import be.xplore.pricescraper.dtos.ItemScraperSearch;
 import be.xplore.pricescraper.repositories.implementations.ItemRepositoryImpl;
 import be.xplore.pricescraper.utils.ModelMapperUtil;
 import java.time.ZoneId;
@@ -32,16 +32,16 @@ class ItemRepositoryTests {
 
   @Test
   void trackedItemsShouldHaveLatestPrices() {
-    Optional<Item> item =
+    var item =
         itemRepository.findItemWithTrackedItemsById(1);
-    List<ItemPrice> itemPrices =
+    var itemPrices =
         itemRepository.findLatestPricesForTrackedItems(item.get().getTrackedItems());
-    List<Integer> dayOfMonthForTimestamps =
+    var dayOfMonthForTimestamps =
         itemPrices.stream().map(
                 itemPrice -> itemPrice.getTimestamp().atZone(ZoneId.of("Europe/Brussels"))
                     .getDayOfMonth())
             .toList();
-    List<Integer> expectedDays = List.of(22, 21);
+    var expectedDays = List.of(22, 21);
     assertThat(dayOfMonthForTimestamps).usingRecursiveComparison().ignoringCollectionOrder()
         .isEqualTo(expectedDays);
     assertThat(itemPrices).hasSize(2);
@@ -49,9 +49,16 @@ class ItemRepositoryTests {
 
   @Test
   void resultShouldHave2Items() {
-    List<ItemSearchDto> items =
-        itemRepository.findItemsByNameLike("PIzZa");
+    var items = itemRepository.findItemsByNameLike("PIzZa");
     assertThat(items).hasSize(2);
+  }
+
+  @Test
+  void testDto() {
+    var searchDto = new ItemScraperSearch("title", "url");
+    assertNotNull(searchDto);
+    assertNotNull(searchDto.title());
+    assertNotNull(searchDto.url());
   }
 
 }

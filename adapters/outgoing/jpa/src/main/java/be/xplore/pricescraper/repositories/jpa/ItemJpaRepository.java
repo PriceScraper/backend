@@ -2,7 +2,6 @@ package be.xplore.pricescraper.repositories.jpa;
 
 import be.xplore.pricescraper.entity.shops.ItemEntity;
 import be.xplore.pricescraper.entity.shops.ItemPriceEntity;
-import be.xplore.pricescraper.entity.shops.ItemSearchEntity;
 import be.xplore.pricescraper.entity.shops.TrackedItemEntity;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import java.util.List;
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ItemJpaRepository
     extends JpaRepository<ItemEntity, Integer> {
-  List<ItemSearchEntity> findByNameContainsIgnoreCase(String name);
+  List<ItemEntity> findByNameContainsIgnoreCase(String name);
 
 
   @Query("""

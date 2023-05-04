@@ -20,4 +20,9 @@ public class ShoppingList {
   private String title;
   @Setter
   private List<ShoppingListLine> lines;
+
+  public ShoppingList(String title, List<ShoppingListLine> lines) {
+    this.title = title;
+    this.lines = lines;
+  }
 }

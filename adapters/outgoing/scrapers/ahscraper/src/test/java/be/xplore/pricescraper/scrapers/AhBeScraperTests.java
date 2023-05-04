@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 
+import be.xplore.pricescraper.scrapers.detail.AhBeScraper;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;

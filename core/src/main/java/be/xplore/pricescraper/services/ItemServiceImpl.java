@@ -15,8 +15,11 @@ import be.xplore.pricescraper.repositories.ShopRepository;
 import be.xplore.pricescraper.repositories.TrackedItemRepository;
 import jakarta.transaction.Transactional;
 import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -78,7 +81,7 @@ public class ItemServiceImpl implements ItemService {
     itemsToTrack
         .forEach(item -> {
           if (hasBeenScrapedRecently(item)) {
-            log.info(
+            log.debug(
                 "Last attempt: " + item.getLastAttempt() + ", skipping scrape of " + item.getUrl());
           } else {
             scrapeTrackedItem(item);
@@ -105,7 +108,7 @@ public class ItemServiceImpl implements ItemService {
           + trackedItem.getUrl());
     } catch (ScraperNotFoundException scraperNotFoundException) {
       setLastAttemptToNow(trackedItem);
-      log.warn("Failed to find scraper for tracked item " + trackedItem.getUrl());
+      log.error("Failed to find scraper for tracked item " + trackedItem.getUrl());
     }
   }
 
@@ -128,7 +131,7 @@ public class ItemServiceImpl implements ItemService {
    * @return {@link Item}
    */
   public Item findItemWithTrackedItemsAndLatestPricesById(int id) {
-    Item item =
+    var item =
         itemRepository.findItemWithTrackedItemsById(id).orElseThrow(ItemNotFoundException::new);
     List<ItemPrice> itemPrices =
         itemRepository.findLatestPricesForTrackedItems(item.getTrackedItems());
@@ -136,8 +139,17 @@ public class ItemServiceImpl implements ItemService {
     return item;
   }
 
+  /**
+   * Find by name.
+   * If low amount of results, start discovering new items.
+   */
   public List<ItemSearchDto> findItemByNameLike(String name) {
-    return itemRepository.findItemsByNameLike(name);
+    var res = itemRepository.findItemsByNameLike(name.strip());
+    if (res.size() > 3 || name.strip().length() < 3) {
+      return res;
+    }
+    discoverNewItems(name);
+    return itemRepository.findItemsByNameLike(name.strip());
   }
 
   /**
@@ -190,13 +202,17 @@ public class ItemServiceImpl implements ItemService {
     }
     var shop = getShopFromDomain(scraperDomain.get());
     var itemIdentifier = scraperService.getItemIdentifier(urlToItem);
-    if (itemIdentifier.isPresent()
-        &&
-        trackedItemRepository.existsByUrlIgnoreCaseAndShopId(itemIdentifier.get(),
-            shop.getId())) {
-      throw new TrackItemException("Item is already being tracked");
+    if (itemIdentifier.isEmpty()) {
+      throw new TrackItemException("Item identifier not found.");
     }
-    var item = getItem(scrapedResponse.get().title(), "", 1, Optional.empty());
+    var dbItem =
+        trackedItemRepository.findByUrlIgnoreCaseAndShopId(itemIdentifier.get(), shop.getId());
+    if (dbItem.isPresent()) {
+      log.debug("Item is already being tracked. Url: " + dbItem.get().getUrl());
+      return dbItem.get();
+    }
+    var item = getItem(scrapedResponse.get().title(), scrapedResponse.get().img().orElse(null), 1,
+        Optional.empty());
     var trackedItem = getTrackedItem(urlToItem, item, shop);
     if (trackedItem.isEmpty()) {
       throw new TrackItemException("Failed to create tracked item");
@@ -240,13 +256,53 @@ public class ItemServiceImpl implements ItemService {
       return Optional.empty();
     }
     var trackedItem = new TrackedItem();
-    trackedItem.setUrl(identifier.get());
+    trackedItem.setUrl(url);
     trackedItem.setShop(shop);
     trackedItem.setItem(item);
     trackedItem.setLastAttempt(Timestamp.from(Instant.MIN));
     return Optional.of(trackedItemRepository.save(trackedItem));
   }
 
+
+  /**
+   * Step 1. Get potential items.
+   * Step 2. Scrape each item separately and add them to db.
+   */
+  public List<TrackedItem> discoverNewItems(String query) {
+    var start = LocalDateTime.now();
+    var potentialItems = scraperService.discoverItems(query);
+    var trackedItems = new ArrayList<TrackedItem>();
+    for (var item : potentialItems) {
+      try {
+        var res = addTrackedItem(item.url());
+        trackedItems.add(res);
+      } catch (Exception e) {
+        log.error(e.getMessage());
+      }
+    }
+    logDiscoveryPerformance(start, trackedItems.size(), potentialItems.size(), query);
+    return trackedItems;
+  }
+
+  /**
+   * Logs the duration to discover the new items.
+   */
+  private void logDiscoveryPerformance(LocalDateTime start, int itemsFound, int itemsTried,
+                                       String query) {
+    var duration = Duration.between(start, LocalDateTime.now()).getSeconds();
+    var sentence =
+        String.format("Took %ds to discover %d/%d items for query: %s",
+            duration, itemsFound, itemsTried, query);
+    if (duration > itemsTried * 0.5) {
+      log.warn(sentence);
+    } else {
+      log.info(sentence);
+    }
+  }
+
+  /**
+   * Returns amount of items in table.
+   */
   public long trackedItemsCount() {
     return trackedItemRepository.count();
   }

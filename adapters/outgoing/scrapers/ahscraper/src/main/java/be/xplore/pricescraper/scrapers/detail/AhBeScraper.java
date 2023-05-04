@@ -1,5 +1,6 @@
-package be.xplore.pricescraper.scrapers;
+package be.xplore.pricescraper.scrapers.detail;
 
+import be.xplore.pricescraper.scrapers.ItemDetailScraper;
 import java.util.Optional;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component;
  * Scraper for ah.be.
  */
 @Component("scraper-ah.be")
-public class AhBeScraper extends Scraper {
+public class AhBeScraper extends ItemDetailScraper {
   public AhBeScraper() {
     super("https://www.ah.be/producten/product/");
   }
@@ -19,6 +20,15 @@ public class AhBeScraper extends Scraper {
       return Optional.empty();
     }
     return Optional.of(title.get(0).attr("title"));
+  }
+
+  @Override
+  protected Optional<String> getItemImage(Document document) {
+    var img = document.getElementsByClass("lazy-image_image__o9P+M");
+    if (hasArgumentFailed(img, 1, "lazy-image_image__o9P+M")) {
+      return Optional.empty();
+    }
+    return Optional.of(img.get(0).attr("src"));
   }
 
   protected Optional<Double> getItemPrice(Document document) {

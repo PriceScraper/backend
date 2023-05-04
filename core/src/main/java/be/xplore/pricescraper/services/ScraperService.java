@@ -1,7 +1,9 @@
 package be.xplore.pricescraper.services;
 
 import be.xplore.pricescraper.domain.shops.TrackedItem;
+import be.xplore.pricescraper.dtos.ItemScraperSearch;
 import be.xplore.pricescraper.dtos.ShopItem;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -32,4 +34,9 @@ public interface ScraperService {
    * Get Identifier area of full Item URL.
    */
   Optional<String> getItemIdentifier(String url);
+
+  /**
+   * Get brief item info by query.
+   */
+  List<ItemScraperSearch> discoverItems(String query);
 }

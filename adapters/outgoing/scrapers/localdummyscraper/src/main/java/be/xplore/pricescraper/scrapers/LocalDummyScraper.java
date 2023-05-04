@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * Scraper for our dummy website running on port :9000.
  */
 @Component("scraper-localhost:9000")
-public class LocalDummyScraper extends Scraper {
+public class LocalDummyScraper extends ItemDetailScraper {
   public LocalDummyScraper() {
     super("http://localhost:9000/p/");
   }
@@ -21,6 +21,11 @@ public class LocalDummyScraper extends Scraper {
       return Optional.empty();
     }
     return Optional.of(title.get(1).text());
+  }
+
+  @Override
+  protected Optional<String> getItemImage(Document document) {
+    return Optional.empty();
   }
 
   @Override

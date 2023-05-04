@@ -27,4 +27,6 @@ public interface ItemService {
   TrackedItem addTrackedItem(String urlToItem);
 
   long trackedItemsCount();
+
+  List<TrackedItem> discoverNewItems(String query);
 }
