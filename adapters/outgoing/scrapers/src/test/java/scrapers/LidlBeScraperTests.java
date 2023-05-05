@@ -1,19 +1,21 @@
-package be.xplore.pricescraper.utils.scrapers;
+package scrapers;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import be.xplore.pricescraper.item.LidlBeScraper;
+import be.xplore.pricescraper.item.Scraper;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = CarrefourBeScraper.class)
-public class CarrefourBeScraperTests {
+@SpringBootTest(classes = LidlBeScraper.class)
+public class LidlBeScraperTests {
   private final Scraper scraper;
 
-  public CarrefourBeScraperTests(@Qualifier("scraper-carrefour.be") Scraper carrefourBeScraper) {
-    this.scraper = carrefourBeScraper;
+  public LidlBeScraperTests(@Qualifier("scraper-lidl.be") Scraper scraper) {
+    this.scraper = scraper;
   }
 
   @Test
@@ -23,8 +25,7 @@ public class CarrefourBeScraperTests {
 
   @Test
   void getItemResults() throws IOException {
-    var response = scraper.scrape(
-        "Dranken/Bier/Pils/In-krat/Jupiler%7CBlond-Bier-Krat-24-x-25-cl/p/00165431");
+    var response = scraper.scrape("bleekwater/p740192819");
     assertTrue(response.isPresent());
     assertNotNull(response.get());
     assertNotNull(response.get().title());

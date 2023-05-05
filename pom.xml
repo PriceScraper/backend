@@ -18,6 +18,8 @@
         <module>application</module>
         <module>core</module>
         <module>adapters</module>
+        <module>adapters/outgoing/scrapers</module>
+        <module>adapters/matchers</module>
     </modules>
     <properties>
         <java.version>17</java.version>

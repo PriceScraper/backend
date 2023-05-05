@@ -1,19 +1,21 @@
-package be.xplore.pricescraper.utils.scrapers;
+package scrapers;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import be.xplore.pricescraper.item.CarrefourBeScraper;
+import be.xplore.pricescraper.item.Scraper;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = AhBeScraper.class)
-public class AhBeScraperTests {
+@SpringBootTest(classes = CarrefourBeScraper.class)
+public class CarrefourBeScraperTests {
   private final Scraper scraper;
 
-  public AhBeScraperTests(@Qualifier("scraper-ah.be") Scraper scraper) {
-    this.scraper = scraper;
+  public CarrefourBeScraperTests(@Qualifier("scraper-carrefour.be") Scraper carrefourBeScraper) {
+    this.scraper = carrefourBeScraper;
   }
 
   @Test
@@ -23,7 +25,8 @@ public class AhBeScraperTests {
 
   @Test
   void getItemResults() throws IOException {
-    var response = scraper.scrape("wi445543/duvel-blond-4-pack");
+    var response = scraper.scrape(
+        "Dranken/Bier/Pils/In-krat/Jupiler%7CBlond-Bier-Krat-24-x-25-cl/p/00165431");
     assertTrue(response.isPresent());
     assertNotNull(response.get());
     assertNotNull(response.get().title());

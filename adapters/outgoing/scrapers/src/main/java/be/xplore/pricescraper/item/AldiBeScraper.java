@@ -1,4 +1,4 @@
-package be.xplore.pricescraper.utils.scrapers;
+package be.xplore.pricescraper.item;
 
 import java.util.Optional;
 import org.jsoup.nodes.Document;

@@ -1,6 +1,7 @@
-package be.xplore.pricescraper.utils.scrapers;
+package be.xplore.pricescraper.item;
 
 import be.xplore.pricescraper.dtos.ShopItem;
+import be.xplore.pricescraper.scrapers.ItemScraper;
 import java.io.IOException;
 import java.util.Optional;
 import lombok.Getter;
@@ -13,18 +14,7 @@ import org.jsoup.select.Elements;
  * Abstract class with the most common implementations of a scraper.
  */
 @Slf4j
-public abstract class Scraper {
-  /**
-   * Code to fetch the item title.
-   */
-  protected abstract Optional<String> getItemTitle(Document document);
-
-  /**
-   * Code to fetch the item price.
-   */
-
-  protected abstract Optional<Double> getItemPrice(Document document);
-
+public abstract class Scraper implements ItemScraper {
   /**
    * Url to the website to scrape.
    */
@@ -35,6 +25,16 @@ public abstract class Scraper {
     this.baseUrl = baseUrl;
   }
 
+  /**
+   * Code to fetch the item title.
+   */
+  protected abstract Optional<String> getItemTitle(Document document);
+
+  /**
+   * Code to fetch the item price.
+   */
+
+  protected abstract Optional<Double> getItemPrice(Document document);
 
   /**
    * We expect a certain amount of elements within the tree search.

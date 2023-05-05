@@ -3,7 +3,7 @@ package be.xplore.pricescraper.services;
 import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.dtos.ShopItem;
 import be.xplore.pricescraper.exceptions.ScraperNotFoundException;
-import be.xplore.pricescraper.utils.scrapers.Scraper;
+import be.xplore.pricescraper.scrapers.ItemScraper;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ScraperServiceImpl implements ScraperService {
 
-  private final Map<String, Scraper> scrapers;
+  private final Map<String, ItemScraper> scrapers;
 
   /**
    * Scrape url by entity.
@@ -40,7 +40,7 @@ public class ScraperServiceImpl implements ScraperService {
    * @param rootDomain root domain
    * @return scraper
    */
-  private Scraper getScraper(String rootDomain) {
+  private ItemScraper getScraper(String rootDomain) {
     var scraper = scrapers.getOrDefault("scraper-" + rootDomain, null);
     if (scraper == null) {
       throw new ScraperNotFoundException();
