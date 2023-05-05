@@ -1,6 +1,8 @@
-package be.xplore.pricescraper.utils.matchers;
+package be.xplore.pricescraper.matchers;
+
 
 import be.xplore.pricescraper.domain.shops.Item;
+import be.xplore.pricescraper.utils.matchers.Matcher;
 
 /**
  * This is the abstract definition for an ItemMatcher that matches items from one or more sources.

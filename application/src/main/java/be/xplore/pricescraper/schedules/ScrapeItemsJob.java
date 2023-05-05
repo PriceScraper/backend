@@ -28,6 +28,7 @@ public class ScrapeItemsJob {
    */
   @Scheduled(fixedDelay = 5000)
   private void scrapeOldestItems() {
+    log.info("started");
     var itemsToTrack = itemService.oldestTrackedItems(5);
     itemsToTrack
         .forEach(item -> {

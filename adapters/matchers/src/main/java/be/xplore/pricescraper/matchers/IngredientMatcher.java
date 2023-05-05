@@ -1,4 +1,4 @@
-package be.xplore.pricescraper.utils.matchers;
+package be.xplore.pricescraper.matchers;
 
 import be.xplore.pricescraper.domain.shops.Item;
 import org.apache.commons.text.similarity.LevenshteinDistance;
@@ -9,9 +9,9 @@ import org.apache.commons.text.similarity.LevenshteinDistance;
  */
 public class IngredientMatcher extends ItemMatcher {
 
-  private final int matchThreshold;
   private static final LevenshteinDistance levenshteinDistance =
       LevenshteinDistance.getDefaultInstance();
+  private final int matchThreshold;
 
   public IngredientMatcher(int threshold, Item itemA, Item itemB) {
     super(itemA, itemB);
