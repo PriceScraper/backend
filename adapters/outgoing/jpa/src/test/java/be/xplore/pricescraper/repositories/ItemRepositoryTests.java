@@ -7,6 +7,7 @@ import be.xplore.pricescraper.domain.shops.ItemPrice;
 import be.xplore.pricescraper.dtos.ItemSearchDto;
 import be.xplore.pricescraper.repositories.implementations.ItemRepositoryImpl;
 import be.xplore.pricescraper.utils.ModelMapperUtil;
+import java.time.ZoneId;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +34,14 @@ class ItemRepositoryTests {
         itemRepository.findItemWithTrackedItemsById(1);
     List<ItemPrice> itemPrices =
         itemRepository.findLatestPricesForTrackedItems(item.getTrackedItems());
-    List<String> timestampsAsStrings =
-        itemPrices.stream().map(itemPrice -> itemPrice.getTimestamp().toString()).toList();
-    List<String> expectedTimestamps = List.of("2023-04-22 12:00:00.0", "2023-04-21 12:00:00.0");
-    assertThat(timestampsAsStrings).usingRecursiveComparison().ignoringCollectionOrder()
-        .isEqualTo(expectedTimestamps);
+    List<Integer> dayOfMonthForTimestamps =
+        itemPrices.stream().map(
+                itemPrice -> itemPrice.getTimestamp().atZone(ZoneId.of("Europe/Brussels"))
+                    .getDayOfMonth())
+            .toList();
+    List<Integer> expectedDays = List.of(22, 21);
+    assertThat(dayOfMonthForTimestamps).usingRecursiveComparison().ignoringCollectionOrder()
+        .isEqualTo(expectedDays);
     assertThat(itemPrices).hasSize(2);
   }
 

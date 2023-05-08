@@ -1,8 +1,6 @@
 package be.xplore.pricescraper.domain;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import be.xplore.pricescraper.domain.users.User;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,14 +16,14 @@ class UserTests {
 
   @Test
   void getters() {
-    assertNull(user.getId());
-    assertNotNull(user.getUsername());
-    assertNotNull(user.getProvider());
-    assertNull(user.getPassword());
-    assertTrue(user.isAccountNonExpired());
-    assertTrue(user.isEnabled());
-    assertTrue(user.isAccountNonLocked());
-    assertTrue(user.isCredentialsNonExpired());
-    assertNull(user.getAuthorities());
+    assertThat(user.getId()).isNull();
+    assertThat(user.getUsername()).isNotNull();
+    assertThat(user.getProvider()).isNotNull();
+    assertThat(user.getPassword()).isNull();
+    assertThat(user.isAccountNonExpired()).isTrue();
+    assertThat(user.isEnabled()).isTrue();
+    assertThat(user.isAccountNonLocked()).isTrue();
+    assertThat(user.isCredentialsNonExpired()).isTrue();
+    assertThat(user.getAuthorities()).isEmpty();
   }
 }

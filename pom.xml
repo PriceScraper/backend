@@ -18,8 +18,6 @@
         <module>application</module>
         <module>core</module>
         <module>adapters</module>
-        <module>adapters/outgoing/scrapers</module>
-        <module>adapters/matchers</module>
         <module>tests</module>
     </modules>
     <properties>

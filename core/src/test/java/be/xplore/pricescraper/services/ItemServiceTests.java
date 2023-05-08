@@ -43,15 +43,15 @@ class ItemServiceTests {
   private static final ItemPrice price1 =
       new ItemPrice(1, Instant.from(
           ZonedDateTime.of(LocalDateTime.from(formatter.parse("2023-04-21 12:00:00")),
-              ZoneId.systemDefault())), 3.19, trackedItem1);
+              ZoneId.of("Europe/Brussels"))), 3.19, trackedItem1);
   private static final ItemPrice price2 =
       new ItemPrice(2, Instant.from(
           ZonedDateTime.of(LocalDateTime.from(formatter.parse("2023-04-22 12:00:00")),
-              ZoneId.systemDefault())), 3.25, trackedItem1);
+              ZoneId.of("Europe/Brussels"))), 3.25, trackedItem1);
   private static final ItemPrice price3 =
       new ItemPrice(3, Instant.from(
           ZonedDateTime.of(LocalDateTime.from(formatter.parse("2023-04-21 12:00:00")),
-              ZoneId.systemDefault())), 3.29, trackedItem2);
+              ZoneId.of("Europe/Brussels"))), 3.29, trackedItem2);
   private static final List<ItemPrice> itemPricesFromRepository = List.of(price1, price2, price3);
 
 
