@@ -8,7 +8,7 @@ import be.xplore.pricescraper.utils.security.JwtProvider;
 import be.xplore.pricescraper.utils.security.JwtSuccessHandler;
 import org.junit.jupiter.api.Test;
 
-public class JwtSuccessHandlerTests {
+class JwtSuccessHandlerTests {
   private final JwtSuccessHandler jwtSuccessHandler;
 
   public JwtSuccessHandlerTests() {

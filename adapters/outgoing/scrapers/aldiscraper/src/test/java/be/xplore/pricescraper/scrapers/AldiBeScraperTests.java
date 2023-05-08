@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = AldiBeScraper.class)
-public class AldiBeScraperTests {
+class AldiBeScraperTests {
   private final Scraper scraper;
 
   public AldiBeScraperTests(@Qualifier("scraper-aldi.be") Scraper scraper) {

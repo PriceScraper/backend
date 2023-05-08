@@ -7,8 +7,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.Serial;
-import java.io.Serializable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
@@ -20,13 +18,10 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class JwtSuccessHandler extends SimpleUrlAuthenticationSuccessHandler implements
-    Serializable {
+public class JwtSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
   private final UserRepository userRepository;
   private final JwtProvider jwtProvider;
   private final FrontendConfig frontendConfig;
-  @Serial
-  private static final long serialVersionUID = -2550185165626007488L;
 
   /**
    * Constructor.

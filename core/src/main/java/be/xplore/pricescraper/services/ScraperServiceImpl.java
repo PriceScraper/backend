@@ -2,6 +2,7 @@ package be.xplore.pricescraper.services;
 
 import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.dtos.ShopItem;
+import be.xplore.pricescraper.exceptions.RootDomainNotFoundException;
 import be.xplore.pricescraper.exceptions.ScraperNotFoundException;
 import be.xplore.pricescraper.scrapers.ItemScraper;
 import java.io.IOException;
@@ -68,7 +69,7 @@ public class ScraperServiceImpl implements ScraperService {
     try {
       var rootDomain = getScraperRootDomain(itemUrl);
       if (rootDomain.isEmpty()) {
-        throw new Exception("Failed to find root domain for tracked item.");
+        throw new RootDomainNotFoundException("Failed to find root domain for tracked item.");
       }
       var scraper = getScraper(rootDomain.get());
       return scraper.scrapeFromFullUrl(itemUrl);

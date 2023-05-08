@@ -20,7 +20,7 @@ public abstract class Scraper implements ItemScraper {
   @Getter
   protected String baseUrl;
 
-  public Scraper(String baseUrl) {
+  protected Scraper(String baseUrl) {
     this.baseUrl = baseUrl;
   }
 

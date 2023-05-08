@@ -8,7 +8,7 @@ import be.xplore.pricescraper.domain.users.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class UserTests {
+class UserTests {
   private User user;
 
   @BeforeEach

@@ -12,7 +12,7 @@ public abstract class ItemMatcher implements Matcher {
   private final Item itemA;
   private final Item itemB;
 
-  public ItemMatcher(Item itemA, Item itemB) {
+  protected ItemMatcher(Item itemA, Item itemB) {
     this.itemA = itemA;
     this.itemB = itemB;
   }
@@ -24,7 +24,5 @@ public abstract class ItemMatcher implements Matcher {
   protected Item getItemB() {
     return itemB;
   }
-
-  public abstract boolean isMatching();
 
 }

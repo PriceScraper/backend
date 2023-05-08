@@ -21,7 +21,7 @@ import org.springframework.http.HttpStatusCode;
 
 @SpringBootTest(classes = {ItemsController.class, ItemServiceImpl.class})
 @Slf4j
-public class ItemControllerTests {
+class ItemControllerTests {
   @Autowired
   private ItemsController itemsController;
   @MockBean

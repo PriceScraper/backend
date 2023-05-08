@@ -19,12 +19,10 @@ public class ModelMapperUtil {
   @Scope("singleton")
   public ModelMapper modelMapper() {
     ModelMapper mapper = new ModelMapper();
-    mapper.getConfiguration().setPropertyCondition(context -> {
-      //if the object is a PersistentCollection could be not initialized
-      //in case of lazy strategy, in this case the object will not be mapped:
-      return (!(context.getSource() instanceof PersistentCollection)
-          || ((PersistentCollection) context.getSource()).wasInitialized());
-    });
+    mapper.getConfiguration().setPropertyCondition(
+        context -> (!(context.getSource() instanceof PersistentCollection persistentCollection) ||
+            ((PersistentCollection) context.getSource()).wasInitialized())
+    );
     return mapper;
   }
 }

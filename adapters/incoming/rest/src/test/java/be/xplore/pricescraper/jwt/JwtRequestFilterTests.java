@@ -6,7 +6,7 @@ import be.xplore.pricescraper.utils.security.JwtRequestFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class JwtRequestFilterTests {
+class JwtRequestFilterTests {
   private JwtRequestFilter jwtRequestFilter;
 
   @BeforeEach

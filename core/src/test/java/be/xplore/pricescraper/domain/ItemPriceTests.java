@@ -8,7 +8,7 @@ import be.xplore.pricescraper.domain.shops.ItemPrice;
 import java.time.Instant;
 import org.junit.jupiter.api.Test;
 
-public class ItemPriceTests {
+class ItemPriceTests {
   @Test
   void constructor() {
     var entity = new ItemPrice();

@@ -10,11 +10,11 @@ import static org.mockito.BDDMockito.given;
 
 import be.xplore.pricescraper.domain.shops.Shop;
 import be.xplore.pricescraper.domain.shops.TrackedItem;
-import be.xplore.pricescraper.item.CarrefourBeScraper;
 import be.xplore.pricescraper.repositories.ItemPriceRepository;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.ShopRepository;
 import be.xplore.pricescraper.repositories.TrackedItemRepository;
+import be.xplore.pricescraper.scrapers.CarrefourBeScraper;
 import be.xplore.pricescraper.scrapers.ItemScraper;
 import be.xplore.pricescraper.services.ItemServiceImpl;
 import be.xplore.pricescraper.services.ScraperServiceImpl;
@@ -27,7 +27,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest(classes = {ItemServiceImpl.class, ItemScraper.class,
     ScraperServiceImpl.class, CarrefourBeScraper.class})
-public class ItemServiceIntegrationTests {
+class ItemServiceIntegrationTests {
   @MockBean
   private ItemRepository itemRepository;
   @MockBean

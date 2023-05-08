@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = LocalDummyScraper.class)
-public class LocalDummyScraperTests {
+class LocalDummyScraperTests {
   private final Scraper scraper;
 
   public LocalDummyScraperTests(@Qualifier("scraper-localhost:9000") Scraper scraper) {

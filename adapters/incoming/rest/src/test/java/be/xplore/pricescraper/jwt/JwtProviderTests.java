@@ -8,7 +8,7 @@ import be.xplore.pricescraper.utils.security.JwtProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class JwtProviderTests {
+class JwtProviderTests {
   private final JwtProvider jwtProvider;
   private String token;
 

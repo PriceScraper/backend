@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 
-public class ScrapeItemsJobTests {
+class ScrapeItemsJobTests {
   private final ScrapeItemsJob scrapeItemsJob;
 
   public ScrapeItemsJobTests() {

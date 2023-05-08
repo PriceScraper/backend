@@ -18,7 +18,7 @@
         </dependency>
         <dependency>
             <groupId>be.xplore</groupId>
-            <artifactId>scrapers</artifactId>
+            <artifactId>carrefourscraper</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
