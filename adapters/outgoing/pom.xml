@@ -8,13 +8,5 @@
         <artifactId>adapters</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-
     <artifactId>outgoing</artifactId>
-
-    <properties>
-        <maven.compiler.source>18</maven.compiler.source>
-        <maven.compiler.target>18</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
 </project>
