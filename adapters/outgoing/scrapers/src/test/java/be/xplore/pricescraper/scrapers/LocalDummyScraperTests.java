@@ -1,4 +1,4 @@
-package scrapers;
+package be.xplore.pricescraper.scrapers;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

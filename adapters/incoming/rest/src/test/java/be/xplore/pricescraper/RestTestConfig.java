@@ -10,6 +10,7 @@ import be.xplore.pricescraper.utils.security.JwtSuccessHandler;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @TestConfiguration
@@ -24,8 +25,14 @@ public class RestTestConfig {
   private JwtProvider jwtProvider;
   @MockBean
   private JwtRequestFilter jwtRequestFilter;
-  @MockBean
-  private JwtConfig jwtConfig;
+
+  @Bean
+  JwtConfig getJwtConfig() {
+    JwtConfig jwtConfig = new JwtConfig();
+    jwtConfig.setSecret("mySecret");
+    return jwtConfig;
+  }
+
   @MockBean
   private FrontendConfig frontendConfig;
   @MockBean

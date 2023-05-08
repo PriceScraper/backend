@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +28,7 @@ public class ScrapeItemsJob {
    * Uses the last 5 tracked items every, and only scrapes them if lastAttempt was at least 1h ago.
    */
   @Scheduled(fixedDelay = 5000)
+  @Profile("!test")
   private void scrapeOldestItems() {
     log.info("started");
     var itemsToTrack = itemService.oldestTrackedItems(5);

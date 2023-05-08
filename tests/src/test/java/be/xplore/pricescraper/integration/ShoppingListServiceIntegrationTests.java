@@ -1,62 +1,50 @@
-package be.xplore.pricescraper.services;
+package be.xplore.pricescraper.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.domain.users.ShoppingList;
 import be.xplore.pricescraper.domain.users.User;
 import be.xplore.pricescraper.exceptions.ShoppingListNotFoundException;
-import be.xplore.pricescraper.mocks.ShoppingListInMemoryRepository;
-import be.xplore.pricescraper.repositories.ItemPriceRepository;
 import be.xplore.pricescraper.repositories.ItemRepository;
-import be.xplore.pricescraper.repositories.ShopRepository;
 import be.xplore.pricescraper.repositories.ShoppingListRepository;
-import be.xplore.pricescraper.repositories.TrackedItemRepository;
 import be.xplore.pricescraper.repositories.UserRepository;
+import be.xplore.pricescraper.services.ShoppingListService;
 import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@SpringBootTest(classes = {ShoppingListServiceImpl.class, ShoppingListInMemoryRepository.class})
+@Import(IntegrationConfig.class)
+@SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ShoppingListServiceTests {
+@ActiveProfiles("test")
+class ShoppingListServiceIntegrationTests {
 
   @Autowired
   ShoppingListRepository shoppingListRepository;
   @Autowired
-  ShoppingListService shoppingListService;
-
-  @MockBean
-  ItemRepository itemRepository;
-  @MockBean
-  ItemService itemService;
-  @MockBean
-  ItemPriceRepository itemPriceRepository;
-  @MockBean
-  TrackedItemRepository trackedItemRepository;
-  @MockBean
-  ShopRepository shopRepository;
-  @MockBean
   UserRepository userRepository;
+  @Autowired
+  ItemRepository itemRepository;
+  @Autowired
+  ShoppingListService shoppingListService;
 
   @BeforeEach
   void setup() {
-    when(itemService.findItemById(any(int.class))).thenReturn(
-        new Item(1, "", "", 1, null, "", new ArrayList<>()));
+    shoppingListRepository.save(new ShoppingList());
+    itemRepository.save(new Item());
   }
 
   @Test
   void shouldReturnShoppingList() {
-    shoppingListRepository.save(new ShoppingList());
     ShoppingList shoppingList = shoppingListService.findShoppingListById(1);
     assertThat(shoppingList).isNotNull();
   }
@@ -65,6 +53,7 @@ class ShoppingListServiceTests {
   void shoppingListShouldBeAdded() {
     User user = new User();
     user.setUsername("test");
+    user = userRepository.save(user);
     ShoppingList shoppingList = new ShoppingList(1, "mijn lijst", new ArrayList<>());
     shoppingListService.createShoppingListForUser(user, shoppingList);
     ShoppingList shoppingList1 = user.getShoppingLists().get(0);
@@ -84,7 +73,7 @@ class ShoppingListServiceTests {
 
   @Test
   void shoppingListShouldContainLineWithQuantity() {
-    shoppingListRepository.save(new ShoppingList());
+
     shoppingListService.addItemToShoppingListById(1, 1, 2);
     ShoppingList shoppingList = shoppingListService.findShoppingListById(1);
     assertThat(shoppingList.getLines().get(0).getQuantity()).isEqualTo(2);

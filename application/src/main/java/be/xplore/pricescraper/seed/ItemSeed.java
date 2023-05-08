@@ -5,6 +5,7 @@ import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,7 @@ public class ItemSeed {
    * Executing seed.
    */
   @EventListener(ApplicationReadyEvent.class)
+  @Profile("!test")
   public void seedItems() {
     if (itemService.trackedItemsCount() > 0) {
       log.info("Not seeding because db is not empty.");

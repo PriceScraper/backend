@@ -1,20 +1,20 @@
-package scrapers;
+package be.xplore.pricescraper.scrapers;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import be.xplore.pricescraper.item.AhBeScraper;
+import be.xplore.pricescraper.item.LidlBeScraper;
 import be.xplore.pricescraper.item.Scraper;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = AhBeScraper.class)
-public class AhBeScraperTests {
+@SpringBootTest(classes = LidlBeScraper.class)
+public class LidlBeScraperTests {
   private final Scraper scraper;
 
-  public AhBeScraperTests(@Qualifier("scraper-ah.be") Scraper scraper) {
+  public LidlBeScraperTests(@Qualifier("scraper-lidl.be") Scraper scraper) {
     this.scraper = scraper;
   }
 
@@ -25,7 +25,7 @@ public class AhBeScraperTests {
 
   @Test
   void getItemResults() throws IOException {
-    var response = scraper.scrape("wi445543/duvel-blond-4-pack");
+    var response = scraper.scrape("bleekwater/p740192819");
     assertTrue(response.isPresent());
     assertNotNull(response.get());
     assertNotNull(response.get().title());

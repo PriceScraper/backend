@@ -1,27 +1,30 @@
-package be.xplore.pricescraper.services;
+package be.xplore.pricescraper.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import be.xplore.pricescraper.utils.scrapers.CarrefourBeScraper;
-import be.xplore.pricescraper.utils.scrapers.Scraper;
-import java.util.HashMap;
-import java.util.Map;
-import org.junit.jupiter.api.BeforeAll;
+import be.xplore.pricescraper.item.CarrefourBeScraper;
+import be.xplore.pricescraper.repositories.ItemPriceRepository;
+import be.xplore.pricescraper.repositories.ItemRepository;
+import be.xplore.pricescraper.services.ScraperService;
+import be.xplore.pricescraper.services.ScraperServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ScraperServiceTests {
+@SpringBootTest(classes = {ScraperServiceImpl.class, CarrefourBeScraper.class})
+public class ScraperServiceIntegrationTests {
 
+  @MockBean
+  ItemRepository itemRepository;
+  @MockBean
+  ItemPriceRepository itemPriceRepository;
+
+  @Autowired
   private ScraperService scraperService;
-
-  @BeforeAll
-  void setup() {
-    Map<String, Scraper> scrapers = new HashMap<>();
-    scrapers.put("scraper-carrefour.be", new CarrefourBeScraper());
-    scraperService = new ScraperServiceImpl(scrapers);
-  }
 
   @Test
   void getItemIdentifier() {

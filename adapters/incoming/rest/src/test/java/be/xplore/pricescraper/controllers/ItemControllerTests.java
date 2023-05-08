@@ -9,6 +9,7 @@ import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.dtos.ServiceResponse;
 import be.xplore.pricescraper.dtos.TrackItem;
 import be.xplore.pricescraper.services.ItemService;
+import be.xplore.pricescraper.services.ItemServiceImpl;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatusCode;
 
-@SpringBootTest(classes = ItemsController.class)
+@SpringBootTest(classes = {ItemsController.class, ItemServiceImpl.class})
 @Slf4j
 public class ItemControllerTests {
   @Autowired

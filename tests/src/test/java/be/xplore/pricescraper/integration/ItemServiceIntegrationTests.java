@@ -1,4 +1,4 @@
-package be.xplore.pricescraper.services;
+package be.xplore.pricescraper.integration;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -10,11 +10,14 @@ import static org.mockito.BDDMockito.given;
 
 import be.xplore.pricescraper.domain.shops.Shop;
 import be.xplore.pricescraper.domain.shops.TrackedItem;
+import be.xplore.pricescraper.item.CarrefourBeScraper;
 import be.xplore.pricescraper.repositories.ItemPriceRepository;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.ShopRepository;
 import be.xplore.pricescraper.repositories.TrackedItemRepository;
-import be.xplore.pricescraper.utils.scrapers.CarrefourBeScraper;
+import be.xplore.pricescraper.scrapers.ItemScraper;
+import be.xplore.pricescraper.services.ItemServiceImpl;
+import be.xplore.pricescraper.services.ScraperServiceImpl;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,8 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-@SpringBootTest(classes = {ItemServiceImpl.class, CarrefourBeScraper.class,
-    ScraperServiceImpl.class})
+@SpringBootTest(classes = {ItemServiceImpl.class, ItemScraper.class,
+    ScraperServiceImpl.class, CarrefourBeScraper.class})
 public class ItemServiceIntegrationTests {
   @MockBean
   private ItemRepository itemRepository;
