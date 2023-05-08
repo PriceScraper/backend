@@ -7,7 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import java.sql.Timestamp;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +26,7 @@ public class ItemPriceEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(nullable = false)
   private int id;
-  private Timestamp timestamp;
+  private Instant timestamp;
   private double price;
   @JsonIgnore
   @ManyToOne

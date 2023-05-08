@@ -1,7 +1,7 @@
 package be.xplore.pricescraper.domain.shops;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.sql.Timestamp;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +16,7 @@ import lombok.Setter;
 @Setter
 public class ItemPrice {
   private int id;
-  private Timestamp timestamp;
+  private Instant timestamp;
   private double price;
   @JsonIgnore
   private TrackedItem trackedItem;

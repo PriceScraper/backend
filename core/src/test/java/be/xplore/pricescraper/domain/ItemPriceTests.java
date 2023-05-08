@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import be.xplore.pricescraper.domain.shops.ItemPrice;
-import java.sql.Timestamp;
 import java.time.Instant;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +27,7 @@ public class ItemPriceTests {
     entity.setId(5);
     assertEquals(5, entity.getId());
 
-    var now = Timestamp.from(Instant.now());
+    var now = Instant.now();
     assertNull(entity.getTimestamp());
     entity.setTimestamp(now);
     assertEquals(now, entity.getTimestamp());

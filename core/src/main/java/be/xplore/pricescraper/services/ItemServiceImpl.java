@@ -115,7 +115,7 @@ public class ItemServiceImpl implements ItemService {
     var p = new ItemPrice();
     p.setPrice(price);
     p.setTrackedItem(item);
-    p.setTimestamp(Timestamp.from(Instant.now()));
+    p.setTimestamp(Instant.now());
     itemPriceRepository.save(p);
     setLastAttemptToNow(item);
   }

@@ -9,7 +9,11 @@ import be.xplore.pricescraper.domain.shops.ItemUnit;
 import be.xplore.pricescraper.domain.shops.Shop;
 import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.repositories.ItemRepository;
-import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,12 +38,20 @@ public class ItemServiceTests {
   private static final List<TrackedItem> trackedItems = List.of(trackedItem1, trackedItem2);
   private static final Item itemFromRepository = new Item(1, "Pizza hawai", "", 1, new ItemUnit(
       ItemUnit.UnitType.KILOGRAMS, 320), "zout, peper", trackedItems);
+
+  private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
   private static final ItemPrice price1 =
-      new ItemPrice(1, Timestamp.valueOf("2023-04-20 12:00:00"), 3.19, trackedItem1);
+      new ItemPrice(1, Instant.from(
+          ZonedDateTime.of(LocalDateTime.from(formatter.parse("2023-04-21 12:00:00")),
+              ZoneId.systemDefault())), 3.19, trackedItem1);
   private static final ItemPrice price2 =
-      new ItemPrice(2, Timestamp.valueOf("2023-04-22 12:00:00"), 3.25, trackedItem1);
+      new ItemPrice(2, Instant.from(
+          ZonedDateTime.of(LocalDateTime.from(formatter.parse("2023-04-22 12:00:00")),
+              ZoneId.systemDefault())), 3.25, trackedItem1);
   private static final ItemPrice price3 =
-      new ItemPrice(3, Timestamp.valueOf("2023-04-21 12:00:00"), 3.29, trackedItem2);
+      new ItemPrice(3, Instant.from(
+          ZonedDateTime.of(LocalDateTime.from(formatter.parse("2023-04-21 12:00:00")),
+              ZoneId.systemDefault())), 3.29, trackedItem2);
   private static final List<ItemPrice> itemPricesFromRepository = List.of(price1, price2, price3);
 
 
@@ -65,7 +77,7 @@ public class ItemServiceTests {
     List<String> timestampsAsStrings = item.getTrackedItems().stream()
         .map(trackedItem -> trackedItem.getItemPrices().get(0).getTimestamp().toString())
         .collect(Collectors.toList());
-    List<String> expectedTimestamps = List.of("2023-04-22 12:00:00.0", "2023-04-21 12:00:00.0");
+    List<String> expectedTimestamps = List.of("2023-04-22T10:00:00Z", "2023-04-21T10:00:00Z");
     assertThat(timestampsAsStrings).usingRecursiveComparison().ignoringCollectionOrder()
         .isEqualTo(expectedTimestamps);
   }
