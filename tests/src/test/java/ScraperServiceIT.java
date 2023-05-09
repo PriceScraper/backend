@@ -1,5 +1,3 @@
-package be.xplore.pricescraper.integration;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -15,7 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(classes = {ScraperServiceImpl.class, CarrefourBeScraper.class})
-public class ScraperServiceIntegrationTests {
+public class ScraperServiceIT {
 
   @MockBean
   ItemRepository itemRepository;

@@ -18,12 +18,6 @@
         </dependency>
         <dependency>
             <groupId>be.xplore</groupId>
-            <artifactId>carrefourscraper</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>be.xplore</groupId>
             <artifactId>jpa</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
@@ -49,6 +43,42 @@
         <dependency>
             <groupId>be.xplore</groupId>
             <artifactId>tests</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>be.xplore</groupId>
+            <artifactId>carrefourscraper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>be.xplore</groupId>
+            <artifactId>ahscraper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>be.xplore</groupId>
+            <artifactId>scraper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>be.xplore</groupId>
+            <artifactId>lildscraper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>be.xplore</groupId>
+            <artifactId>localdummyscraper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>be.xplore</groupId>
+            <artifactId>aldiscraper</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

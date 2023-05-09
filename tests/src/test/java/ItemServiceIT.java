@@ -1,5 +1,3 @@
-package be.xplore.pricescraper.integration;
-
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -27,7 +25,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest(classes = {ItemServiceImpl.class, ItemScraper.class,
     ScraperServiceImpl.class, CarrefourBeScraper.class})
-class ItemServiceIntegrationTests {
+class ItemServiceIT {
   @MockBean
   private ItemRepository itemRepository;
   @MockBean
