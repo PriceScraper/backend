@@ -19,7 +19,7 @@ import org.springframework.data.domain.Pageable;
 @DataJpaTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Import({TrackedItemRepositoryImpl.class, ShopRepositoryImpl.class, ModelMapperUtil.class})
-public class TrackedItemRepositoryTests {
+class TrackedItemRepositoryTests {
   @Autowired
   TrackedItemRepositoryImpl trackedItemRepository;
   @Autowired

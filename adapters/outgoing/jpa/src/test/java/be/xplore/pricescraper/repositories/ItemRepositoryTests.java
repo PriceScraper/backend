@@ -26,7 +26,7 @@ class ItemRepositoryTests {
   @Test
   void itemShouldHave2TrackedItems() {
     Optional<Item> item = itemRepository.findItemWithTrackedItemsById(1);
-    assertThat(item.isPresent()).isTrue();
+    assertThat(item).isPresent();
     assertThat(item.get().getTrackedItems()).hasSize(2);
   }
 

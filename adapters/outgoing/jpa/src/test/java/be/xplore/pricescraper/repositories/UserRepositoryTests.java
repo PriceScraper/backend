@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Import;
 @DataJpaTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Import({UserRepositoryImpl.class, ModelMapperUtil.class})
-public class UserRepositoryTests {
+class UserRepositoryTests {
   @Autowired
   UserRepositoryImpl userRepository;
 
@@ -35,20 +35,20 @@ public class UserRepositoryTests {
   @Test
   void findByUsernameAndProviderShouldReturnUser() {
     Optional<User> user = userRepository.findByUsernameAndProvider("test", "testprovider");
-    assertThat(user.isPresent()).isTrue();
+    assertThat(user).isPresent();
   }
 
   @Test
   void userShouldHaveShoppingLists() {
     Optional<User> user = userRepository.findByUsernameWithShoppingLists("test");
-    assertThat(user.isPresent()).isTrue();
+    assertThat(user).isPresent();
     assertThat(user.get().getShoppingLists()).hasSize(1);
   }
 
   @Test
   void findByIdShouldReturnUser() {
     Optional<User> user = userRepository.findById(1L);
-    assertThat(user.isPresent()).isTrue();
+    assertThat(user).isPresent();
   }
 
   @Test

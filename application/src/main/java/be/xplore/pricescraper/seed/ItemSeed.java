@@ -48,9 +48,9 @@ public class ItemSeed {
     };
 
     Arrays.stream(items).toList()
-        .forEach((i) -> {
+        .forEach(i -> {
           log.debug("Seeding item " + i);
-          var res = itemService.addTrackedItem(i);
+          itemService.addTrackedItem(i);
         });
   }
 }

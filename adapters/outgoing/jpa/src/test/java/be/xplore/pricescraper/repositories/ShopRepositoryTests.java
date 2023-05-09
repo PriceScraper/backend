@@ -22,7 +22,7 @@ class ShopRepositoryTests {
     Shop shop = new Shop(1, "test", "test");
     shopRepository.save(shop);
     Optional<Shop> shopFromRepository = shopRepository.findByUrl("test");
-    assertThat(shopFromRepository.isPresent()).isTrue();
+    assertThat(shopFromRepository).isPresent();
   }
 
   @Test

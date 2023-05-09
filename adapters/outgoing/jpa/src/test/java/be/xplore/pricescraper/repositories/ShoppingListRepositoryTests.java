@@ -28,14 +28,14 @@ class ShoppingListRepositoryTests {
   @Test
   void getByIdShouldReturnShoppingList() {
     Optional<ShoppingList> shoppingList = shoppingListRepository.getShoppingListById(1);
-    assertThat(shoppingList.isPresent()).isTrue();
+    assertThat(shoppingList).isPresent();
   }
 
   @Test
   void shoppingListShouldHaveIdAfterSaving() {
     ShoppingList shoppingList = new ShoppingList();
     shoppingList = shoppingListRepository.save(shoppingList);
-    assertThat(shoppingList.getId()).isGreaterThan(0);
+    assertThat(shoppingList.getId()).isPositive();
   }
 
 }
