@@ -26,7 +26,7 @@ env:
 
 on:
   push:
-    branches: [ "main", "41-deploy-aws" ]
+    branches: [ "main", "feature/41-deploy-aws" ]
   workflow_dispatch:
 
 permissions:
