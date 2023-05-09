@@ -2,10 +2,16 @@ package be.xplore.pricescraper.config;
 
 import be.xplore.pricescraper.utils.security.JwtRequestFilter;
 import be.xplore.pricescraper.utils.security.JwtSuccessHandler;
+import java.util.function.Consumer;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -17,14 +23,11 @@ import org.springframework.web.filter.CorsFilter;
  */
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfig {
   private final JwtSuccessHandler jwtSuccessHandler;
   private final FrontendConfig frontendConfig;
-
-  public SecurityConfig(JwtSuccessHandler jwtSuccessHandler, FrontendConfig frontendConfig) {
-    this.jwtSuccessHandler = jwtSuccessHandler;
-    this.frontendConfig = frontendConfig;
-  }
+  private final ClientRegistrationRepository clientRegistrationRepository;
 
   /**
    * Security configuration.
@@ -44,9 +47,18 @@ public class SecurityConfig {
             .requestMatchers("/items").permitAll()
             .anyRequest().authenticated()
         )
-        .oauth2Login(e -> e.successHandler(jwtSuccessHandler))
+        .oauth2Login(e -> {
+          e.successHandler(jwtSuccessHandler);
+          e.authorizationEndpoint()
+              .authorizationRequestResolver(
+                  authorizationRequestResolver(clientRegistrationRepository));
+        })
         .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
         .logout()
+        //.logoutSuccessHandler(logoutSuccessHandler())
+        .invalidateHttpSession(true)
+        .clearAuthentication(true)
+        .deleteCookies("JSESSIONID")
         .logoutSuccessUrl(frontendConfig.getUrl() + "/logout")
         .and()
         .build();
@@ -73,5 +85,28 @@ public class SecurityConfig {
     var source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", config);
     return new CorsFilter(source);
+  }
+
+  /**
+   * Resolver to customize oauth2 login request.
+   */
+  private OAuth2AuthorizationRequestResolver authorizationRequestResolver(
+      ClientRegistrationRepository clientRegistrationRepository) {
+
+    var authorizationRequestResolver =
+        new DefaultOAuth2AuthorizationRequestResolver(
+            clientRegistrationRepository, "/oauth2/authorization");
+    authorizationRequestResolver.setAuthorizationRequestCustomizer(
+        authorizationRequestCustomizer());
+
+    return authorizationRequestResolver;
+  }
+
+  /**
+   * Adding params to auth request. Prompt=consent will enforce the login modal from GitHub.
+   */
+  private Consumer<OAuth2AuthorizationRequest.Builder> authorizationRequestCustomizer() {
+    return customizer -> customizer
+        .additionalParameters(params -> params.put("prompt", "consent"));
   }
 }
