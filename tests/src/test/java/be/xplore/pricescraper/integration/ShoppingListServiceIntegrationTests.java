@@ -10,7 +10,7 @@ import be.xplore.pricescraper.exceptions.ShoppingListNotFoundException;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.ShoppingListRepository;
 import be.xplore.pricescraper.repositories.UserRepository;
-import be.xplore.pricescraper.services.ShoppingListService;
+import be.xplore.pricescraper.services.ShoppingListServiceImpl;
 import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class ShoppingListServiceIntegrationTests {
   @Autowired
   ItemRepository itemRepository;
   @Autowired
-  ShoppingListService shoppingListService;
+  ShoppingListServiceImpl shoppingListService;
 
   @BeforeEach
   void setup() {
