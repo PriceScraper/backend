@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Import;
 
 @DataJpaTest
 @Import({ItemPriceRepositoryImpl.class, ModelMapperUtil.class})
-public class ItemPriceRepositoryTests {
+class ItemPriceRepositoryTests {
   @Autowired
   ItemPriceRepositoryImpl itemPriceRepository;
 
@@ -20,6 +20,6 @@ public class ItemPriceRepositoryTests {
   void itemPriceShouldHaveIdAfterSave() {
     ItemPrice itemPrice = new ItemPrice();
     itemPrice = itemPriceRepository.save(itemPrice);
-    assertThat(itemPrice.getId()).isGreaterThan(0);
+    assertThat(itemPrice.getId()).isPositive();
   }
 }

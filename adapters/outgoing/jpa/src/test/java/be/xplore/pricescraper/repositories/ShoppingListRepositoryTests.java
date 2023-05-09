@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Import;
 @DataJpaTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Import({ShoppingListRepositoryImpl.class, ModelMapperUtil.class})
-public class ShoppingListRepositoryTests {
+class ShoppingListRepositoryTests {
   @Autowired
   ShoppingListRepositoryImpl shoppingListRepository;
 
