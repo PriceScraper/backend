@@ -38,9 +38,9 @@ public class ItemRepositoryImpl implements ItemRepository {
    * Find by id with JOIN on tracked items.
    */
   @Override
-  public Item findItemWithTrackedItemsById(int id) {
-    ItemEntity entity = itemJpaRepository.findItemWithTrackedItemsById(id);
-    return modelMapper.map(entity, Item.class);
+  public Optional<Item> findItemWithTrackedItemsById(int id) {
+    Optional<ItemEntity> entity = itemJpaRepository.findItemWithTrackedItemsById(id);
+    return entity.map(userEntity -> modelMapper.map(userEntity, Item.class));
   }
 
   /**

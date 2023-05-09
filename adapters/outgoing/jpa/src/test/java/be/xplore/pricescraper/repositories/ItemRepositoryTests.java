@@ -9,6 +9,7 @@ import be.xplore.pricescraper.repositories.implementations.ItemRepositoryImpl;
 import be.xplore.pricescraper.utils.ModelMapperUtil;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -24,16 +25,17 @@ class ItemRepositoryTests {
 
   @Test
   void itemShouldHave2TrackedItems() {
-    Item item = itemRepository.findItemWithTrackedItemsById(1);
-    assertThat(item.getTrackedItems()).hasSize(2);
+    Optional<Item> item = itemRepository.findItemWithTrackedItemsById(1);
+    assertThat(item.isPresent()).isTrue();
+    assertThat(item.get().getTrackedItems()).hasSize(2);
   }
 
   @Test
   void trackedItemsShouldHaveLatestPrices() {
-    Item item =
+    Optional<Item> item =
         itemRepository.findItemWithTrackedItemsById(1);
     List<ItemPrice> itemPrices =
-        itemRepository.findLatestPricesForTrackedItems(item.getTrackedItems());
+        itemRepository.findLatestPricesForTrackedItems(item.get().getTrackedItems());
     List<Integer> dayOfMonthForTimestamps =
         itemPrices.stream().map(
                 itemPrice -> itemPrice.getTimestamp().atZone(ZoneId.of("Europe/Brussels"))

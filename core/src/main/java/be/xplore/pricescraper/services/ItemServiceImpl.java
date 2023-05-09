@@ -74,7 +74,8 @@ public class ItemServiceImpl implements ItemService {
    * @return {@link Item}
    */
   public Item findItemWithTrackedItemsAndLatestPricesById(int id) {
-    Item item = itemRepository.findItemWithTrackedItemsById(id);
+    Item item =
+        itemRepository.findItemWithTrackedItemsById(id).orElseThrow(ItemNotFoundException::new);
     List<ItemPrice> itemPrices =
         itemRepository.findLatestPricesForTrackedItems(item.getTrackedItems());
     assignPricesToTrackedItemsOfItems(item, itemPrices);

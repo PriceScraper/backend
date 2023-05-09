@@ -15,6 +15,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,7 +58,8 @@ class ItemServiceTests {
 
   @BeforeEach
   void setup() {
-    when(itemRepository.findItemWithTrackedItemsById(1)).thenReturn(itemFromRepository);
+    when(itemRepository.findItemWithTrackedItemsById(1)).thenReturn(
+        Optional.of(itemFromRepository));
     when(itemRepository.findLatestPricesForTrackedItems(
         itemFromRepository.getTrackedItems())).thenReturn(itemPricesFromRepository);
   }

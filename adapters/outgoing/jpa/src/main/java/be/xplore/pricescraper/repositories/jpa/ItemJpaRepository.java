@@ -6,6 +6,7 @@ import be.xplore.pricescraper.entity.shops.ItemSearchEntity;
 import be.xplore.pricescraper.entity.shops.TrackedItemEntity;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -24,7 +25,7 @@ public interface ItemJpaRepository
               LEFT JOIN FETCH i.trackedItems
               WHERE i.id = :id
       """)
-  ItemEntity findItemWithTrackedItemsById(int id);
+  Optional<ItemEntity> findItemWithTrackedItemsById(int id);
 
   @Query("""
               SELECT DISTINCT ip from ItemPrice ip

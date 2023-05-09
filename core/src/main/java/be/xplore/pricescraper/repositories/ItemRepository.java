@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 public interface ItemRepository {
   List<ItemSearchDto> findItemsByNameLike(String name);
 
-  Item findItemWithTrackedItemsById(int id);
+  Optional<Item> findItemWithTrackedItemsById(int id);
 
   List<ItemPrice> findLatestPricesForTrackedItems(List<TrackedItem> trackedItems);
 

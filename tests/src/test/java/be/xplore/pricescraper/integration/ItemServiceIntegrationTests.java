@@ -1,5 +1,6 @@
 package be.xplore.pricescraper.integration;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -10,6 +11,7 @@ import static org.mockito.BDDMockito.given;
 
 import be.xplore.pricescraper.domain.shops.Shop;
 import be.xplore.pricescraper.domain.shops.TrackedItem;
+import be.xplore.pricescraper.exceptions.ItemNotFoundException;
 import be.xplore.pricescraper.repositories.ItemPriceRepository;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.ShopRepository;
@@ -62,4 +64,12 @@ class ItemServiceIntegrationTests {
     assertNull(response.object());
     assertNotNull(response.message());
   }
+
+  @Test
+  void findItemShouldThrow() {
+    assertThatThrownBy(
+        () -> itemService.findItemWithTrackedItemsAndLatestPricesById(5)).isInstanceOf(
+        ItemNotFoundException.class);
+  }
+
 }
