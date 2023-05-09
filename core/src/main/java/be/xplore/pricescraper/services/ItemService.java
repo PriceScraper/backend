@@ -3,7 +3,6 @@ package be.xplore.pricescraper.services;
 import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.dtos.ItemSearchDto;
-import be.xplore.pricescraper.dtos.ServiceResponse;
 import be.xplore.pricescraper.dtos.ShopItem;
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +24,7 @@ public interface ItemService {
 
   void setLastAttemptToNow(TrackedItem trackedItem);
 
-  ServiceResponse<TrackedItem> addTrackedItem(String urlToItem);
+  TrackedItem addTrackedItem(String urlToItem);
 
   long trackedItemsCount();
 }

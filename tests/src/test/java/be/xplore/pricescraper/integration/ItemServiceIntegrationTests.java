@@ -1,10 +1,7 @@
 package be.xplore.pricescraper.integration;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -12,6 +9,7 @@ import static org.mockito.BDDMockito.given;
 import be.xplore.pricescraper.domain.shops.Shop;
 import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.exceptions.ItemNotFoundException;
+import be.xplore.pricescraper.exceptions.TrackItemException;
 import be.xplore.pricescraper.repositories.ItemPriceRepository;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.ShopRepository;
@@ -52,17 +50,15 @@ class ItemServiceIntegrationTests {
   void trackItemSuccess() {
     var response = itemService.addTrackedItem(
         "https://drive.carrefour.be/nl/Dranken/Softdrinks/Sport--%26-gezonde-dranken/Aquarius%7CLemon-500-ml/p/06093663");
-    assertTrue(response.isSuccessful());
-    assertNotNull(response.object());
-    assertNull(response.message());
+    assertNotNull(response);
+
   }
 
   @Test
   void trackItemFailure() {
-    var response = itemService.addTrackedItem("https://drive.carrefour.be/nl/itemdoesnotexist");
-    assertFalse(response.isSuccessful());
-    assertNull(response.object());
-    assertNotNull(response.message());
+    assertThatThrownBy(() -> itemService.addTrackedItem(
+        "https://drive.carrefour.be/nl/itemdoesnotexist")).isInstanceOf(
+        TrackItemException.class);
   }
 
   @Test

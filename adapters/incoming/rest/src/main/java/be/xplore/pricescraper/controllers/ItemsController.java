@@ -1,12 +1,12 @@
 package be.xplore.pricescraper.controllers;
 
 import be.xplore.pricescraper.domain.shops.Item;
+import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.dtos.ItemSearchResponseDto;
 import be.xplore.pricescraper.dtos.TrackItem;
 import be.xplore.pricescraper.services.ItemService;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,13 +43,8 @@ public class ItemsController {
    * Start tracking a specific item.
    */
   @PostMapping("/track")
-  public ResponseEntity<Object> trackItem(@RequestBody TrackItem trackItem) {
+  public TrackedItem trackItem(@RequestBody TrackItem trackItem) {
     var response = itemService.addTrackedItem(trackItem.url());
-    if (!response.isSuccessful()) {
-      return ResponseEntity
-          .badRequest()
-          .body(response.message());
-    }
-    return ResponseEntity.ok(response.object());
+    return response;
   }
 }

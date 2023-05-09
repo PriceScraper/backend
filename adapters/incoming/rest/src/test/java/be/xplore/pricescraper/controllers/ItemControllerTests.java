@@ -1,12 +1,11 @@
 package be.xplore.pricescraper.controllers;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.BDDMockito.given;
 
 import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.domain.shops.TrackedItem;
-import be.xplore.pricescraper.dtos.ServiceResponse;
 import be.xplore.pricescraper.dtos.TrackItem;
 import be.xplore.pricescraper.services.ItemService;
 import be.xplore.pricescraper.services.ItemServiceImpl;
@@ -17,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatusCode;
 
 @SpringBootTest(classes = {ItemsController.class, ItemServiceImpl.class})
 @Slf4j
@@ -34,9 +32,7 @@ class ItemControllerTests {
     given(itemService.findItemWithTrackedItemsAndLatestPricesById(1)).willReturn(item);
 
     given(itemService.addTrackedItem("https://drive.carrefour.be/nl/Dranken/itemexists"))
-        .willReturn(new ServiceResponse<>(true, new TrackedItem(), null));
-    given(itemService.addTrackedItem("https://drive.carrefour.be/nl/Dranken/itemdoesnotexist"))
-        .willReturn(new ServiceResponse<>(false, null, "Some error"));
+        .willReturn(new TrackedItem());
   }
 
   @Test
@@ -45,16 +41,7 @@ class ItemControllerTests {
         "https://drive.carrefour.be/nl/Dranken/itemexists");
     var response = itemsController.trackItem(body);
     assertNotNull(response);
-    log.info(response.getBody().toString());
-    assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-  }
-
-  @Test
-  void trackItemFailure() {
-    var body = new TrackItem("https://drive.carrefour.be/nl/Dranken/itemdoesnotexist");
-    var response = itemsController.trackItem(body);
-    assertNotNull(response);
-    assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
+    assertThat(response).isNotNull();
   }
 
   @Test

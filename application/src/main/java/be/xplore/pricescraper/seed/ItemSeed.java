@@ -51,7 +51,6 @@ public class ItemSeed {
         .forEach((i) -> {
           log.debug("Seeding item " + i);
           var res = itemService.addTrackedItem(i);
-          log.debug(res.isSuccessful() + ", msg: " + res.message() + "\n----------------");
         });
   }
 }

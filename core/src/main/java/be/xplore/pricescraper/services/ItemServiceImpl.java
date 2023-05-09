@@ -5,10 +5,10 @@ import be.xplore.pricescraper.domain.shops.ItemPrice;
 import be.xplore.pricescraper.domain.shops.Shop;
 import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.dtos.ItemSearchDto;
-import be.xplore.pricescraper.dtos.ServiceResponse;
 import be.xplore.pricescraper.dtos.ShopItem;
 import be.xplore.pricescraper.exceptions.ItemNotFoundException;
 import be.xplore.pricescraper.exceptions.ScraperNotFoundException;
+import be.xplore.pricescraper.exceptions.TrackItemException;
 import be.xplore.pricescraper.repositories.ItemPriceRepository;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.ShopRepository;
@@ -179,14 +179,14 @@ public class ItemServiceImpl implements ItemService {
    * Set up item tracking by URL.
    */
   @Transactional
-  public ServiceResponse<TrackedItem> addTrackedItem(String urlToItem) {
+  public TrackedItem addTrackedItem(String urlToItem) {
     var scraperDomain = scraperService.getScraperRootDomain(urlToItem);
     if (scraperDomain.isEmpty()) {
-      return new ServiceResponse<>(false, null, "Scraper not found.");
+      throw new TrackItemException("Scraper not found while tracking item");
     }
     var scrapedResponse = scraperService.scrapeFullUrl(urlToItem);
     if (scrapedResponse.isEmpty()) {
-      return new ServiceResponse<>(false, null, "Failed to scrape item.");
+      throw new TrackItemException("Failed to scrape item");
     }
     var shop = getShopFromDomain(scraperDomain.get());
     var itemIdentifier = scraperService.getItemIdentifier(urlToItem);
@@ -194,15 +194,15 @@ public class ItemServiceImpl implements ItemService {
         &&
         trackedItemRepository.existsByUrlIgnoreCaseAndShopId(itemIdentifier.get(),
             shop.getId())) {
-      return new ServiceResponse<>(false, null, "Item already being tracked.");
+      throw new TrackItemException("Item is already being tracked");
     }
     var item = getItem(scrapedResponse.get().title(), "", 1, Optional.empty());
     var trackedItem = getTrackedItem(urlToItem, item, shop);
     if (trackedItem.isEmpty()) {
-      return new ServiceResponse<>(false, null, "Failed to create tracked item.");
+      throw new TrackItemException("Failed to create tracked item");
     }
     storeItemPrice(trackedItem.get(), scrapedResponse.get().price());
-    return new ServiceResponse<>(true, trackedItem.get(), null);
+    return trackedItem.get();
   }
 
   /**
