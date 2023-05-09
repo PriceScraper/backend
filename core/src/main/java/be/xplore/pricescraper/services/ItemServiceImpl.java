@@ -8,6 +8,7 @@ import be.xplore.pricescraper.dtos.ItemSearchDto;
 import be.xplore.pricescraper.dtos.ServiceResponse;
 import be.xplore.pricescraper.dtos.ShopItem;
 import be.xplore.pricescraper.exceptions.ItemNotFoundException;
+import be.xplore.pricescraper.exceptions.ScraperNotFoundException;
 import be.xplore.pricescraper.repositories.ItemPriceRepository;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.ShopRepository;
@@ -15,6 +16,7 @@ import be.xplore.pricescraper.repositories.TrackedItemRepository;
 import jakarta.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -59,12 +61,64 @@ public class ItemServiceImpl implements ItemService {
    *
    * @return the items which have the oldest price date.
    */
-  public List<TrackedItem> oldestTrackedItems(int limit) {
+  private List<TrackedItem> oldestTrackedItems(int limit) {
     var sort = Sort.by("lastAttempt").ascending();
     var pageable = PageRequest
         .of(0, limit)
         .withSort(sort);
     return trackedItemRepository.findAll(pageable).stream().toList();
+  }
+
+  /**
+   * Scrapes the items with the oldest data.
+   */
+  @Override
+  public void updateOldestTrackedItems(int limit) {
+    var itemsToTrack = oldestTrackedItems(limit);
+    itemsToTrack
+        .forEach(item -> {
+          if (hasBeenScrapedRecently(item)) {
+            log.info(
+                "Last attempt: " + item.getLastAttempt() + ", skipping scrape of " + item.getUrl());
+          } else {
+            scrapeTrackedItem(item);
+          }
+        });
+  }
+
+  /**
+   * Execute scrape of item.
+   *
+   * @param trackedItem item to scrape.
+   */
+  private void scrapeTrackedItem(TrackedItem trackedItem) {
+    try {
+      var start = Timestamp.from(Instant.now());
+      var scraped = scraperService.scrapeTrackedItem(trackedItem);
+      modifyTrackedItemPrice(trackedItem, scraped);
+      var end = Timestamp.from(Instant.now());
+      log.info("Last attempt: "
+          + trackedItem.getLastAttempt()
+          + ", took "
+          + (end.getTime() - start.getTime())
+          + "ms to scrape "
+          + trackedItem.getUrl());
+    } catch (ScraperNotFoundException scraperNotFoundException) {
+      setLastAttemptToNow(trackedItem);
+      log.warn("Failed to find scraper for tracked item " + trackedItem.getUrl());
+    }
+  }
+
+  /**
+   * Checks if the item has been scraped recently.
+   *
+   * @param trackedItem item to check.
+   * @return true if it has been scraped recently.
+   */
+  private boolean hasBeenScrapedRecently(TrackedItem trackedItem) {
+    return trackedItem.getLastAttempt() != null
+        && !trackedItem.getLastAttempt().before(
+        Timestamp.from(Instant.now().minus(1, ChronoUnit.HOURS)));
   }
 
   /**

@@ -15,7 +15,7 @@ public interface ItemService {
 
   Item findItemById(int id);
 
-  List<TrackedItem> oldestTrackedItems(int limit);
+  void updateOldestTrackedItems(int limit);
 
   Item findItemWithTrackedItemsAndLatestPricesById(int id);
 
