@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 /**
  * Seed of items.
  */
+@Profile("!test")
 @AllArgsConstructor
 @Slf4j
 @Component
@@ -22,7 +23,6 @@ public class ItemSeed {
    * Executing seed.
    */
   @EventListener(ApplicationReadyEvent.class)
-  @Profile("!test")
   public void seedItems() {
     if (itemService.trackedItemsCount() > 0) {
       log.info("Not seeding because db is not empty.");
