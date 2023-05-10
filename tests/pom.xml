@@ -75,4 +75,32 @@
             <artifactId>spring-boot-test-autoconfigure</artifactId>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>integration-tests</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <skipTests>${skip.integration.tests}</skipTests>
+                            <includes>
+                                <include>**/*IT.java</include>
+                            </includes>
+                            <reuseForks>true</reuseForks>
+                            <!-- When running as a Maven plugin, the JaCoCo agent configuration is prepared by invoking the prepare-agent
+                            or prepare-agent-integration goals, before the actual tests are run. This sets a property named argLine which
+                            points to the JaCoCo agent, later passed as a JVM argument to the test runner -->
+                            <argLine>${itCoverageAgent}</argLine>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
