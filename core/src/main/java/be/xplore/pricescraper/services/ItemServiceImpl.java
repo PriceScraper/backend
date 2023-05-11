@@ -200,7 +200,8 @@ public class ItemServiceImpl implements ItemService {
       log.debug("Item is already being tracked. Url: " + dbItem.get().getUrl());
       return dbItem.get();
     }
-    var item = getItem(scrapedResponse.title(), "", 1, Optional.empty());
+    var item =
+        getItem(scrapedResponse.title(), scrapedResponse.img().orElse(null), 1, Optional.empty());
     var trackedItem = getTrackedItem(urlToItem, item, shop, scrapedResponse.price()).orElseThrow(
         TrackItemException::new);
     addTrackedItemToItem(item, trackedItem);
