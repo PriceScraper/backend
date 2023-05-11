@@ -4,6 +4,7 @@ import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.entity.shops.TrackedItemEntity;
 import be.xplore.pricescraper.repositories.TrackedItemRepository;
 import be.xplore.pricescraper.repositories.jpa.TrackedItemJpaRepository;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,12 @@ public class TrackedItemRepositoryImpl implements TrackedItemRepository {
   @Override
   public boolean existsByUrlIgnoreCaseAndShopId(String url, int id) {
     return jpaRepository.existsByUrlIgnoreCaseAndShop_Id(url, id);
+  }
+
+  @Override
+  public Optional<TrackedItem> findByUrlIgnoreCaseAndShopId(String url, int id) {
+    return jpaRepository.findByUrlIgnoreCaseAndShopId(url, id)
+        .map(e -> modelMapper.map(e, TrackedItem.class));
   }
 
   /**

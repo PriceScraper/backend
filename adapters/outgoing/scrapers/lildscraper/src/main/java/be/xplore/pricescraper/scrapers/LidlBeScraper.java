@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * Scraper for lidl.be.
  */
 @Component("scraper-lidl.be")
-public class LidlBeScraper extends Scraper {
+public class LidlBeScraper extends ItemDetailScraper {
 
   public LidlBeScraper() {
     super("https://www.lidl.be/p/nl-BE/");
@@ -24,6 +24,11 @@ public class LidlBeScraper extends Scraper {
       return Optional.empty();
     }
     return Optional.of(title.get(0).text());
+  }
+
+  @Override
+  protected Optional<String> getItemImage(Document document) {
+    return Optional.empty();
   }
 
   protected Optional<Double> getItemPrice(Document document) {

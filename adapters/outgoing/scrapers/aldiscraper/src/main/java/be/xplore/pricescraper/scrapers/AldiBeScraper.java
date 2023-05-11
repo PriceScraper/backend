@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * Scraper for aldi.be.
  */
 @Component("scraper-aldi.be")
-public class AldiBeScraper extends Scraper {
+public class AldiBeScraper extends ItemDetailScraper {
   public AldiBeScraper() {
     super("https://www.aldi.be/nl/p/");
   }
@@ -23,6 +23,11 @@ public class AldiBeScraper extends Scraper {
       return Optional.empty();
     }
     return Optional.of(title.get(0).textNodes().get(1).text().strip());
+  }
+
+  @Override
+  protected Optional<String> getItemImage(Document document) {
+    return Optional.empty();
   }
 
   protected Optional<Double> getItemPrice(Document document) {

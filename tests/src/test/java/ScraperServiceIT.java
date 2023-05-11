@@ -3,7 +3,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import be.xplore.pricescraper.repositories.ItemPriceRepository;
 import be.xplore.pricescraper.repositories.ItemRepository;
-import be.xplore.pricescraper.scrapers.CarrefourBeScraper;
+import be.xplore.pricescraper.scrapers.detail.CarrefourBeScraper;
 import be.xplore.pricescraper.services.ScraperServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;

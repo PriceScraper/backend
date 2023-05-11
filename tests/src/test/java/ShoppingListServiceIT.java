@@ -52,7 +52,7 @@ class ShoppingListServiceIT {
     User user = new User();
     user.setUsername("test");
     user = userRepository.save(user);
-    ShoppingList shoppingList = new ShoppingList(1, "mijn lijst", new ArrayList<>());
+    ShoppingList shoppingList = new ShoppingList("mijn lijst", new ArrayList<>());
     shoppingListService.createShoppingListForUser(user, shoppingList);
     ShoppingList shoppingList1 = user.getShoppingLists().get(0);
     assertThat(shoppingList1.getTitle()).isEqualToIgnoringCase("mijn lijst");

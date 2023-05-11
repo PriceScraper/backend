@@ -1,11 +1,15 @@
 package be.xplore.pricescraper.services;
 
 import be.xplore.pricescraper.domain.shops.TrackedItem;
+import be.xplore.pricescraper.dtos.ItemScraperSearch;
 import be.xplore.pricescraper.dtos.ShopItem;
 import be.xplore.pricescraper.exceptions.RootDomainNotFoundException;
 import be.xplore.pricescraper.exceptions.ScraperNotFoundException;
-import be.xplore.pricescraper.scrapers.ItemScraper;
+import be.xplore.pricescraper.utils.scrapers.ItemScraper;
+import be.xplore.pricescraper.utils.scrapers.SearchItemsScraper;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +25,7 @@ import org.springframework.stereotype.Service;
 public class ScraperServiceImpl implements ScraperService {
 
   private final Map<String, ItemScraper> scrapers;
+  private final Map<String, SearchItemsScraper> searchScrapers;
 
   /**
    * Scrape url by entity.
@@ -72,7 +77,7 @@ public class ScraperServiceImpl implements ScraperService {
         throw new RootDomainNotFoundException("Failed to find root domain for tracked item.");
       }
       var scraper = getScraper(rootDomain.get());
-      return scraper.scrapeFromFullUrl(itemUrl);
+      return scraper.scrape(itemUrl);
     } catch (Exception ioException) {
       log.error(ioException.getMessage());
       return Optional.empty();
@@ -89,5 +94,18 @@ public class ScraperServiceImpl implements ScraperService {
     }
     var scraper = getScraper(root.get());
     return Optional.of(url.toLowerCase().replace(scraper.getBaseUrl().toLowerCase(), ""));
+  }
+
+  @Override
+  public List<ItemScraperSearch> discoverItems(String query) {
+    var items = new ArrayList<ItemScraperSearch>();
+    for (var scraper : searchScrapers.values()) {
+      try {
+        items.addAll(scraper.scrape(query));
+      } catch (IOException ioException) {
+        log.error(ioException.getMessage());
+      }
+    }
+    return items;
   }
 }

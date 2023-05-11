@@ -44,8 +44,12 @@ public class ItemSeed {
 
     Arrays.stream(items).toList()
         .forEach(i -> {
-          log.debug("Seeding item " + i);
-          itemService.addTrackedItem(i);
+          try {
+            itemService.addTrackedItem(i);
+            log.debug("Seeded item " + i);
+          } catch (Exception e) {
+            log.error(e.getMessage() + " while seeding item " + i);
+          }
         });
   }
 }

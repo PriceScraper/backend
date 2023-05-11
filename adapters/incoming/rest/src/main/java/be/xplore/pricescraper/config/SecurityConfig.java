@@ -41,6 +41,7 @@ public class SecurityConfig {
         .ignoringRequestMatchers("/logout")
         .and()
         .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/items").permitAll()
             .anyRequest().authenticated()
         )
         .oauth2Login(e -> e.successHandler(jwtSuccessHandler))

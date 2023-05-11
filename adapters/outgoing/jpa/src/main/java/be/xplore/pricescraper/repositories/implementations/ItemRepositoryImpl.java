@@ -6,7 +6,6 @@ import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.dtos.ItemSearchDto;
 import be.xplore.pricescraper.entity.shops.ItemEntity;
 import be.xplore.pricescraper.entity.shops.ItemPriceEntity;
-import be.xplore.pricescraper.entity.shops.ItemSearchEntity;
 import be.xplore.pricescraper.entity.shops.TrackedItemEntity;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.jpa.ItemJpaRepository;
@@ -30,8 +29,11 @@ public class ItemRepositoryImpl implements ItemRepository {
    */
   @Override
   public List<ItemSearchDto> findItemsByNameLike(String name) {
-    List<ItemSearchEntity> entities = itemJpaRepository.findByNameContainsIgnoreCase(name);
-    return entities.stream().map(e -> new ItemSearchDto(e.id(), e.name(), e.image())).toList();
+    var entities = itemJpaRepository.findByNameContainsIgnoreCase(name.toLowerCase());
+    return entities.stream()
+        .map(e -> modelMapper.map(e, ItemSearchDto.class))
+        .filter(e -> e.getId() > 0)
+        .toList();
   }
 
   /**
