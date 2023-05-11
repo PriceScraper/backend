@@ -1,13 +1,10 @@
+package be.xplore.pricescraper;
+
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.given;
 
-import be.xplore.pricescraper.domain.shops.Shop;
-import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.exceptions.ItemNotFoundException;
-import be.xplore.pricescraper.exceptions.TrackItemException;
+import be.xplore.pricescraper.exceptions.ScrapeItemException;
 import be.xplore.pricescraper.repositories.ItemPriceRepository;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.ShopRepository;
@@ -16,33 +13,25 @@ import be.xplore.pricescraper.scrapers.ItemScraper;
 import be.xplore.pricescraper.scrapers.detail.CarrefourBeScraper;
 import be.xplore.pricescraper.services.ItemServiceImpl;
 import be.xplore.pricescraper.services.ScraperServiceImpl;
-import java.util.Optional;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 
+@Import(IntegrationConfig.class)
 @SpringBootTest(classes = {ItemServiceImpl.class, ItemScraper.class,
     ScraperServiceImpl.class, CarrefourBeScraper.class})
 class ItemServiceIT {
-  @MockBean
+  @Autowired
   private ItemRepository itemRepository;
-  @MockBean
+  @Autowired
   private ItemPriceRepository itemPriceRepository;
-  @MockBean
+  @Autowired
   private TrackedItemRepository trackedItemRepository;
-  @MockBean
+  @Autowired
   private ShopRepository shopRepository;
   @Autowired
   private ItemServiceImpl itemService;
-
-  @BeforeEach
-  void prepare() {
-    given(shopRepository.findByUrl(anyString()))
-        .willReturn(Optional.of(new Shop(1, "", "")));
-    given(trackedItemRepository.save(any())).willReturn(new TrackedItem());
-  }
 
   @Test
   void trackItemSuccess() {
@@ -56,13 +45,13 @@ class ItemServiceIT {
   void trackItemFailure() {
     assertThatThrownBy(() -> itemService.addTrackedItem(
         "https://drive.carrefour.be/nl/itemdoesnotexist")).isInstanceOf(
-        TrackItemException.class);
+        ScrapeItemException.class);
   }
 
   @Test
   void findItemShouldThrow() {
     assertThatThrownBy(
-        () -> itemService.findItemWithTrackedItemsAndLatestPricesById(5)).isInstanceOf(
+        () -> itemService.findItemWithTrackedItemsAndLatestPricesById(999999999)).isInstanceOf(
         ItemNotFoundException.class);
   }
 

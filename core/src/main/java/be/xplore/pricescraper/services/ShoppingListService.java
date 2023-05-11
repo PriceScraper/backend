@@ -10,6 +10,8 @@ public interface ShoppingListService {
 
   ShoppingList findShoppingListById(int id);
 
+  ShoppingList fillShoppingListWithTrackedItems(ShoppingList shoppingList);
+
   void createShoppingListForUser(User user, ShoppingList shoppingList);
 
   void deleteShoppingListForUser(User user, int shoppingListId);
