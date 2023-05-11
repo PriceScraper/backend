@@ -36,7 +36,7 @@ public class UserEntity implements UserDetails {
   private String username;
   @Column()
   private String provider;
-  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
   @JsonIgnore
   private List<ShoppingListEntity> shoppingLists;
 

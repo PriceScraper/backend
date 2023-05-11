@@ -37,6 +37,7 @@ public class SecurityConfig {
         .and()
         .csrf()
         .ignoringRequestMatchers("/items/track")
+        .ignoringRequestMatchers("/shoppinglists/**")
         .ignoringRequestMatchers("/logout")
         .and()
         .authorizeHttpRequests(auth -> auth

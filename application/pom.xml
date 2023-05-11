@@ -18,6 +18,12 @@
         </dependency>
         <dependency>
             <groupId>be.xplore</groupId>
+            <artifactId>rest</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>be.xplore</groupId>
             <artifactId>jpa</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
