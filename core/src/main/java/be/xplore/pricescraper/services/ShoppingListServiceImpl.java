@@ -31,6 +31,16 @@ public class ShoppingListServiceImpl implements ShoppingListService {
   }
 
   /**
+   * Find {@link be.xplore.pricescraper.domain.shops.TrackedItem} for Items in {@link ShoppingList}.
+   */
+  public ShoppingList fillShoppingListWithTrackedItems(ShoppingList shoppingList) {
+    ShoppingList shoppingListWithTrackedItems = shoppingList;
+    shoppingListWithTrackedItems.getLines().forEach(line -> line.setItem(
+        itemService.findItemWithTrackedItemsAndLatestPricesById(line.getItem().getId())));
+    return shoppingListWithTrackedItems;
+  }
+
+  /**
    * Creates a {@link ShoppingList} for a {@link User}.
    *
    * @param user         the corresponding {@link User}

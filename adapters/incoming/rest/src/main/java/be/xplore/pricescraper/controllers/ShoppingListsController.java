@@ -35,6 +35,8 @@ public class ShoppingListsController {
   public List<ShoppingList> getShoppingListsForUser(
       @AuthenticationPrincipal UserDetails userDetails) {
     User user = userService.loadUserByUsername(userDetails.getUsername());
+    user.getShoppingLists()
+        .forEach(shoppingListService::fillShoppingListWithTrackedItems);
     return user.getShoppingLists();
   }
 
