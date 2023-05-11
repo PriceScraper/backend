@@ -31,10 +31,15 @@ public class ShoppingListsController {
   private final UserService userService;
   private final ShoppingListService shoppingListService;
 
+  /**
+   * Get all shopping lists for {@link User}.
+   */
   @GetMapping
   public List<ShoppingList> getShoppingListsForUser(
       @AuthenticationPrincipal UserDetails userDetails) {
     User user = userService.loadUserByUsername(userDetails.getUsername());
+    user.getShoppingLists()
+        .forEach(shoppingListService::fillShoppingListWithTrackedItems);
     return user.getShoppingLists();
   }
 

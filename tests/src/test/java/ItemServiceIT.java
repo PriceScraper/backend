@@ -7,7 +7,7 @@ import static org.mockito.BDDMockito.given;
 import be.xplore.pricescraper.domain.shops.Shop;
 import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.exceptions.ItemNotFoundException;
-import be.xplore.pricescraper.exceptions.TrackItemException;
+import be.xplore.pricescraper.exceptions.ScrapeItemException;
 import be.xplore.pricescraper.repositories.ItemPriceRepository;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.ShopRepository;
@@ -56,7 +56,7 @@ class ItemServiceIT {
   void trackItemFailure() {
     assertThatThrownBy(() -> itemService.addTrackedItem(
         "https://drive.carrefour.be/nl/itemdoesnotexist")).isInstanceOf(
-        TrackItemException.class);
+        ScrapeItemException.class);
   }
 
   @Test
