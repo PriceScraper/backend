@@ -21,5 +21,7 @@ public interface ItemRepository {
 
   Item save(Item item);
 
+  Item saveAndFlush(Item item);
+
   Optional<Item> findById(int id);
 }
