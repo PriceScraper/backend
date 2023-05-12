@@ -63,8 +63,18 @@ public class ItemServiceImpl implements ItemService {
     return item;
   }
 
+
+  /**
+   * Find by name.
+   * If low amount of results, start discovering new items.
+   */
   public List<ItemSearchDto> findItemByNameLike(String name) {
-    return itemRepository.findItemsByNameLike(name);
+    var res = itemRepository.findItemsByNameLike(name.strip());
+    if (res.size() > 3 || name.strip().length() < 3) {
+      return res;
+    }
+    discoverNewItems(name);
+    return itemRepository.findItemsByNameLike(name.strip());
   }
 
   /**
