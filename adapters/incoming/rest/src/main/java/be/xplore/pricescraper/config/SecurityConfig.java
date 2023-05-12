@@ -106,7 +106,6 @@ public class SecurityConfig {
    * Adding params to auth request. Prompt=consent will enforce the login modal from GitHub.
    */
   private Consumer<OAuth2AuthorizationRequest.Builder> authorizationRequestCustomizer() {
-    return customizer -> customizer
-        .additionalParameters(params -> params.put("prompt", "consent"));
+    return customizer -> customizer.additionalParameters(params -> params.put("prompt", "consent"));
   }
 }
