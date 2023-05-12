@@ -232,7 +232,7 @@ public class ItemServiceImpl implements ItemService {
     item.setImage(img);
     item.setQuantity(quantity);
     item.setIngredients(ingredients.orElse(null));
-    return itemRepository.save(item);
+    return itemRepository.saveAndFlush(item);
   }
 
   /**
