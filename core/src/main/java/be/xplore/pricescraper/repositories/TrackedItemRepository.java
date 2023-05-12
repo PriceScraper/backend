@@ -17,6 +17,8 @@ public interface TrackedItemRepository {
 
   TrackedItem save(TrackedItem trackedItem);
 
+  TrackedItem saveAndFlush(TrackedItem trackedItem);
+
   long count();
 
   Page<TrackedItem> findAll(Pageable pageable);
