@@ -1,4 +1,4 @@
-package be.xplore.pricescraper;
+package be.xplore.pricescraper.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

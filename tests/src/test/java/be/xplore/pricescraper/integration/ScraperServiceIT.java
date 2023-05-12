@@ -1,4 +1,4 @@
-package be.xplore.pricescraper;
+package be.xplore.pricescraper.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

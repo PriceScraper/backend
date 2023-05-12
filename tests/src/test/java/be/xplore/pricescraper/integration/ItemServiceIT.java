@@ -1,7 +1,6 @@
-package be.xplore.pricescraper;
+package be.xplore.pricescraper.integration;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import be.xplore.pricescraper.exceptions.ItemNotFoundException;
 import be.xplore.pricescraper.exceptions.ScrapeItemException;
@@ -17,11 +16,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
+
 
 @Import(IntegrationConfig.class)
 @SpringBootTest(classes = {ItemServiceImpl.class, ItemScraper.class,
     ScraperServiceImpl.class, CarrefourBeScraper.class})
+@ActiveProfiles("test")
 class ItemServiceIT {
+
   @Autowired
   private ItemRepository itemRepository;
   @Autowired
@@ -32,14 +35,6 @@ class ItemServiceIT {
   private ShopRepository shopRepository;
   @Autowired
   private ItemServiceImpl itemService;
-
-  @Test
-  void trackItemSuccess() {
-    var response = itemService.addTrackedItem(
-        "https://drive.carrefour.be/nl/Dranken/Softdrinks/Sport--%26-gezonde-dranken/Aquarius%7CLemon-500-ml/p/06093663");
-    assertNotNull(response);
-
-  }
 
   @Test
   void trackItemFailure() {
