@@ -11,7 +11,7 @@ class UserTests {
 
   @BeforeEach
   void prepare() {
-    user = new User("Username", "Github");
+    user = new User("Username", "Github", "avatar");
   }
 
   @Test

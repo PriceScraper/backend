@@ -39,6 +39,7 @@ public class SecurityConfig {
         .ignoringRequestMatchers("/items/track")
         .ignoringRequestMatchers("/shoppinglists/**")
         .ignoringRequestMatchers("/logout")
+        .ignoringRequestMatchers("/auth/**")
         .and()
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/items").permitAll()

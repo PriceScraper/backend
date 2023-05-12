@@ -3,10 +3,12 @@ package be.xplore.pricescraper.utils.security;
 import be.xplore.pricescraper.config.FrontendConfig;
 import be.xplore.pricescraper.domain.users.User;
 import be.xplore.pricescraper.repositories.UserRepository;
+import be.xplore.pricescraper.services.RefreshTokenService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
@@ -18,20 +20,12 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class JwtSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
   private final UserRepository userRepository;
   private final JwtProvider jwtProvider;
   private final FrontendConfig frontendConfig;
-
-  /**
-   * Constructor.
-   */
-  public JwtSuccessHandler(JwtProvider jwtProvider,
-                           UserRepository userRepository, FrontendConfig frontendConfig) {
-    this.jwtProvider = jwtProvider;
-    this.userRepository = userRepository;
-    this.frontendConfig = frontendConfig;
-  }
+  private final RefreshTokenService refreshTokenService;
 
   /**
    * Retrieves the authorities of the user, and converts it to a token to redirect.
@@ -48,7 +42,11 @@ public class JwtSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     var userDetails =
         (OAuth2UserAuthority) authentication.getAuthorities().stream().toList().get(0);
 
-    response.sendRedirect(frontendConfig.getUrl() + "/auth/" + getToken(userDetails));
+    response.sendRedirect(frontendConfig.getUrl()
+        + "/auth/"
+        + getRefreshToken(userDetails)
+        + "/"
+        + getAccessToken(userDetails));
 
     handle(request, response, authentication);
 
@@ -56,12 +54,20 @@ public class JwtSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
   }
 
   /**
-   * Create token from authority.
+   * Create access token from authority.
    */
-  private String getToken(OAuth2UserAuthority userAuthority) {
+  private String getAccessToken(OAuth2UserAuthority userAuthority) {
     var user = getUser(userAuthority);
     return jwtProvider.generate(user.getId(), user.getUsername(),
         String.valueOf(userAuthority.getAttributes().get("avatar_url")));
+  }
+
+  /**
+   * Create refresh token from authority.
+   */
+  private String getRefreshToken(OAuth2UserAuthority userAuthority) {
+    var user = getUser(userAuthority);
+    return refreshTokenService.createRefreshToken(user.getId()).getToken();
   }
 
   /**
@@ -71,7 +77,8 @@ public class JwtSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     var user = userRepository.findByUsernameAndProvider(
         String.valueOf(userAuthority.getAttributes().get("login")), "github").orElse(null);
     if (user == null) {
-      var tempuser = new User(String.valueOf(userAuthority.getAttributes().get("login")), "github");
+      var tempuser = new User(String.valueOf(userAuthority.getAttributes().get("login")), "github",
+          String.valueOf(userAuthority.getAttributes().get("avatar_url")));
       user = userRepository.save(tempuser);
       log.info("Registered new account for " + user.getUsername());
     }

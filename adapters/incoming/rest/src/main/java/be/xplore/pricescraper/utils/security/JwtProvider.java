@@ -1,6 +1,7 @@
 package be.xplore.pricescraper.utils.security;
 
 import be.xplore.pricescraper.config.JwtConfig;
+import be.xplore.pricescraper.domain.users.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -37,6 +38,13 @@ public class JwtProvider {
         .setExpiration(Date.from(Instant.now().plus(10, ChronoUnit.MINUTES)))
         .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret())
         .compact();
+  }
+
+  /**
+   * Generates a JSON Web Token from user.
+   */
+  public String generate(User user) {
+    return generate(user.getId(), user.getUsername(), user.getAvatar());
   }
 
   /**

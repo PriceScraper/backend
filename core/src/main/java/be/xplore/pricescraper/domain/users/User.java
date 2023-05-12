@@ -19,14 +19,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 public class User implements UserDetails {
   private Long id;
+  private String avatar;
   private String username;
   private String provider;
   @JsonIgnore
   private List<ShoppingList> shoppingLists;
 
-  public User(String username, String provider) {
+  /**
+   * Constructor without id.
+   */
+  public User(String username, String provider, String avatar) {
     this.username = username;
     this.provider = provider;
+    this.avatar = avatar;
   }
 
   @Override
@@ -37,11 +42,6 @@ public class User implements UserDetails {
   @Override
   public String getPassword() {
     return null;
-  }
-
-  @Override
-  public String getUsername() {
-    return username;
   }
 
   @Override

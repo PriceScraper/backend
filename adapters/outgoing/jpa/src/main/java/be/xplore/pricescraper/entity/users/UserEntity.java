@@ -36,14 +36,11 @@ public class UserEntity implements UserDetails {
   private String username;
   @Column()
   private String provider;
+  @Column()
+  private String avatar;
   @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
   @JsonIgnore
   private List<ShoppingListEntity> shoppingLists;
-
-  public UserEntity(String username, String provider) {
-    this.username = username;
-    this.provider = provider;
-  }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

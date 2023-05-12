@@ -2,7 +2,6 @@ package be.xplore.pricescraper.jwt;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import be.xplore.pricescraper.config.FrontendConfig;
 import be.xplore.pricescraper.config.JwtConfig;
 import be.xplore.pricescraper.utils.security.JwtProvider;
 import be.xplore.pricescraper.utils.security.JwtSuccessHandler;
@@ -13,7 +12,7 @@ class JwtSuccessHandlerTests {
 
   public JwtSuccessHandlerTests() {
     this.jwtSuccessHandler =
-        new JwtSuccessHandler(new JwtProvider(new JwtConfig()), null, new FrontendConfig());
+        new JwtSuccessHandler(null, new JwtProvider(new JwtConfig()), null, null);
   }
 
   @Test

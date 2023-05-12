@@ -32,7 +32,8 @@ public class ShopRepositoryImpl implements ShopRepository {
    */
   @Override
   public Shop save(Shop shop) {
-    ShopEntity savedEntity = shopJpaRepository.save(modelMapper.map(shop, ShopEntity.class));
+    ShopEntity savedEntity =
+        shopJpaRepository.save(modelMapper.map(shop, ShopEntity.class));
     return modelMapper.map(savedEntity, Shop.class);
   }
 }

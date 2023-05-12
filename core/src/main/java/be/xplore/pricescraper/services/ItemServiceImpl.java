@@ -242,7 +242,7 @@ public class ItemServiceImpl implements ItemService {
     item.setImage(img);
     item.setQuantity(quantity);
     item.setIngredients(ingredients.orElse(null));
-    return itemRepository.saveAndFlush(item);
+    return itemRepository.save(item);
   }
 
   /**
