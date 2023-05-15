@@ -4,6 +4,7 @@ import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.domain.shops.ItemPrice;
 import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.dtos.ItemSearchDto;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,9 @@ public interface ItemRepository {
   Optional<Item> findItemWithTrackedItemsById(int id);
 
   List<ItemPrice> findLatestPricesForTrackedItems(List<TrackedItem> trackedItems);
+
+  List<ItemPrice> findLatestPricesForTrackedItems(List<TrackedItem> trackedItems,
+                                                  LocalDateTime since);
 
   Item save(Item item);
 

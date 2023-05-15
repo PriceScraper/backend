@@ -43,13 +43,16 @@ public class ItemServiceImpl implements ItemService {
   private final ShopRepository shopRepository;
   private final ScraperService scraperService;
 
+  /**
+   * Find by key.
+   */
   public Item findItemById(int id) {
     return itemRepository.findById(id).orElseThrow(ItemNotFoundException::new);
   }
 
 
   /**
-   * Find {@link Item}s with {@link TrackedItem}s and their latest {@link ItemPrice} respectively.
+   * Find {@link Item}s with {@link TrackedItem}s and their latest {@link ItemPrice}s respectively.
    *
    * @param id Id of item
    * @return {@link Item}
@@ -58,8 +61,24 @@ public class ItemServiceImpl implements ItemService {
     Item item =
         itemRepository.findItemWithTrackedItemsById(id).orElseThrow(ItemNotFoundException::new);
     List<ItemPrice> itemPrices =
-        itemRepository.findLatestPricesForTrackedItems(item.getTrackedItems());
+        itemRepository.findLatestPricesForTrackedItems(item.getTrackedItems(),
+            LocalDateTime.now().minusDays(7));
     assignPricesToTrackedItemsOfItems(item, itemPrices);
+    return item;
+  }
+
+  /**
+   * Find {@link Item}s with {@link TrackedItem}s and their latest {@link ItemPrice} respectively.
+   *
+   * @param id Id of item
+   * @return {@link Item}
+   */
+  public Item findItemWithTrackedItemsAndLatestPriceById(int id) {
+    Item item =
+        itemRepository.findItemWithTrackedItemsById(id).orElseThrow(ItemNotFoundException::new);
+    List<ItemPrice> itemPrices =
+        itemRepository.findLatestPricesForTrackedItems(item.getTrackedItems());
+    assignLatestPriceToTrackedItemsOfItems(item, itemPrices);
     return item;
   }
 
@@ -81,6 +100,17 @@ public class ItemServiceImpl implements ItemService {
    * mapping of item prices in memory.
    */
   private void assignPricesToTrackedItemsOfItems(Item item, List<ItemPrice> itemPrices) {
+    for (TrackedItem trackedItem : item.getTrackedItems()) {
+      trackedItem.setItemPrices(
+          itemPrices.stream().filter(p -> p.getTrackedItem().getUrl().equals(trackedItem.getUrl()))
+              .toList());
+    }
+  }
+
+  /**
+   * mapping of item prices in memory.
+   */
+  private void assignLatestPriceToTrackedItemsOfItems(Item item, List<ItemPrice> itemPrices) {
     for (ItemPrice itemPrice : itemPrices) {
       for (TrackedItem trackedItem : item.getTrackedItems()) {
         if (itemPrice.getTrackedItem().getUrl().equals(trackedItem.getUrl())) {
@@ -98,9 +128,7 @@ public class ItemServiceImpl implements ItemService {
    */
   private List<TrackedItem> oldestTrackedItems(int limit) {
     var sort = Sort.by("lastAttempt").ascending();
-    var pageable = PageRequest
-        .of(0, limit)
-        .withSort(sort);
+    var pageable = PageRequest.of(0, limit).withSort(sort);
     return trackedItemRepository.findAll(pageable).stream().toList();
   }
 
@@ -110,15 +138,14 @@ public class ItemServiceImpl implements ItemService {
   @Override
   public void updateOldestTrackedItems(int limit) {
     var itemsToTrack = oldestTrackedItems(limit);
-    itemsToTrack
-        .forEach(item -> {
-          if (hasBeenScrapedRecently(item)) {
-            log.debug(
-                "Last attempt: " + item.getLastAttempt() + ", skipping scrape of " + item.getUrl());
-          } else {
-            scrapeTrackedItem(item);
-          }
-        });
+    itemsToTrack.forEach(item -> {
+      if (hasBeenScrapedRecently(item)) {
+        log.debug(
+            "Last attempt: " + item.getLastAttempt() + ", skipping scrape of " + item.getUrl());
+      } else {
+        scrapeTrackedItem(item);
+      }
+    });
   }
 
   /**
@@ -151,9 +178,8 @@ public class ItemServiceImpl implements ItemService {
    * @return true if it has been scraped recently.
    */
   private boolean hasBeenScrapedRecently(TrackedItem trackedItem) {
-    return trackedItem.getLastAttempt() != null
-        && !trackedItem.getLastAttempt().before(
-        Timestamp.from(Instant.now().minus(1, ChronoUnit.HOURS)));
+    return trackedItem.getLastAttempt() != null && !trackedItem.getLastAttempt()
+        .before(Timestamp.from(Instant.now().minus(1, ChronoUnit.HOURS)));
   }
 
 
@@ -197,15 +223,14 @@ public class ItemServiceImpl implements ItemService {
    */
   @Transactional
   public TrackedItem addTrackedItem(String urlToItem) {
-    var scraperDomain = scraperService.getScraperRootDomain(urlToItem).orElseThrow(
-        RootDomainNotFoundException::new);
+    var scraperDomain = scraperService.getScraperRootDomain(urlToItem)
+        .orElseThrow(RootDomainNotFoundException::new);
     var scrapedResponse =
         scraperService.scrapeFullUrl(urlToItem).orElseThrow(ScrapeItemException::new);
     var shop = getShopFromDomain(scraperDomain);
     var itemIdentifier =
         scraperService.getItemIdentifier(urlToItem).orElseThrow(ScrapeItemException::new);
-    var dbItem =
-        trackedItemRepository.findByUrlIgnoreCaseAndShopId(itemIdentifier, shop.getId());
+    var dbItem = trackedItemRepository.findByUrlIgnoreCaseAndShopId(itemIdentifier, shop.getId());
     if (dbItem.isPresent()) {
       log.debug("Item is already being tracked. Url: " + dbItem.get().getUrl());
       return dbItem.get();
@@ -273,8 +298,7 @@ public class ItemServiceImpl implements ItemService {
     return itemPriceRepository.save(itemPrice);
   }
 
-  private void addTrackedItemToItem(Item item,
-                                    TrackedItem trackedItem) {
+  private void addTrackedItemToItem(Item item, TrackedItem trackedItem) {
     List<TrackedItem> trackedItemToAdd = new ArrayList<>();
     trackedItemToAdd.add(trackedItem);
     if (item.getTrackedItems() != null) {
@@ -313,8 +337,8 @@ public class ItemServiceImpl implements ItemService {
                                        String query) {
     var duration = Duration.between(start, LocalDateTime.now()).getSeconds();
     var sentence =
-        String.format("Took %ds to discover %d/%d items for query: %s",
-            duration, itemsFound, itemsTried, query);
+        String.format("Took %ds to discover %d/%d items for query: %s", duration, itemsFound,
+            itemsTried, query);
     if (duration > itemsTried * 0.5) {
       log.warn(sentence);
     } else {

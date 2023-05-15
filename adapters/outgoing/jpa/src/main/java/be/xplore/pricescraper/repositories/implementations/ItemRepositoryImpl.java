@@ -9,6 +9,8 @@ import be.xplore.pricescraper.entity.shops.ItemPriceEntity;
 import be.xplore.pricescraper.entity.shops.TrackedItemEntity;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.jpa.ItemJpaRepository;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -54,6 +56,20 @@ public class ItemRepositoryImpl implements ItemRepository {
         trackedItems.stream().map(e -> modelMapper.map(e, TrackedItemEntity.class)).toList();
     List<ItemPriceEntity> entities =
         itemJpaRepository.findLatestPricesForTrackedItems(trackedEntities);
+    return entities.stream().map(e -> modelMapper.map(e, ItemPrice.class)).toList();
+  }
+
+  /**
+   * Find tracked items with latest price.
+   */
+  @Override
+  public List<ItemPrice> findLatestPricesForTrackedItems(List<TrackedItem> trackedItems,
+                                                         LocalDateTime since) {
+    var trackedEntities =
+        trackedItems.stream().map(e -> modelMapper.map(e, TrackedItemEntity.class)).toList();
+    List<ItemPriceEntity> entities =
+        itemJpaRepository.findLatestPricesForTrackedItems(trackedEntities,
+            since.toInstant(ZoneOffset.UTC));
     return entities.stream().map(e -> modelMapper.map(e, ItemPrice.class)).toList();
   }
 
