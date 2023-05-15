@@ -18,9 +18,9 @@ class UserUtilsTests {
 
   @BeforeAll
   void setup() {
-    user1 = new User(1L, "test user 1", "",
+    user1 = new User(1L, "test user 1", "", "",
         new ArrayList<>());
-    user2 = new User(2L, "test user 2", "", null);
+    user2 = new User(2L, "test user 2", "", "", null);
     user1.getShoppingLists().add(new ShoppingList(1, "lijst", null));
 
   }

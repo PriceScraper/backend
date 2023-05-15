@@ -23,18 +23,18 @@ import org.springframework.test.web.servlet.MockMvc;
     UserActionExceptionHandler.class})
 @AutoConfigureMockMvc(addFilters = false)
 class ShoppingListControllerTests {
-  @Autowired
-  private MockMvc mockMvc;
   @MockBean
   UserService userService;
   @Autowired
   ShoppingListsController shoppingListsController;
+  @Autowired
+  private MockMvc mockMvc;
 
   @Test
   @WithMockUser("test user")
   void deletingShouldFail() throws Exception {
     when(userService.loadUserByUsername(any(String.class))).thenReturn(
-        new User("test", "provider"));
+        new User("test", "provider", "avatar"));
     mockMvc.perform(
             delete("/shoppinglists/1")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -62,12 +62,6 @@ public class ItemRepositoryImpl implements ItemRepository {
    */
   @Override
   public Item save(Item item) {
-    ItemEntity savedEntity = itemJpaRepository.save(modelMapper.map(item, ItemEntity.class));
-    return modelMapper.map(savedEntity, Item.class);
-  }
-
-  @Override
-  public Item saveAndFlush(Item item) {
     ItemEntity savedEntity =
         itemJpaRepository.saveAndFlush(modelMapper.map(item, ItemEntity.class));
     return modelMapper.map(savedEntity, Item.class);

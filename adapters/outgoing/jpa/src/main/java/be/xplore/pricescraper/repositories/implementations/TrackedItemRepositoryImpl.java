@@ -40,13 +40,6 @@ public class TrackedItemRepositoryImpl implements TrackedItemRepository {
   @Override
   public TrackedItem save(TrackedItem trackedItem) {
     var entity = modelMapper.map(trackedItem, TrackedItemEntity.class);
-    entity = jpaRepository.save(entity);
-    return modelMapper.map(entity, TrackedItem.class);
-  }
-
-  @Override
-  public TrackedItem saveAndFlush(TrackedItem trackedItem) {
-    var entity = modelMapper.map(trackedItem, TrackedItemEntity.class);
     entity = jpaRepository.saveAndFlush(entity);
     return modelMapper.map(entity, TrackedItem.class);
   }

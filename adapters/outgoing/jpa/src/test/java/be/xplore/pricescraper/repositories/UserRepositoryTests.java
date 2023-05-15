@@ -25,7 +25,7 @@ class UserRepositoryTests {
 
   @BeforeAll
   void setup() {
-    User user = userRepository.save(new User("test", "testprovider"));
+    User user = userRepository.save(new User("test", "testprovider", ""));
     List<ShoppingList> shoppingLists = new ArrayList<>();
     shoppingLists.add(new ShoppingList());
     user.setShoppingLists(shoppingLists);
