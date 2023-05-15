@@ -9,27 +9,10 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>matchers</artifactId>
-    <dependencies>
-        <dependency>
-            <groupId>be.xplore</groupId>
-            <artifactId>core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
+    <packaging>pom</packaging>
+    <modules>
+        <module>ingredientmatcher</module>
+        <module>imagerecognitionmatcher</module>
+        <module>itemmatcher</module>
+    </modules>
 </project>

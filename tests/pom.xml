@@ -42,7 +42,25 @@
         </dependency>
         <dependency>
             <groupId>be.xplore</groupId>
-            <artifactId>matchers</artifactId>
+            <artifactId>itemmatcher</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>be.xplore</groupId>
+            <artifactId>ingredientmatcher</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>be.xplore</groupId>
+            <artifactId>imagerecognitionmatcher</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>be.xplore</groupId>
+            <artifactId>factories</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
@@ -92,7 +110,6 @@
                             <includes>
                                 <include>**/*IT.java</include>
                             </includes>
-                            <reuseForks>true</reuseForks>
                             <!-- When running as a Maven plugin, the JaCoCo agent configuration is prepared by invoking the prepare-agent
                             or prepare-agent-integration goals, before the actual tests are run. This sets a property named argLine which
                             points to the JaCoCo agent, later passed as a JVM argument to the test runner -->

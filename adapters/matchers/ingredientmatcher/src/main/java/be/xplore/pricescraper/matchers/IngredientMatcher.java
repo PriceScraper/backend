@@ -13,7 +13,7 @@ public class IngredientMatcher extends ItemMatcher {
       LevenshteinDistance.getDefaultInstance();
   private final int matchThreshold;
 
-  public IngredientMatcher(int threshold, Item itemA, Item itemB) {
+  protected IngredientMatcher(int threshold, Item itemA, Item itemB) {
     super(itemA, itemB);
     this.matchThreshold = threshold;
   }
