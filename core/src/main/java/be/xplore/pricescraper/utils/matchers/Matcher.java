@@ -5,6 +5,8 @@ package be.xplore.pricescraper.utils.matchers;
  */
 public interface Matcher {
 
+  double getMatchProbabilityInPercentage();
+
   boolean isMatching();
 
 }

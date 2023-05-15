@@ -9,6 +9,11 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>factories</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>itemmatcherfactory</module>
+        <module>itemmatchercombinerfactory</module>
+    </modules>
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>

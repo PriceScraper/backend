@@ -14,5 +14,6 @@
         <module>ingredientmatcher</module>
         <module>imagerecognitionmatcher</module>
         <module>itemmatcher</module>
+        <module>combiners</module>
     </modules>
 </project>
