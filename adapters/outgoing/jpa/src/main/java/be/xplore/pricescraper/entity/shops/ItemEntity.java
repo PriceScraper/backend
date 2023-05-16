@@ -32,19 +32,8 @@ public class ItemEntity {
   private String image;
   private int quantity;
   private ItemUnitEntity unit;
+  @Column(columnDefinition = "TEXT")
   private String ingredients;
   @OneToMany(fetch = FetchType.LAZY)
   private List<TrackedItemEntity> trackedItems;
-
-  /**
-   * Constructor without id and trackedItems.
-   */
-  public ItemEntity(String name, String image, int quantity, ItemUnitEntity unit,
-                    String ingredients) {
-    this.name = name;
-    this.image = image;
-    this.quantity = quantity;
-    this.unit = unit;
-    this.ingredients = ingredients;
-  }
 }

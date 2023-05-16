@@ -211,7 +211,8 @@ public class ItemServiceImpl implements ItemService {
       return dbItem.get();
     }
     var item =
-        getItem(scrapedResponse.title(), scrapedResponse.img().orElse(null), 1, Optional.empty());
+        getItem(scrapedResponse.title(), scrapedResponse.img().orElse(null), 1,
+            scrapedResponse.ingredients());
     var trackedItem = getTrackedItem(urlToItem, item, shop, scrapedResponse.price()).orElseThrow(
         TrackItemException::new);
     addTrackedItemToItem(item, trackedItem);

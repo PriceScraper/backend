@@ -37,6 +37,11 @@ public abstract class ItemDetailScraper extends WebScraper implements ItemScrape
   protected abstract Optional<String> getItemImage(Document document);
 
   /**
+   * We expect a certain amount of elements within the tree search.
+   */
+  protected abstract Optional<String> getItemIngredients(Document document);
+
+  /**
    * Code to fetch the item price.
    */
 
@@ -62,7 +67,8 @@ public abstract class ItemDetailScraper extends WebScraper implements ItemScrape
     }
 
     var image = getItemImage(document);
-    var item = new ShopItem(title.get(), price.get(), image);
+    var ingredients = getItemIngredients(document);
+    var item = new ShopItem(title.get(), price.get(), image, ingredients);
     log.debug("Scraped " + baseUrl + " to find item: " + item);
     return Optional.of(item);
   }

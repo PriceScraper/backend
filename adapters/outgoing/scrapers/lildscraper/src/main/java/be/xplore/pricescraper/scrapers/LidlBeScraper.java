@@ -31,6 +31,11 @@ public class LidlBeScraper extends ItemDetailScraper {
     return Optional.empty();
   }
 
+  @Override
+  protected Optional<String> getItemIngredients(Document document) {
+    return Optional.empty();
+  }
+
   protected Optional<Double> getItemPrice(Document document) {
     var price = document.getElementsByClass("m-price__price");
     if (hasArgumentFailed(price, 1, "m-price__price")) {
