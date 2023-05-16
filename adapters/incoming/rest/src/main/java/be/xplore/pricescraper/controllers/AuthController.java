@@ -29,10 +29,10 @@ public class AuthController {
   @PostMapping("/refresh")
   public ResponseEntity<RefreshAndAccessTokenDto> refresh(@RequestBody NewTokenDto dto) {
     var refreshToken = refreshTokenService.refresh(dto.refreshToken());
-    log.info("Refresh: " + refreshToken);
+    log.debug("Refresh: " + refreshToken.getToken());
     var accessToken = jwtProvider.generate(refreshToken.getUser());
-    log.info("Access: " + refreshToken);
-    log.info(
+    log.debug("Access: " + accessToken);
+    log.debug(
         "Refreshed token for user "
             + refreshToken.getUser().getId()
             + ", new access token: "

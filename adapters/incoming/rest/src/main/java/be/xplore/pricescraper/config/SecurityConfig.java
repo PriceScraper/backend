@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.oauth2.client.OAuth2LoginConfigurer;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
@@ -35,34 +36,25 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-    return http
-        .cors()
-        .and()
-        .csrf()
-        .ignoringRequestMatchers("/items/track")
-        .ignoringRequestMatchers("/shoppinglists/**")
-        .ignoringRequestMatchers("/logout")
-        .ignoringRequestMatchers("/auth/**")
-        .and()
-        .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/items").permitAll()
-            .anyRequest().authenticated()
-        )
-        .oauth2Login(e -> {
-          e.successHandler(jwtSuccessHandler);
-          e.authorizationEndpoint()
-              .authorizationRequestResolver(
-                  authorizationRequestResolver(clientRegistrationRepository));
-        })
+    return http.cors().and().csrf().ignoringRequestMatchers("/items/track")
+        .ignoringRequestMatchers("/shoppinglists/**").ignoringRequestMatchers("/logout")
+        .ignoringRequestMatchers("/auth/**").and().authorizeHttpRequests(
+            auth -> auth.requestMatchers("/items/**").permitAll().requestMatchers("/items/track")
+                .authenticated().anyRequest().authenticated()).oauth2Login(this::handleSuccess)
         .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
         .logout()
         //.logoutSuccessHandler(logoutSuccessHandler())
-        .invalidateHttpSession(true)
-        .clearAuthentication(true)
-        .deleteCookies("JSESSIONID")
-        .logoutSuccessUrl(frontendConfig.getUrl() + "/logout")
-        .and()
-        .build();
+        .invalidateHttpSession(true).clearAuthentication(true).deleteCookies("JSESSIONID")
+        .logoutSuccessUrl(frontendConfig.getUrl() + "/logout").and().build();
+  }
+
+  /**
+   * Add handlers.
+   */
+  private void handleSuccess(OAuth2LoginConfigurer<HttpSecurity> e) {
+    e.successHandler(jwtSuccessHandler);
+    e.authorizationEndpoint()
+        .authorizationRequestResolver(authorizationRequestResolver(clientRegistrationRepository));
   }
 
   /**
@@ -95,8 +87,8 @@ public class SecurityConfig {
       ClientRegistrationRepository clientRegistrationRepository) {
 
     var authorizationRequestResolver =
-        new DefaultOAuth2AuthorizationRequestResolver(
-            clientRegistrationRepository, "/oauth2/authorization");
+        new DefaultOAuth2AuthorizationRequestResolver(clientRegistrationRepository,
+            "/oauth2/authorization");
     authorizationRequestResolver.setAuthorizationRequestCustomizer(
         authorizationRequestCustomizer());
 

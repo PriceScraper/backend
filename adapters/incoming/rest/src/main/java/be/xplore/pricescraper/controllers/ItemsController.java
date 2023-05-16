@@ -42,7 +42,6 @@ public class ItemsController {
    */
   @PostMapping("/track")
   public TrackedItem trackItem(@RequestBody TrackItem trackItem) {
-    var response = itemService.addTrackedItem(trackItem.url());
-    return response;
+    return itemService.addTrackedItem(trackItem.url());
   }
 }

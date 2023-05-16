@@ -4,6 +4,7 @@ import be.xplore.pricescraper.entity.shops.ItemEntity;
 import be.xplore.pricescraper.entity.shops.ItemPriceEntity;
 import be.xplore.pricescraper.entity.shops.TrackedItemEntity;
 import be.xplore.pricescraper.repositories.ItemRepository;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -34,4 +35,12 @@ public interface ItemJpaRepository
               WHERE ip2.trackedItem = ip.trackedItem)
       """)
   List<ItemPriceEntity> findLatestPricesForTrackedItems(List<TrackedItemEntity> trackedItems);
+
+  @Query("""
+              SELECT DISTINCT ip from ItemPrice ip
+              WHERE ip.trackedItem in :trackedItems
+              AND ip.timestamp > :since
+      """)
+  List<ItemPriceEntity> findLatestPricesForTrackedItems(List<TrackedItemEntity> trackedItems,
+                                                        Instant since);
 }

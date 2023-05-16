@@ -16,6 +16,8 @@ public interface ItemService {
 
   void updateOldestTrackedItems(int limit);
 
+  Item findItemWithTrackedItemsAndLatestPriceById(int id);
+
   Item findItemWithTrackedItemsAndLatestPricesById(int id);
 
   List<ItemSearchDto> findItemByNameLike(String name);
