@@ -31,6 +31,15 @@ public class AhBeScraper extends ItemDetailScraper {
     return Optional.of(img.get(0).attr("src"));
   }
 
+  @Override
+  protected Optional<String> getItemIngredients(Document document) {
+    var allSpanBlocks = document.getElementsByTag("span");
+    var ingredientsBlock = allSpanBlocks.stream()
+        .filter(e -> e.text().toLowerCase().startsWith("ingrediënten"))
+        .findFirst();
+    return ingredientsBlock.map(element -> element.text().substring(14).trim());
+  }
+
   protected Optional<Double> getItemPrice(Document document) {
     var base = document.getElementsByClass("price-amount_integer__+e2XO");
     if (hasArgumentFailed(base, 1, "price-amount_integer__+e2XO")) {

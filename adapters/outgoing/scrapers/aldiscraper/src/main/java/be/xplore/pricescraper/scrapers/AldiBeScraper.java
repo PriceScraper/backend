@@ -30,6 +30,11 @@ public class AldiBeScraper extends ItemDetailScraper {
     return Optional.empty();
   }
 
+  @Override
+  protected Optional<String> getItemIngredients(Document document) {
+    return Optional.empty();
+  }
+
   protected Optional<Double> getItemPrice(Document document) {
     var priceSection = document.getElementsByClass("price__main");
     if (hasArgumentFailed(priceSection, 1, "price__main")) {

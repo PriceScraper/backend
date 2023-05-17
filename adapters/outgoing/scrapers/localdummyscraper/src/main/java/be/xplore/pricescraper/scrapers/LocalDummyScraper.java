@@ -3,6 +3,7 @@ package be.xplore.pricescraper.scrapers;
 
 import java.util.Optional;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,6 +27,24 @@ public class LocalDummyScraper extends ItemDetailScraper {
   @Override
   protected Optional<String> getItemImage(Document document) {
     return Optional.empty();
+  }
+
+  @Override
+  protected Optional<String> getItemIngredients(Document document) {
+    var infoBlock = document.getElementsByClass("productDetailsInfo");
+    if (hasArgumentFailed(infoBlock, 1, "productDetailsInfo")) {
+      return Optional.empty();
+    }
+    var ingredientsBlock = infoBlock.get(0).getElementsByTag("div");
+    if (hasArgumentFailed(ingredientsBlock, 1, "div")) {
+      return Optional.empty();
+    }
+    var ingredients = ingredientsBlock.get(0).getElementsByTag("span");
+    if (ingredients.size() == 0) {
+      return Optional.empty();
+    }
+    return Optional.of(String.join("", ingredients.stream().map(Element::text).toList()));
+
   }
 
   @Override
