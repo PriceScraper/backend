@@ -12,9 +12,11 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(classes = {ScraperServiceImpl.class, CarrefourBeScraper.class})
+@ActiveProfiles("test")
 class ScraperServiceIT {
 
   @MockBean

@@ -32,24 +32,30 @@ public class ImageRecognitionMatcher extends ItemMatcher {
 
   private static final LevenshteinDistance levenshteinDistance =
       LevenshteinDistance.getDefaultInstance();
-  private final int matchThreshold;
+  private final double matchThreshold;
   private final int textDetectionLimit = 2;
   private final Environment env;
 
-  protected ImageRecognitionMatcher(int matchThreshold, Item itemA, Item itemB, Environment env) {
+  protected ImageRecognitionMatcher(double matchThreshold, Item itemA, Item itemB,
+                                    Environment env) {
     super(itemA, itemB);
     this.matchThreshold = matchThreshold;
     this.env = env;
   }
 
-
   @Override
   public boolean isMatching() {
+    double matchProbability = getMatchProbabilityInPercentage();
+    return matchProbability >= matchThreshold;
+  }
+
+  @Override
+  public double getMatchProbabilityInPercentage() {
     List<List<String>> linesFromImages = getSortedLinesFromImages();
     int total = getTotalDifferenceInCharsFromStringLists(linesFromImages);
     List<List<String>> labelsFromImages = getSortedLabelsFromImages();
     total += getTotalDifferenceInCharsFromStringLists(labelsFromImages);
-    return total <= matchThreshold;
+    return normalizeScoreToPercentageGivenRange(total, 0, 500);
   }
 
   private int getTotalDifferenceInCharsFromStringLists(List<List<String>> linesFromImages) {
@@ -189,5 +195,4 @@ public class ImageRecognitionMatcher extends ItemMatcher {
     String awsSecretAccessKey = env.getProperty("aws_secret_access_key");
     return AwsBasicCredentials.create(awsAccessKeyId, awsSecretAccessKey);
   }
-
 }

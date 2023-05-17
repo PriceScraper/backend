@@ -17,11 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 @Import(IntegrationConfig.class)
 @SpringBootTest(classes = {ItemServiceImpl.class, ItemScraper.class,
     ScraperServiceImpl.class, CarrefourBeScraper.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
+@ActiveProfiles("test")
 class ItemServiceIT {
   @Autowired
   private ItemRepository itemRepository;

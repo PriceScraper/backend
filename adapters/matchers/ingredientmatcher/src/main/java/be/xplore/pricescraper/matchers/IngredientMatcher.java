@@ -11,9 +11,9 @@ public class IngredientMatcher extends ItemMatcher {
 
   private static final LevenshteinDistance levenshteinDistance =
       LevenshteinDistance.getDefaultInstance();
-  private final int matchThreshold;
+  private final double matchThreshold;
 
-  protected IngredientMatcher(int threshold, Item itemA, Item itemB) {
+  protected IngredientMatcher(double threshold, Item itemA, Item itemB) {
     super(itemA, itemB);
     this.matchThreshold = threshold;
   }
@@ -29,8 +29,14 @@ public class IngredientMatcher extends ItemMatcher {
    */
   @Override
   public boolean isMatching() {
-    return matchitemsByIngredients(getItemA().getIngredients(), getItemB().getIngredients())
-        < matchThreshold;
+    double matchProbability = getMatchProbabilityInPercentage();
+    return matchProbability >= matchThreshold;
+  }
+
+  @Override
+  public double getMatchProbabilityInPercentage() {
+    int score = matchitemsByIngredients(getItemA().getIngredients(), getItemB().getIngredients());
+    return normalizeScoreToPercentageGivenRange(score, 0, 750);
   }
 
   /**
@@ -84,6 +90,5 @@ public class IngredientMatcher extends ItemMatcher {
   private String removePlurals(String ingredients) {
     return ingredients.replaceAll("(s\\b)|(en)|(eren)", "");
   }
-
 
 }

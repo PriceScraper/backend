@@ -29,7 +29,7 @@ class ItemIngredientMatcherTests {
 
   @Test
   void shouldMatchProducts() {
-    IngredientMatcher itemIngredientMatcher = new IngredientMatcher(50, delhaizePizza1, ahPizza1);
+    IngredientMatcher itemIngredientMatcher = new IngredientMatcher(0.7, delhaizePizza1, ahPizza1);
     boolean matched =
         itemIngredientMatcher.isMatching();
     assertTrue(matched);
@@ -37,7 +37,7 @@ class ItemIngredientMatcherTests {
 
   @Test
   void shouldNotMatchProducts() {
-    IngredientMatcher itemIngredientMatcher = new IngredientMatcher(50, ahPizza1, ahPizza2);
+    IngredientMatcher itemIngredientMatcher = new IngredientMatcher(0.85, ahPizza1, ahPizza2);
     boolean notMatched =
         itemIngredientMatcher.isMatching();
     assertFalse(notMatched);
