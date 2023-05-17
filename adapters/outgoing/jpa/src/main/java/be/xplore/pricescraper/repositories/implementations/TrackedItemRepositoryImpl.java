@@ -1,9 +1,16 @@
 package be.xplore.pricescraper.repositories.implementations;
 
 import be.xplore.pricescraper.domain.shops.TrackedItem;
+import be.xplore.pricescraper.entity.shops.ItemEntity;
+import be.xplore.pricescraper.entity.shops.ItemPriceEntity;
 import be.xplore.pricescraper.entity.shops.TrackedItemEntity;
 import be.xplore.pricescraper.repositories.TrackedItemRepository;
+import be.xplore.pricescraper.repositories.jpa.ItemJpaRepository;
+import be.xplore.pricescraper.repositories.jpa.ItemPriceJpaRepository;
+import be.xplore.pricescraper.repositories.jpa.ShopJpaRepository;
 import be.xplore.pricescraper.repositories.jpa.TrackedItemJpaRepository;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -18,6 +25,9 @@ import org.springframework.stereotype.Repository;
 @AllArgsConstructor
 public class TrackedItemRepositoryImpl implements TrackedItemRepository {
   private final TrackedItemJpaRepository jpaRepository;
+  private final ShopJpaRepository shopRepository;
+  private final ItemJpaRepository itemRepository;
+  private final ItemPriceJpaRepository itemPriceRepository;
   private final ModelMapper modelMapper;
 
   /**
@@ -39,7 +49,19 @@ public class TrackedItemRepositoryImpl implements TrackedItemRepository {
    */
   @Override
   public TrackedItem save(TrackedItem trackedItem) {
-    var entity = modelMapper.map(trackedItem, TrackedItemEntity.class);
+    ItemEntity item = trackedItem.getItem() != null
+        ?
+        itemRepository.getReferenceById(trackedItem.getItem().getId()) : null;
+    List<ItemPriceEntity> prices =
+        trackedItem.getItemPrices() != null ? trackedItem.getItemPrices().stream()
+            .map((ip) -> itemPriceRepository.getReferenceById(ip.getId())).toList() :
+            new ArrayList<>();
+    TrackedItemEntity entity =
+        new TrackedItemEntity(trackedItem.getUrl(),
+            shopRepository.getReferenceById(trackedItem.getShop().getId()),
+            item,
+            prices,
+            trackedItem.getLastAttempt());
     entity = jpaRepository.saveAndFlush(entity);
     return modelMapper.map(entity, TrackedItem.class);
   }
