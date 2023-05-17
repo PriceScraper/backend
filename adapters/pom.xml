@@ -16,6 +16,7 @@
         <module>outgoing</module>
         <module>incoming/rest</module>
         <module>outgoing/jpa</module>
+        <module>factories</module>
         <module>matchers</module>
         <module>outgoing/scrapers</module>
         <module>outgoing/scrapers/ahscraper</module>
