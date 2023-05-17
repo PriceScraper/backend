@@ -12,6 +12,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.DocumentId;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
 /**
  * Definition of an Item, not related to a {@link ShopEntity}.
@@ -23,11 +26,14 @@ import lombok.Setter;
 @Entity(name = "Item")
 @Getter
 @Setter
+@Indexed
 public class ItemEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(nullable = false)
+  @DocumentId
   private int id;
+  @FullTextField(name = "itemname")
   private String name;
   private String image;
   private int quantity;

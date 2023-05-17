@@ -4,28 +4,59 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import be.xplore.pricescraper.domain.shops.Item;
+import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.dtos.ItemScraperSearch;
 import be.xplore.pricescraper.repositories.implementations.ItemRepositoryImpl;
+import be.xplore.pricescraper.repositories.implementations.TrackedItemRepositoryImpl;
 import be.xplore.pricescraper.utils.ModelMapperUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
+import javax.sql.DataSource;
+import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.session.SearchSession;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
 
-@Sql({"/sql/item_test_data.sql"})
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DataJpaTest
-@Import({ItemRepositoryImpl.class, ModelMapperUtil.class})
+@Import({ItemRepositoryImpl.class, TrackedItemRepositoryImpl.class, ModelMapperUtil.class})
 class ItemRepositoryTests {
   @Autowired
   ItemRepositoryImpl itemRepository;
+  @Autowired
+  TrackedItemRepositoryImpl trackedItemRepository;
+  @PersistenceContext
+  EntityManager entityManager;
+  @Autowired
+  DataSource dataSource;
+
+  @BeforeAll
+  void setup() throws InterruptedException, SQLException {
+    try (Connection con = dataSource.getConnection()) {
+      ScriptUtils.executeSqlScript(con, new ClassPathResource("sql/item_test_data.sql"));
+    }
+    entityManager = entityManager.getEntityManagerFactory().createEntityManager();
+    SearchSession searchSession = Search.session(entityManager);
+    searchSession.massIndexer().startAndWait();
+  }
+
 
   @Test
   void itemShouldHave2TrackedItems() {
-    Optional<Item> item = itemRepository.findItemWithTrackedItemsById(1);
+    Optional<Item> item = itemRepository.findItemWithTrackedItemsById(101);
     assertThat(item).isPresent();
     assertThat(item.get().getTrackedItems()).hasSize(2);
   }
@@ -33,7 +64,7 @@ class ItemRepositoryTests {
   @Test
   void trackedItemsShouldHaveLatestPrices() {
     var item =
-        itemRepository.findItemWithTrackedItemsById(1);
+        itemRepository.findItemWithTrackedItemsById(101);
     var itemPrices =
         itemRepository.findLatestPricesForTrackedItems(item.get().getTrackedItems());
     var dayOfMonthForTimestamps =
@@ -48,9 +79,24 @@ class ItemRepositoryTests {
   }
 
   @Test
+  void searchShouldHaveResult() {
+    var items = itemRepository.findItemByNameWithFuzzySearchAndLimit("pizza", 1);
+    assertThat(items).hasSize(1);
+  }
+
+  @Test
   void resultShouldHave2Items() {
     var items = itemRepository.findItemsByNameLike("PIzZa");
     assertThat(items).hasSize(2);
+  }
+
+  @Test
+  void resultShouldHavePrices() {
+    TrackedItem trackedItem =
+        trackedItemRepository.findAll(Pageable.ofSize(1)).get().findFirst().orElseThrow();
+    var items = itemRepository.findLatestPricesForTrackedItems(List.of(trackedItem),
+        LocalDateTime.of(2022, 1, 1, 1, 1));
+    assertThat(items).isNotEmpty();
   }
 
   @Test

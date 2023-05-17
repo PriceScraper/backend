@@ -34,4 +34,8 @@ public class TrackedItem {
     this.item = item;
     this.lastAttempt = Timestamp.from(Instant.now().minus(7, ChronoUnit.DAYS));
   }
+
+  public TrackedItem(String url) {
+    this.url = url;
+  }
 }

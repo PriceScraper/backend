@@ -61,7 +61,7 @@
         </dependency>
         <dependency>
             <groupId>be.xplore</groupId>
-            <artifactId>itemmatcherfactory</artifactId>
+            <artifactId>combiners</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

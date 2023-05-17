@@ -9,12 +9,20 @@ import be.xplore.pricescraper.utils.matchers.Matcher;
  */
 public abstract class ItemMatcher implements Matcher {
 
-  private final Item itemA;
-  private final Item itemB;
+  private boolean initialized = false;
 
-  protected ItemMatcher(Item itemA, Item itemB) {
-    this.itemA = itemA;
-    this.itemB = itemB;
+  private Item itemA = null;
+  private Item itemB = null;
+
+  @Override
+  public void addItems(Item a, Item b) {
+    itemA = a;
+    itemB = b;
+    initialized = true;
+  }
+
+  protected void setInitialized(boolean initialized) {
+    this.initialized = initialized;
   }
 
   /**
@@ -37,6 +45,10 @@ public abstract class ItemMatcher implements Matcher {
 
   protected Item getItemB() {
     return itemB;
+  }
+
+  protected boolean isInitialized() {
+    return initialized;
   }
 
 }
