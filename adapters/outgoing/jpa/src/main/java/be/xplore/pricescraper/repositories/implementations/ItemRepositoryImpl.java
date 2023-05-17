@@ -6,9 +6,11 @@ import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.dtos.ItemSearchDto;
 import be.xplore.pricescraper.entity.shops.ItemEntity;
 import be.xplore.pricescraper.entity.shops.ItemPriceEntity;
+import be.xplore.pricescraper.entity.shops.ItemUnitEntity;
 import be.xplore.pricescraper.entity.shops.TrackedItemEntity;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.jpa.ItemJpaRepository;
+import be.xplore.pricescraper.repositories.jpa.TrackedItemJpaRepository;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Repository;
 @AllArgsConstructor
 public class ItemRepositoryImpl implements ItemRepository {
   private final ItemJpaRepository itemJpaRepository;
+  private final TrackedItemJpaRepository trackedItemRepository;
   private final ModelMapper modelMapper;
 
   /**
@@ -78,7 +81,19 @@ public class ItemRepositoryImpl implements ItemRepository {
    */
   @Override
   public Item save(Item item) {
-    var itemToSave = modelMapper.map(item, ItemEntity.class);
+    ItemUnitEntity itemUnit = item.getUnit() != null
+        ?
+        new ItemUnitEntity(item.getUnit().getType(), item.getUnit().getContent()) : null;
+    List<TrackedItemEntity> trackedItems = item.getTrackedItems() != null
+        ? item.getTrackedItems().stream()
+        .map((tr) -> trackedItemRepository.getReferenceById(tr.getUrl())).toList()
+        : null;
+
+    ItemEntity itemToSave =
+        new ItemEntity(item.getId(), item.getName(), item.getImage(), item.getQuantity(),
+            itemUnit,
+            item.getIngredients(),
+            trackedItems);
     var savedEntity = itemJpaRepository.saveAndFlush(itemToSave);
     return modelMapper.map(savedEntity, Item.class);
   }

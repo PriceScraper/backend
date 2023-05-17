@@ -1,5 +1,6 @@
 package be.xplore.pricescraper.entity.shops;
 
+import be.xplore.pricescraper.domain.shops.ItemUnit;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Enumerated;
@@ -15,16 +16,8 @@ import lombok.NoArgsConstructor;
 public class ItemUnitEntity {
   @Column
   @Enumerated
-  private UnitType type;
+  private ItemUnit.UnitType type;
   @Column
   private double content;
-
-  /**
-   * Type of the unit (kg,l).
-   */
-  public enum UnitType {
-    KILOGRAMS,
-    LITERS
-  }
 
 }

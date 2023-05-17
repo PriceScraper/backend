@@ -1,6 +1,7 @@
 package be.xplore.pricescraper.domain.shops;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
@@ -8,8 +9,9 @@ import lombok.NoArgsConstructor;
  */
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class ItemUnit {
-  
+
   private UnitType type;
   private double content;
 
