@@ -2,6 +2,8 @@ package be.xplore.pricescraper.controllers;
 
 import be.xplore.pricescraper.domain.users.ShoppingList;
 import be.xplore.pricescraper.domain.users.User;
+import be.xplore.pricescraper.dtos.AddRecurringItemDto;
+import be.xplore.pricescraper.dtos.RecurringItemDto;
 import be.xplore.pricescraper.dtos.ShoppingListCreateDto;
 import be.xplore.pricescraper.dtos.ShoppingListItemDto;
 import be.xplore.pricescraper.exceptions.UnauthorizedActionExeption;
@@ -10,6 +12,7 @@ import be.xplore.pricescraper.services.UserService;
 import be.xplore.pricescraper.utils.users.UserUtils;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -91,6 +94,36 @@ public class ShoppingListsController {
     }
     shoppingListService.addItemToShoppingListById(dto.shoppingListId(), dto.itemId(),
         dto.quantity());
+  }
+
+  @PostMapping("/items/add/recurring")
+  public void addRecurringItem(@RequestBody AddRecurringItemDto dto,
+                               @AuthenticationPrincipal
+                               UserDetails userDetails) {
+    var user = userService.loadUserByUsername(userDetails.getUsername());
+    shoppingListService.addRecurringItem(dto.itemId(), dto.quantity(), user);
+  }
+
+  @DeleteMapping("/items/remove/recurring/{id}")
+  public void removeRecurringItem(@PathVariable int id,
+                                  @AuthenticationPrincipal
+                                  UserDetails userDetails) {
+    var user = userService.loadUserByUsername(userDetails.getUsername());
+    shoppingListService.removeRecurringItem(id, user);
+  }
+
+  /**
+   * Get recurring items.
+   */
+  @GetMapping("/items/recurring")
+  public ResponseEntity<List<RecurringItemDto>> getRecurringItems(
+      @AuthenticationPrincipal UserDetails userDetails) {
+    var user = userService.loadUserByUsername(userDetails.getUsername());
+    var res = shoppingListService
+        .getRecurringItemsFromUser(user).stream()
+        .map(e -> new RecurringItemDto(e.getId(), e.getItem(), e.getQuantity()))
+        .toList();
+    return ResponseEntity.ok(res);
   }
 
   /**

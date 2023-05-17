@@ -64,6 +64,7 @@ class ShoppingListServiceIT {
   @Test
   void shoppingListShouldBeDeleted() {
     User user = new User();
+    user.setId(1L);
     user.setUsername("test");
     shoppingListService.createShoppingListForUser(user, new ShoppingList());
     shoppingListService.deleteShoppingListForUser(user, 0);

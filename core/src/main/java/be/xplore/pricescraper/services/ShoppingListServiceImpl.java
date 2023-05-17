@@ -1,17 +1,20 @@
 package be.xplore.pricescraper.services;
 
 import be.xplore.pricescraper.domain.shops.Item;
+import be.xplore.pricescraper.domain.users.RecurringShoppingListItem;
 import be.xplore.pricescraper.domain.users.ShoppingList;
 import be.xplore.pricescraper.domain.users.ShoppingListLine;
 import be.xplore.pricescraper.domain.users.User;
 import be.xplore.pricescraper.exceptions.ShoppingListItemNotFoundException;
 import be.xplore.pricescraper.exceptions.ShoppingListNotFoundException;
+import be.xplore.pricescraper.repositories.RecurringShoppingListItemRepository;
 import be.xplore.pricescraper.repositories.ShoppingListRepository;
 import be.xplore.pricescraper.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,11 +22,13 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ShoppingListServiceImpl implements ShoppingListService {
 
   private final ShoppingListRepository shoppingListRepository;
   private final ItemService itemService;
   private final UserRepository userRepository;
+  private final RecurringShoppingListItemRepository recurringShoppingListItemRepository;
 
   public ShoppingList findShoppingListById(int id) {
     return shoppingListRepository.getShoppingListById(id)
@@ -49,6 +54,10 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     if (user.getShoppingLists() == null) {
       user.setShoppingLists(new ArrayList<>());
     }
+    var recurringItems = recurringShoppingListItemRepository.findByUserId(user.getId());
+    shoppingList.setLines(
+        recurringItems.stream().map(r -> new ShoppingListLine(r.getQuantity(), r.getItem()))
+            .toList());
     user.getShoppingLists().add(shoppingList);
     userRepository.save(user);
   }
@@ -142,5 +151,40 @@ public class ShoppingListServiceImpl implements ShoppingListService {
         .findFirst().orElseThrow(ShoppingListItemNotFoundException::new);
   }
 
+  @Override
+  public void addRecurringItem(int itemId, int quantity, User user) {
+    var item = itemService.findItemById(itemId);
+    var temp = new RecurringShoppingListItem(item, quantity, user);
+    var saved = recurringShoppingListItemRepository.save(temp);
+    user.getShoppingLists().forEach(list -> addRecurringItemToShoppingList(list, saved));
+  }
+
+  @Override
+  public void removeRecurringItem(int recurringItemId, User user) {
+    var entity = recurringShoppingListItemRepository.findById(recurringItemId);
+    if (entity.isEmpty()) {
+      log.debug("Could not find recurring item by id " + recurringItemId);
+      return;
+    }
+    if (!entity.get().getUser().getId().equals(user.getId())) {
+      log.warn("Attempted to remove recurring item of other user.");
+    }
+    recurringShoppingListItemRepository.deleteById(recurringItemId);
+  }
+
+  @Override
+  public List<RecurringShoppingListItem> getRecurringItemsFromUser(User user) {
+    return recurringShoppingListItemRepository.findByUserId(user.getId());
+  }
+
+  private void addRecurringItemToShoppingList(ShoppingList list,
+                                              RecurringShoppingListItem recurringShoppingListItem) {
+    var lines = list.getLines();
+    var line = new ShoppingListLine(recurringShoppingListItem.getQuantity(),
+        recurringShoppingListItem.getItem());
+    lines.add(line);
+    list.setLines(lines);
+    shoppingListRepository.save(list);
+  }
 
 }

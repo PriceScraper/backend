@@ -17,4 +17,9 @@ public class ShoppingListLine {
   private int id;
   private int quantity;
   private Item item;
+
+  public ShoppingListLine(int quantity, Item item) {
+    this.quantity = quantity;
+    this.item = item;
+  }
 }
