@@ -37,8 +37,12 @@ public class SecurityConfig {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
     return http.cors().and().csrf().ignoringRequestMatchers("/items/track")
-        .ignoringRequestMatchers("/shoppinglists/**").ignoringRequestMatchers("/logout")
-        .ignoringRequestMatchers("/auth/**").and().authorizeHttpRequests(
+        .ignoringRequestMatchers("/shoppinglists/**")
+        .ignoringRequestMatchers("/logout")
+        .ignoringRequestMatchers("/recipe/**")
+        .ignoringRequestMatchers("/auth/**")
+        .and()
+        .authorizeHttpRequests(
             auth -> auth.requestMatchers("/items/**").permitAll().requestMatchers("/items/track")
                 .authenticated().anyRequest().authenticated()).oauth2Login(this::handleSuccess)
         .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
