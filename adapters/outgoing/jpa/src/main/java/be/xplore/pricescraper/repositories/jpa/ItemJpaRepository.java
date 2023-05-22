@@ -17,6 +17,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ItemJpaRepository
     extends JpaRepository<ItemEntity, Integer> {
+
+  @Query("SELECT i FROM Item i LEFT JOIN FETCH i.trackedItems")
+  List<ItemEntity> findAllWithTrackedItems();
+
   List<ItemEntity> findByNameContainsIgnoreCase(String name);
 
 

@@ -275,12 +275,11 @@ public class ItemServiceImpl implements ItemService {
 
   private Item getExistingItemIfMatches(String title, String img, int quantity,
                                         String ingredients) {
+    Item itemToMatch = new Item(title, img, quantity, null, ingredients);
     List<Item> potentialMatches = getPotentialMatchingItems(title);
     for (Item potentialMatch : potentialMatches) {
-      Item itemToMatch = new Item(title, img, quantity, null, ingredients);
       Combiner combiner = itemMatcherCombinerFactory.makeWeightedCombiner();
       combiner.addItems(potentialMatch, itemToMatch);
-      //hard coded for now to prevent matching when there are no ingredients
       if (potentialMatch.getIngredients() != null && ingredients != null && combiner.isMatching()) {
         return potentialMatch;
       }
@@ -289,7 +288,7 @@ public class ItemServiceImpl implements ItemService {
   }
 
   private List<Item> getPotentialMatchingItems(String title) {
-    return itemRepository.findItemByNameWithFuzzySearchAndLimit(title, 3);
+    return itemRepository.findAll();
   }
 
   private Item addNewItem(String title, String img, int quantity,

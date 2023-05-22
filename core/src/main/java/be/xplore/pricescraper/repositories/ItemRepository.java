@@ -14,6 +14,9 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ItemRepository {
+
+  List<Item> findAll();
+
   List<ItemSearchDto> findItemsByNameLike(String name);
 
   List<Item> findItemByNameWithFuzzySearchAndLimit(String nameQuery, int limit);

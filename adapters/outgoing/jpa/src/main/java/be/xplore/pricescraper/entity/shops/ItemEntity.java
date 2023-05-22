@@ -33,7 +33,7 @@ public class ItemEntity {
   @Column(nullable = false)
   @DocumentId
   private int id;
-  @FullTextField(name = "itemname")
+  @FullTextField(name = "itemname", analyzer = "itemName")
   private String name;
   private String image;
   private int quantity;
