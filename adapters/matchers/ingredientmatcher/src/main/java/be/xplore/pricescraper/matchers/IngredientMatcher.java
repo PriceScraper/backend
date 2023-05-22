@@ -1,22 +1,19 @@
 package be.xplore.pricescraper.matchers;
 
-import be.xplore.pricescraper.domain.shops.Item;
+import be.xplore.pricescraper.exceptions.MatcherNotInitializedException;
 import org.apache.commons.text.similarity.LevenshteinDistance;
+import org.springframework.stereotype.Component;
 
 /**
  * This is an {@link ItemMatcher} implementation.
  * The implmentation is based on {@link be.xplore.pricescraper.domain.shops.Item} ingredients.
  */
+@Component
 public class IngredientMatcher extends ItemMatcher {
 
   private static final LevenshteinDistance levenshteinDistance =
       LevenshteinDistance.getDefaultInstance();
-  private final double matchThreshold;
-
-  protected IngredientMatcher(double threshold, Item itemA, Item itemB) {
-    super(itemA, itemB);
-    this.matchThreshold = threshold;
-  }
+  private static final double matchThreshold = 0.9;
 
   /**
    * Match 2 items by passing their ingredient strings.
@@ -29,6 +26,9 @@ public class IngredientMatcher extends ItemMatcher {
    */
   @Override
   public boolean isMatching() {
+    if (!isInitialized()) {
+      throw new MatcherNotInitializedException();
+    }
     double matchProbability = getMatchProbabilityInPercentage();
     return matchProbability >= matchThreshold;
   }
@@ -36,7 +36,11 @@ public class IngredientMatcher extends ItemMatcher {
   @Override
   public double getMatchProbabilityInPercentage() {
     int score = matchitemsByIngredients(getItemA().getIngredients(), getItemB().getIngredients());
-    return normalizeScoreToPercentageGivenRange(score, 0, 750);
+    return normalizeScoreToPercentageGivenRange(score, 0, getMaxIngredientsStringSize());
+  }
+
+  private int getMaxIngredientsStringSize() {
+    return Math.max(getItemA().getIngredients().length(), getItemB().getIngredients().length());
   }
 
   /**

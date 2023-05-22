@@ -1,21 +1,18 @@
 package be.xplore.pricescraper.matchers.combiners;
 
-import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.matchers.ItemMatcher;
 
 public class MockItemMatcher extends ItemMatcher {
-  protected MockItemMatcher(Item itemA,
-                            Item itemB) {
-    super(itemA, itemB);
-  }
 
   @Override
   public double getMatchProbabilityInPercentage() {
-    return normalizeScoreToPercentageGivenRange(75, 0, 300);
+    String nameA = getItemA().getName();
+    String nameB = getItemA().getName();
+    return normalizeScoreToPercentageGivenRange(nameA.compareTo(nameB), 0, 300);
   }
 
   @Override
   public boolean isMatching() {
-    return false;
+    return getMatchProbabilityInPercentage() > 0.9;
   }
 }

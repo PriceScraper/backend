@@ -3,14 +3,10 @@ package be.xplore.pricescraper.utils.matchers;
 import be.xplore.pricescraper.domain.shops.Item;
 
 /**
- * Interface for matching Objects based on shared characteristics.
+ * Interface for a matcher combiner.
  */
-public interface Matcher {
-
+public interface Combiner {
   void addItems(Item a, Item b);
 
-  double getMatchProbabilityInPercentage();
-
   boolean isMatching();
-
 }

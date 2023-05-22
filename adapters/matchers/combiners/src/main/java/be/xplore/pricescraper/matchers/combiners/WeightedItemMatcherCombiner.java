@@ -3,17 +3,23 @@ package be.xplore.pricescraper.matchers.combiners;
 import be.xplore.pricescraper.exceptions.MatchException;
 import be.xplore.pricescraper.matchers.ItemMatcher;
 import java.util.Map;
+import org.springframework.stereotype.Component;
 
 /**
  * Weighted implementation for {@link ItemMatcherCombiner}.
  */
+@Component
 public class WeightedItemMatcherCombiner extends ItemMatcherCombiner {
 
-  public WeightedItemMatcherCombiner(double matchThreshold) {
-    super(matchThreshold);
+  private static final double matchThreshold = 0.9;
+
+  protected double getMatchThreshold() {
+    return matchThreshold;
   }
 
-  @Override
+  /**
+   * Gets combines match probability for matchers.
+   */
   public double getMatchProbabilityInPercentage() {
     if (getWeightSum() != 1.0) {
       throw new MatchException("Sum of weights in match combiner should be equal to 1");

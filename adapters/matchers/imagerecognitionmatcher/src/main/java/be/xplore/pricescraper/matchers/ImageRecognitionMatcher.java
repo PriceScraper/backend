@@ -1,7 +1,7 @@
 package be.xplore.pricescraper.matchers;
 
-import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.exceptions.MatchException;
+import be.xplore.pricescraper.exceptions.MatcherNotInitializedException;
 import jakarta.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.SdkBytes;
@@ -28,23 +29,24 @@ import software.amazon.awssdk.services.rekognition.model.TextDetection;
  * This is an {@link ItemMatcher} implementation.
  * The implmentation is based on image recognition.
  */
+@Component
 public class ImageRecognitionMatcher extends ItemMatcher {
 
   private static final LevenshteinDistance levenshteinDistance =
       LevenshteinDistance.getDefaultInstance();
-  private final double matchThreshold;
-  private final int textDetectionLimit = 2;
+  private static final double matchThreshold = 0.8;
+  private static final int textDetectionLimit = 2;
   private final Environment env;
 
-  protected ImageRecognitionMatcher(double matchThreshold, Item itemA, Item itemB,
-                                    Environment env) {
-    super(itemA, itemB);
-    this.matchThreshold = matchThreshold;
+  protected ImageRecognitionMatcher(Environment env) {
     this.env = env;
   }
 
   @Override
   public boolean isMatching() {
+    if (!isInitialized()) {
+      throw new MatcherNotInitializedException();
+    }
     double matchProbability = getMatchProbabilityInPercentage();
     return matchProbability >= matchThreshold;
   }

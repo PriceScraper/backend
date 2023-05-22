@@ -66,34 +66,11 @@
         </dependency>
         <dependency>
             <groupId>be.xplore</groupId>
-            <artifactId>matchers</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>be.xplore</groupId>
             <artifactId>itemmatcher</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>be.xplore</groupId>
-            <artifactId>ingredientmatcher</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>be.xplore</groupId>
-            <artifactId>imagerecognitionmatcher</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>be.xplore</groupId>
-            <artifactId>itemmatcherfactory</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
+
         <dependency>
             <groupId>be.xplore</groupId>
             <artifactId>itemmatchercombinerfactory</artifactId>

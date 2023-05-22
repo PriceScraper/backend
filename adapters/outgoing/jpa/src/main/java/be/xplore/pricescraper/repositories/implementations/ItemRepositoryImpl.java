@@ -2,6 +2,7 @@ package be.xplore.pricescraper.repositories.implementations;
 
 import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.domain.shops.ItemPrice;
+import be.xplore.pricescraper.domain.shops.ItemUnit;
 import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.dtos.ItemSearchDto;
 import be.xplore.pricescraper.entity.shops.ItemEntity;
@@ -11,11 +12,17 @@ import be.xplore.pricescraper.entity.shops.TrackedItemEntity;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.jpa.ItemJpaRepository;
 import be.xplore.pricescraper.repositories.jpa.TrackedItemJpaRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import org.hibernate.search.engine.search.query.SearchResult;
+import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Repository;
 
@@ -29,6 +36,9 @@ public class ItemRepositoryImpl implements ItemRepository {
   private final TrackedItemJpaRepository trackedItemRepository;
   private final ModelMapper modelMapper;
 
+  @PersistenceContext
+  private EntityManager entityManager;
+
   /**
    * Find by name like %name%.
    */
@@ -38,6 +48,30 @@ public class ItemRepositoryImpl implements ItemRepository {
     return entities.stream()
         .map(e -> modelMapper.map(e, ItemSearchDto.class))
         .filter(e -> e.getId() > 0)
+        .toList();
+  }
+
+  @Override
+  @Transactional
+  public List<Item> findItemByNameWithFuzzySearchAndLimit(String nameQuery, int limit) {
+    SearchSession searchSession = Search.session(entityManager);
+    SearchResult<ItemEntity> result = searchSession.search(ItemEntity.class)
+        .where(f -> f.match()
+            .field("itemname")
+            .matching(nameQuery).fuzzy())
+        .fetch(limit);
+    List<ItemEntity> hits = result.hits();
+    return mapToItems(hits);
+  }
+
+  private static List<Item> mapToItems(List<ItemEntity> entities) {
+    return entities.stream().map(
+            ie -> new Item(ie.getId(), ie.getName(), ie.getImage(), ie.getQuantity(),
+                ie.getUnit() != null ? new ItemUnit(ie.getUnit().getType(),
+                    ie.getUnit().getContent()) : null, ie.getIngredients(),
+                ie.getTrackedItems() != null
+                    ? ie.getTrackedItems().stream().map(tr ->
+                    new TrackedItem(tr.getUrl())).toList() : null))
         .toList();
   }
 

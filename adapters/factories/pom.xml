@@ -11,7 +11,6 @@
     <artifactId>factories</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>itemmatcherfactory</module>
         <module>itemmatchercombinerfactory</module>
     </modules>
     <dependencies>
@@ -22,12 +21,6 @@
         <dependency>
             <groupId>be.xplore</groupId>
             <artifactId>ingredientmatcher</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>be.xplore</groupId>
-            <artifactId>imagerecognitionmatcher</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

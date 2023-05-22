@@ -11,10 +11,12 @@ import be.xplore.pricescraper.exceptions.RootDomainNotFoundException;
 import be.xplore.pricescraper.exceptions.ScrapeItemException;
 import be.xplore.pricescraper.exceptions.ScraperNotFoundException;
 import be.xplore.pricescraper.exceptions.TrackItemException;
+import be.xplore.pricescraper.factories.ItemMatcherCombinerFactory;
 import be.xplore.pricescraper.repositories.ItemPriceRepository;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.ShopRepository;
 import be.xplore.pricescraper.repositories.TrackedItemRepository;
+import be.xplore.pricescraper.utils.matchers.Combiner;
 import jakarta.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.Duration;
@@ -42,6 +44,7 @@ public class ItemServiceImpl implements ItemService {
   private final TrackedItemRepository trackedItemRepository;
   private final ShopRepository shopRepository;
   private final ScraperService scraperService;
+  private final ItemMatcherCombinerFactory itemMatcherCombinerFactory;
 
   /**
    * Find by key.
@@ -237,7 +240,7 @@ public class ItemServiceImpl implements ItemService {
     }
     var item =
         getItem(scrapedResponse.title(), scrapedResponse.img().orElse(null), 1,
-            scrapedResponse.ingredients());
+            scrapedResponse.ingredients().orElse(null));
     var trackedItem = getTrackedItem(urlToItem, item, shop, scrapedResponse.price()).orElseThrow(
         TrackItemException::new);
     addTrackedItemToItem(item, trackedItem);
@@ -262,13 +265,42 @@ public class ItemServiceImpl implements ItemService {
   /**
    * Retrieve shop or create if does not exist.
    */
-  private Item getItem(String title, String img, int quantity, Optional<String> ingredients) {
-    var item = new Item();
+  private Item getItem(String title, String img, int quantity, String ingredients) {
+    Item item = getExistingItemIfMatches(title, img, quantity, ingredients);
+    if (item == null) {
+      item = addNewItem(title, img, quantity, ingredients);
+    }
+    return item;
+  }
+
+  private Item getExistingItemIfMatches(String title, String img, int quantity,
+                                        String ingredients) {
+    List<Item> potentialMatches = getPotentialMatchingItems(title);
+    for (Item potentialMatch : potentialMatches) {
+      Item itemToMatch = new Item(title, img, quantity, null, ingredients);
+      Combiner combiner = itemMatcherCombinerFactory.makeWeightedCombiner();
+      combiner.addItems(potentialMatch, itemToMatch);
+      //hard coded for now to prevent matching when there are no ingredients
+      if (potentialMatch.getIngredients() != null && ingredients != null && combiner.isMatching()) {
+        return potentialMatch;
+      }
+    }
+    return null;
+  }
+
+  private List<Item> getPotentialMatchingItems(String title) {
+    return itemRepository.findItemByNameWithFuzzySearchAndLimit(title, 3);
+  }
+
+  private Item addNewItem(String title, String img, int quantity,
+                          String ingredients) {
+    Item item = new Item();
     item.setName(title);
     item.setImage(img);
     item.setQuantity(quantity);
-    item.setIngredients(ingredients.orElse(null));
-    return itemRepository.save(item);
+    item.setIngredients(ingredients);
+    item = itemRepository.save(item);
+    return item;
   }
 
   /**
@@ -300,13 +332,12 @@ public class ItemServiceImpl implements ItemService {
   }
 
   private void addTrackedItemToItem(Item item, TrackedItem trackedItem) {
-    List<TrackedItem> trackedItemToAdd = new ArrayList<>();
-    trackedItemToAdd.add(trackedItem);
+    List<TrackedItem> trackedItemsToAdd = new ArrayList<>();
     if (item.getTrackedItems() != null) {
-      item.getTrackedItems().addAll(trackedItemToAdd);
-    } else {
-      item.setTrackedItems(trackedItemToAdd);
+      trackedItemsToAdd.addAll(item.getTrackedItems());
     }
+    trackedItemsToAdd.add(trackedItem);
+    item.setTrackedItems(trackedItemsToAdd);
     itemRepository.save(item);
   }
 
