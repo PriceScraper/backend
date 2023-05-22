@@ -36,10 +36,11 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-    return http.cors().and().csrf().ignoringRequestMatchers("/items/track")
+    return http.cors().and().csrf().ignoringRequestMatchers("/items/track", "/healthcheck")
         .ignoringRequestMatchers("/shoppinglists/**").ignoringRequestMatchers("/logout")
         .ignoringRequestMatchers("/auth/**").and().authorizeHttpRequests(
-            auth -> auth.requestMatchers("/items/**").permitAll().requestMatchers("/items/track")
+            auth -> auth.requestMatchers("/items/**", "/healthcheck").permitAll()
+                .requestMatchers("/items/track")
                 .authenticated().anyRequest().authenticated()).oauth2Login(this::handleSuccess)
         .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
         .logout()
