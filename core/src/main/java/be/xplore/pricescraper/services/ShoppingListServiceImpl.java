@@ -1,5 +1,6 @@
 package be.xplore.pricescraper.services;
 
+import be.xplore.pricescraper.domain.recipes.Recipe;
 import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.domain.users.RecurringShoppingListItem;
 import be.xplore.pricescraper.domain.users.ShoppingList;
@@ -58,6 +59,29 @@ public class ShoppingListServiceImpl implements ShoppingListService {
     shoppingList.setLines(
         recurringItems.stream().map(r -> new ShoppingListLine(r.getQuantity(), r.getItem()))
             .toList());
+    user.getShoppingLists().add(shoppingList);
+    userRepository.save(user);
+  }
+
+  /**
+   * Creates a {@link ShoppingList} for a {@link User}.
+   *
+   * @param user         the corresponding {@link User}
+   * @param shoppingList the {@link ShoppingList} to add
+   */
+  @Transactional
+  public void createShoppingListForUserFromRecipe(User user, ShoppingList shoppingList,
+                                                  Recipe recipe) {
+    if (user.getShoppingLists() == null) {
+      user.setShoppingLists(new ArrayList<>());
+    }
+    var recurringItems = recurringShoppingListItemRepository.findByUserId(user.getId());
+    var items = new ArrayList<>(
+        recurringItems.stream().map(r -> new ShoppingListLine(r.getQuantity(), r.getItem()))
+            .toList());
+    recipe.getItems()
+        .forEach(item -> items.add(new ShoppingListLine(item.getQuantity(), item.getItem())));
+    shoppingList.setLines(items);
     user.getShoppingLists().add(shoppingList);
     userRepository.save(user);
   }

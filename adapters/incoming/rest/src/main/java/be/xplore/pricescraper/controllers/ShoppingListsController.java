@@ -5,6 +5,7 @@ import be.xplore.pricescraper.domain.users.User;
 import be.xplore.pricescraper.dtos.AddRecurringItemDto;
 import be.xplore.pricescraper.dtos.RecurringItemDto;
 import be.xplore.pricescraper.dtos.ShoppingListCreateDto;
+import be.xplore.pricescraper.dtos.ShoppingListFromRecipeCreateDto;
 import be.xplore.pricescraper.dtos.ShoppingListItemDto;
 import be.xplore.pricescraper.exceptions.UnauthorizedActionExeption;
 import be.xplore.pricescraper.services.ShoppingListService;
@@ -60,6 +61,22 @@ public class ShoppingListsController {
     ShoppingList shoppingList = new ShoppingList();
     shoppingList.setTitle(dto.title());
     shoppingListService.createShoppingListForUser(user, shoppingList);
+  }
+
+  /**
+   * Adds a {@link ShoppingList} to a {@link User}.
+   *
+   * @param dto         Dto for this action
+   * @param userDetails The user details of the {@link User} that is currently authenticated
+   */
+  @PostMapping("/recipe")
+  public void addShoppingListFromRecipe(@RequestBody ShoppingListFromRecipeCreateDto dto,
+                                        @AuthenticationPrincipal
+                                        UserDetails userDetails) {
+    User user = userService.loadUserByUsername(userDetails.getUsername());
+    ShoppingList shoppingList = new ShoppingList();
+    shoppingList.setTitle(dto.title());
+    shoppingListService.createShoppingListForUserFromRecipe(user, shoppingList, dto.recipe());
   }
 
   /**

@@ -1,5 +1,6 @@
 package be.xplore.pricescraper.services;
 
+import be.xplore.pricescraper.domain.recipes.Recipe;
 import be.xplore.pricescraper.domain.users.RecurringShoppingListItem;
 import be.xplore.pricescraper.domain.users.ShoppingList;
 import be.xplore.pricescraper.domain.users.User;
@@ -15,6 +16,8 @@ public interface ShoppingListService {
   void fillShoppingListWithTrackedItems(ShoppingList shoppingList);
 
   void createShoppingListForUser(User user, ShoppingList shoppingList);
+
+  void createShoppingListForUserFromRecipe(User user, ShoppingList shoppingList, Recipe recipe);
 
   void deleteShoppingListForUser(User user, int shoppingListId);
 
