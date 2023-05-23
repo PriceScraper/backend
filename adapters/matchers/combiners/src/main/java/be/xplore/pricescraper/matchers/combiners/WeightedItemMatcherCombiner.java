@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class WeightedItemMatcherCombiner extends ItemMatcherCombiner {
 
-  private static final double matchThreshold = 0.9;
+  private static final double matchThreshold = 0.75;
 
   protected double getMatchThreshold() {
     return matchThreshold;

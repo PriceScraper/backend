@@ -85,6 +85,12 @@ class ItemRepositoryTests {
   }
 
   @Test
+  void resultsShouldHaveTrackedItems() {
+    var items = itemRepository.findAll();
+    assertThat(items.get(0).getTrackedItems()).isNotNull();
+  }
+
+  @Test
   void resultShouldHave2Items() {
     var items = itemRepository.findItemsByNameLike("PIzZa");
     assertThat(items).hasSize(2);
