@@ -7,6 +7,7 @@ import static org.mockito.BDDMockito.given;
 import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.dtos.TrackItem;
+import be.xplore.pricescraper.services.BarcodeItemService;
 import be.xplore.pricescraper.services.ItemService;
 import be.xplore.pricescraper.services.ItemServiceImpl;
 import java.util.List;
@@ -24,6 +25,8 @@ class ItemControllerTests {
   private ItemsController itemsController;
   @MockBean
   private ItemService itemService;
+  @MockBean
+  private BarcodeItemService barcodeItemService;
 
   @BeforeEach
   void prepare() {

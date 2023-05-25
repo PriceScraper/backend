@@ -73,6 +73,12 @@
 
         <dependency>
             <groupId>be.xplore</groupId>
+            <artifactId>barcodescanner</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>be.xplore</groupId>
             <artifactId>itemmatchercombinerfactory</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
