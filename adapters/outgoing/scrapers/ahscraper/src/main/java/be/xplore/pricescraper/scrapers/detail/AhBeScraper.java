@@ -1,6 +1,8 @@
 package be.xplore.pricescraper.scrapers.detail;
 
+import be.xplore.pricescraper.dtos.ItemAmountDetails;
 import be.xplore.pricescraper.scrapers.ItemDetailScraper;
+import be.xplore.pricescraper.scrapers.utils.AmountDetailsUtil;
 import java.util.Optional;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
@@ -51,5 +53,15 @@ public class AhBeScraper extends ItemDetailScraper {
     }
     var result = Double.parseDouble(base.get(0).text() + "." + decimals.get(0).text());
     return Optional.of(result);
+  }
+
+  @Override
+  protected Optional<ItemAmountDetails> getItemAmountDetails(Document document) {
+    var amountDetails =
+        document.getElementsByAttributeValueContaining("data-testhook", "product-unit-size");
+    if (hasArgumentFailed(amountDetails, 1, "data-testhook=product-unit-size")) {
+      return Optional.empty();
+    }
+    return AmountDetailsUtil.extractFromString(amountDetails.text().toLowerCase());
   }
 }

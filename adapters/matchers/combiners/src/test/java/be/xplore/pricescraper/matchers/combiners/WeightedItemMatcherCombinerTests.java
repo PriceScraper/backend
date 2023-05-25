@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import be.xplore.pricescraper.domain.shops.Item;
-import be.xplore.pricescraper.domain.shops.ItemUnit;
+import be.xplore.pricescraper.domain.shops.UnitType;
 import org.junit.jupiter.api.Test;
 
 class WeightedItemMatcherCombinerTests {
@@ -12,10 +12,8 @@ class WeightedItemMatcherCombinerTests {
   private static final WeightedItemMatcherCombiner combiner =
       new WeightedItemMatcherCombiner();
 
-  private static final Item itemA = new Item("", "", 1,
-      new ItemUnit(ItemUnit.UnitType.KILOGRAMS, 1), "");
-  private static final Item itemB = new Item("", "", 1,
-      new ItemUnit(ItemUnit.UnitType.KILOGRAMS, 1), "");
+  private static final Item itemA = new Item("", "", 1, UnitType.kg, 1, "");
+  private static final Item itemB = new Item("", "", 1, UnitType.kg, 1, "");
 
   static {
     combiner.addMatcher(new MockItemMatcher(), 0.9);

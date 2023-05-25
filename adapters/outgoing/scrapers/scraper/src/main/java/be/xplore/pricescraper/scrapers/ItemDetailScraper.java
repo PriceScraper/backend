@@ -1,6 +1,8 @@
 package be.xplore.pricescraper.scrapers;
 
+import be.xplore.pricescraper.dtos.ItemAmountDetails;
 import be.xplore.pricescraper.dtos.ShopItem;
+import be.xplore.pricescraper.utils.AmountDetailsUtil;
 import be.xplore.pricescraper.utils.scrapers.ItemScraper;
 import java.io.IOException;
 import java.util.Optional;
@@ -44,8 +46,18 @@ public abstract class ItemDetailScraper extends WebScraper implements ItemScrape
   /**
    * Code to fetch the item price.
    */
-
   protected abstract Optional<Double> getItemPrice(Document document);
+
+  /**
+   * Code to fetch the item unit.
+   */
+  protected Optional<ItemAmountDetails> getItemAmountDetails(Document document) {
+    var title = getItemTitle(document).orElse(null);
+    if (title == null) {
+      return Optional.empty();
+    }
+    return AmountDetailsUtil.extractFromString(title);
+  }
 
   /**
    * Scrape a certain item by the full URL of the item.
@@ -68,7 +80,8 @@ public abstract class ItemDetailScraper extends WebScraper implements ItemScrape
 
     var image = getItemImage(document);
     var ingredients = getItemIngredients(document);
-    var item = new ShopItem(title.get(), price.get(), image, ingredients);
+    var amountDetails = getItemAmountDetails(document);
+    var item = new ShopItem(title.get(), price.get(), image, amountDetails, ingredients);
     log.debug("Scraped " + baseUrl + " to find item: " + item);
     return Optional.of(item);
   }

@@ -20,18 +20,21 @@ public class Item {
   private String name;
   private String image;
   private int quantity;
-  private ItemUnit unit;
+  private UnitType type;
+  private double amount;
   private String ingredients;
   private List<TrackedItem> trackedItems;
 
   /**
    * Constructor without id and trackedItems.
    */
-  public Item(String name, String image, int quantity, ItemUnit unit, String ingredients) {
+  public Item(String name, String image, int quantity, UnitType type, double amount,
+              String ingredients) {
     this.name = name;
     this.image = image;
     this.quantity = quantity;
-    this.unit = unit;
+    this.type = type;
+    this.amount = amount;
     this.ingredients = ingredients;
   }
 }

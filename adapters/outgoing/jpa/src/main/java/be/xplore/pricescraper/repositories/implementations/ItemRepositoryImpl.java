@@ -2,12 +2,10 @@ package be.xplore.pricescraper.repositories.implementations;
 
 import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.domain.shops.ItemPrice;
-import be.xplore.pricescraper.domain.shops.ItemUnit;
 import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.dtos.ItemSearchDto;
 import be.xplore.pricescraper.entity.shops.ItemEntity;
 import be.xplore.pricescraper.entity.shops.ItemPriceEntity;
-import be.xplore.pricescraper.entity.shops.ItemUnitEntity;
 import be.xplore.pricescraper.entity.shops.TrackedItemEntity;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.jpa.ItemJpaRepository;
@@ -73,8 +71,7 @@ public class ItemRepositoryImpl implements ItemRepository {
   private static List<Item> mapToItems(List<ItemEntity> entities) {
     return entities.stream().map(
             ie -> new Item(ie.getId(), ie.getName(), ie.getImage(), ie.getQuantity(),
-                ie.getUnit() != null ? new ItemUnit(ie.getUnit().getType(),
-                    ie.getUnit().getContent()) : null, ie.getIngredients(),
+                ie.getType(), ie.getAmount(), ie.getIngredients(),
                 ie.getTrackedItems() != null
                     ? ie.getTrackedItems().stream().map(tr ->
                     new TrackedItem(tr.getUrl())).toList() : null))
@@ -121,17 +118,14 @@ public class ItemRepositoryImpl implements ItemRepository {
    */
   @Override
   public Item save(Item item) {
-    ItemUnitEntity itemUnit = item.getUnit() != null
-        ?
-        new ItemUnitEntity(item.getUnit().getType(), item.getUnit().getContent()) : null;
     List<TrackedItemEntity> trackedItems = item.getTrackedItems() != null
         ? item.getTrackedItems().stream()
         .map((tr) -> trackedItemRepository.getReferenceById(tr.getUrl())).toList()
         : null;
 
-    ItemEntity itemToSave =
+    var itemToSave =
         new ItemEntity(item.getId(), item.getName(), item.getImage(), item.getQuantity(),
-            itemUnit,
+            item.getType(), item.getAmount(),
             item.getIngredients(),
             trackedItems);
     var savedEntity = itemJpaRepository.saveAndFlush(itemToSave);
