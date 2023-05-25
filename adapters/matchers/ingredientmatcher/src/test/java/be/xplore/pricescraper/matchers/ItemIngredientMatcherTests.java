@@ -1,8 +1,7 @@
 package be.xplore.pricescraper.matchers;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.domain.shops.ItemUnit;
@@ -35,7 +34,7 @@ class ItemIngredientMatcherTests {
     itemIngredientMatcher.addItems(delhaizePizza1, ahPizza1);
     boolean matched =
         itemIngredientMatcher.isMatching();
-    assertTrue(matched);
+    assertThat(matched).isTrue();
   }
 
   @Test
@@ -51,7 +50,7 @@ class ItemIngredientMatcherTests {
     itemIngredientMatcher.addItems(delhaizePizza1, ahPizza2);
     boolean notMatched =
         itemIngredientMatcher.isMatching();
-    assertFalse(notMatched);
+    assertThat(notMatched).isFalse();
   }
 
 }

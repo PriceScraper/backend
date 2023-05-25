@@ -49,7 +49,8 @@ public class SecurityConfig {
         .logout()
         //.logoutSuccessHandler(logoutSuccessHandler())
         .invalidateHttpSession(true).clearAuthentication(true).deleteCookies("JSESSIONID")
-        .logoutSuccessUrl(frontendConfig.getUrl() + "/logout").and().build();
+        .logoutSuccessUrl((frontendConfig.getUrl().contains("http") ? frontendConfig.getUrl()
+            : "http://" + frontendConfig.getUrl()) + "/logout").and().build();
   }
 
   /**
