@@ -39,6 +39,12 @@ public class ItemRepositoryImpl implements ItemRepository {
   @PersistenceContext
   private EntityManager entityManager;
 
+  @Override
+  public List<Item> findAll() {
+    List<ItemEntity> itemEntities = itemJpaRepository.findAllWithTrackedItems();
+    return itemEntities.stream().map(e -> modelMapper.map(e, Item.class)).toList();
+  }
+
   /**
    * Find by name like %name%.
    */
@@ -58,7 +64,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     SearchResult<ItemEntity> result = searchSession.search(ItemEntity.class)
         .where(f -> f.match()
             .field("itemname")
-            .matching(nameQuery).fuzzy())
+            .matching(nameQuery).fuzzy(2).analyzer("itemNameQuery"))
         .fetch(limit);
     List<ItemEntity> hits = result.hits();
     return mapToItems(hits);

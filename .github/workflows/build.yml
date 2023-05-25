@@ -38,6 +38,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           mvn clean install -DskipTests -DskipITs
+          mvn clean checkstyle:check -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=PriceScraper_backend
       - name: Deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
@@ -56,7 +57,7 @@ jobs:
           docker secret create GITHUBCLIENTSECRET ./GITHUBCLIENTSECRET
           docker secret create GITHUBCLIENTID ./GITHUBCLIENTID
           export DOCKER_BUILDKIT=1
-          docker build --no-cache --progress=plain --secret id=AWS_ACCESS_KEY_ID --secret id=AWS_SECRET_ACCESS_KEY --secret id=GITHUBCLIENTSECRET --secret id=GITHUBCLIENTID  -t pricescraper:latest .
+          docker build --secret id=AWS_ACCESS_KEY_ID --secret id=AWS_SECRET_ACCESS_KEY --secret id=GITHUBCLIENTSECRET --secret id=GITHUBCLIENTID  -t pricescraper .
           PATH=$PATH:./
           curl "https://s3.us-west-2.amazonaws.com/lightsailctl/latest/linux-amd64/lightsailctl" -o "./lightsailctl"
           sudo chmod +x ./lightsailctl
@@ -65,8 +66,8 @@ jobs:
           sudo ./aws/install --update
           mkdir ~/.aws
           echo -e "[default]\naws_access_key_id = ${AWS_ACCESS_KEY_ID}\naws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}" > ~/.aws/credentials
-          aws lightsail push-container-image --region eu-west-3 --service-name backend --label pricescraperbackend --image pricescraper:latest > pushed_image.txt
-          cat pushed_image.txt | tr '\n\r' '\0' | sed -r 's/.*(backend.pricescraperbackend.+)".*/\1/g' > image.txt
-          export image=$(cat image.txt)
-          jq --arg image "$image" '.containers.pricescraperbackend.image = "\($image)"' container.template.json > container.json
-          aws lightsail create-container-service-deployment --debug --service-name backend --cli-input-json file://$(pwd)/container.json
+          aws lightsail push-container-image --region eu-west-3 --service-name backend --label pricescraperbackend --image pricescraper
+          aws lightsail get-container-images --service-name backend > pushed_image.txt
+          cat pushed_image.txt | jq --raw-output ".containerImages[0].image" > image.txt
+          jq --arg image $(cat image.txt) '.containers.pricescraperbackend.image = $image' container.template.json > container.json
+          aws lightsail create-container-service-deployment --service-name backend --cli-input-json file://$(pwd)/container.json

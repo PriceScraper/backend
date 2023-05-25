@@ -13,7 +13,7 @@ public class IngredientMatcher extends ItemMatcher {
 
   private static final LevenshteinDistance levenshteinDistance =
       LevenshteinDistance.getDefaultInstance();
-  private static final double matchThreshold = 0.9;
+  private static final double matchThreshold = 0.8;
 
   /**
    * Match 2 items by passing their ingredient strings.
@@ -36,7 +36,8 @@ public class IngredientMatcher extends ItemMatcher {
   @Override
   public double getMatchProbabilityInPercentage() {
     int score = matchitemsByIngredients(getItemA().getIngredients(), getItemB().getIngredients());
-    return normalizeScoreToPercentageGivenRange(score, 0, getMaxIngredientsStringSize());
+    double tmp = normalizeScoreToPercentageGivenRange(score, 0, getMaxIngredientsStringSize());
+    return tmp;
   }
 
   private int getMaxIngredientsStringSize() {

@@ -12,9 +12,9 @@
     "containerPort": 8080,
     "healthCheck": {
       "healthyThreshold": 2,
-      "unhealthyThreshold": 2,
-      "timeoutSeconds": 8,
-      "intervalSeconds": 45,
+      "unhealthyThreshold": 3,
+      "timeoutSeconds": 10,
+      "intervalSeconds": 60,
       "path": "/healthcheck",
       "successCodes": "200-499"
     }
