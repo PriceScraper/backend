@@ -1,0 +1,22 @@
+{
+  "containers": {
+    "pricescraperbackend": {
+      "image": "",
+      "ports": {
+        "8080": "HTTP"
+      }
+    }
+  },
+  "publicEndpoint": {
+    "containerName": "pricescraperbackend",
+    "containerPort": 8080,
+    "healthCheck": {
+      "healthyThreshold": 2,
+      "unhealthyThreshold": 3,
+      "timeoutSeconds": 10,
+      "intervalSeconds": 60,
+      "path": "/healthcheck",
+      "successCodes": "200-499"
+    }
+  }
+}

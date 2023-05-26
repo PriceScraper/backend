@@ -19,6 +19,26 @@ target/
 *.iml
 *.ipr
 
+#Lucene index
+*.fdx
+*.fdm
+*.fdt
+*.fnm
+*.nvd
+*.nvm
+*.si
+*.dvd
+*.dvm
+*.pos
+*.tim
+*.tip
+*Lucene*
+*.cfe
+*.cfs
+segments*
+
+write.lock
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
