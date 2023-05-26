@@ -11,7 +11,6 @@ import be.xplore.pricescraper.exceptions.RootDomainNotFoundException;
 import be.xplore.pricescraper.exceptions.ScrapeItemException;
 import be.xplore.pricescraper.exceptions.ScraperNotFoundException;
 import be.xplore.pricescraper.exceptions.TrackItemException;
-import be.xplore.pricescraper.factories.ItemMatcherCombinerFactory;
 import be.xplore.pricescraper.repositories.ItemPriceRepository;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.ShopRepository;
@@ -44,7 +43,7 @@ public class ItemServiceImpl implements ItemService {
   private final TrackedItemRepository trackedItemRepository;
   private final ShopRepository shopRepository;
   private final ScraperService scraperService;
-  private final ItemMatcherCombinerFactory itemMatcherCombinerFactory;
+  private final Combiner combiner;
 
   /**
    * Find by key.
@@ -276,18 +275,18 @@ public class ItemServiceImpl implements ItemService {
   private Item getExistingItemIfMatches(String title, String img, int quantity,
                                         String ingredients) {
     Item itemToMatch = new Item(title, img, quantity, null, ingredients);
-    List<Item> potentialMatches = getPotentialMatchingItems(title);
+    List<Item> potentialMatches = getPotentialMatchingItems();
     for (Item potentialMatch : potentialMatches) {
-      Combiner combiner = itemMatcherCombinerFactory.makeWeightedCombiner();
       combiner.addItems(potentialMatch, itemToMatch);
-      if (potentialMatch.getIngredients() != null && ingredients != null && combiner.isMatching()) {
+      if (potentialMatch.getIngredients() != null && ingredients != null && title != null
+          && potentialMatch.getName() != null && combiner.isMatching()) {
         return potentialMatch;
       }
     }
     return null;
   }
 
-  private List<Item> getPotentialMatchingItems(String title) {
+  private List<Item> getPotentialMatchingItems() {
     return itemRepository.findAll();
   }
 

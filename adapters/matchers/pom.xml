@@ -15,5 +15,7 @@
         <module>imagerecognitionmatcher</module>
         <module>itemmatcher</module>
         <module>combiners</module>
+        <module>titlematcher</module>
+        <module>matcherutils</module>
     </modules>
 </project>

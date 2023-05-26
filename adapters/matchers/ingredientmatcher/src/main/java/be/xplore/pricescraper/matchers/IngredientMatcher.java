@@ -1,14 +1,12 @@
 package be.xplore.pricescraper.matchers;
 
-import be.xplore.pricescraper.exceptions.MatcherNotInitializedException;
+import be.xplore.pricescraper.matchers.utils.MatchStringUtils;
 import org.apache.commons.text.similarity.LevenshteinDistance;
-import org.springframework.stereotype.Component;
 
 /**
  * This is an {@link ItemMatcher} implementation.
  * The implmentation is based on {@link be.xplore.pricescraper.domain.shops.Item} ingredients.
  */
-@Component
 public class IngredientMatcher extends ItemMatcher {
 
   private static final LevenshteinDistance levenshteinDistance =
@@ -22,13 +20,11 @@ public class IngredientMatcher extends ItemMatcher {
    * are the same as these should be described.
    * accurately by the vendors.
    *
-   * @return boolean is same product
+   * @return boolean is same item
    */
   @Override
   public boolean isMatching() {
-    if (!isInitialized()) {
-      throw new MatcherNotInitializedException();
-    }
+    validateIsInitialized();
     double matchProbability = getMatchProbabilityInPercentage();
     return matchProbability >= matchThreshold;
   }
@@ -36,12 +32,9 @@ public class IngredientMatcher extends ItemMatcher {
   @Override
   public double getMatchProbabilityInPercentage() {
     int score = matchitemsByIngredients(getItemA().getIngredients(), getItemB().getIngredients());
-    double tmp = normalizeScoreToPercentageGivenRange(score, 0, getMaxIngredientsStringSize());
-    return tmp;
-  }
-
-  private int getMaxIngredientsStringSize() {
-    return Math.max(getItemA().getIngredients().length(), getItemB().getIngredients().length());
+    int maxLength = MatchStringUtils.getMaxSizeOfStrings(getItemA().getIngredients(),
+        getItemB().getIngredients());
+    return normalizeScoreToPercentageGivenRange(score, 0, maxLength);
   }
 
   /**
@@ -60,40 +53,13 @@ public class IngredientMatcher extends ItemMatcher {
   }
 
   private String normalizeIngredientsString(String ingredients) {
-    ingredients = ingredients.toLowerCase();
     ingredients = removeLiteralIngredientsString(ingredients);
-    ingredients = removeObfuscatingCharacters(ingredients);
+    ingredients = MatchStringUtils.normalizeString(ingredients);
     return ingredients;
   }
 
   private String removeLiteralIngredientsString(String ingredients) {
     return ingredients.replace("ingrediënten", "");
-  }
-
-  /**
-   * Removes obfuscating characters from a string.
-   * Characters like "(", ")", ":", "," and whitespaces as well as plural forms of words will
-   * only obfscate the fuzzy matching algorithm and should be removed
-   *
-   * @param ingredients ingredient contents as found on the product source (webpage)
-   * @return sanitized ingredients string
-   */
-  private String removeObfuscatingCharacters(String ingredients) {
-    ingredients = removePlurals(ingredients);
-    return ingredients.replaceAll("([,:()\\. ])|(\\r\\n|\\n|\\r)", "");
-  }
-
-  /**
-   * Removes plurals of words.
-   * remove (dutch) plurals
-   * uienpoeder -> uipoeder
-   * kinderen -> kind
-   * varkens -> varken
-   * At the moment this couples us tightly to the dutch language and could be abstracted in the
-   * future if needed.
-   */
-  private String removePlurals(String ingredients) {
-    return ingredients.replaceAll("(s\\b)|(en)|(eren)", "");
   }
 
 }
