@@ -8,6 +8,9 @@ import be.xplore.pricescraper.domain.shops.UnitType;
 import be.xplore.pricescraper.exceptions.MatcherNotInitializedException;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Tests
+ */
 class TitleMatcherTests {
 
   private static final Item itemA =
