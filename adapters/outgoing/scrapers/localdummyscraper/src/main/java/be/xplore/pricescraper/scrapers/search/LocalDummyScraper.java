@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LocalDummyScraper extends SearchScraper {
   /**
-   * Constructor to get the baseUrl.
+   * Constructor to get the baseUrl of web shop.
    */
   public LocalDummyScraper(LocalDummyConfig config) {
     super(config.getUrl());
