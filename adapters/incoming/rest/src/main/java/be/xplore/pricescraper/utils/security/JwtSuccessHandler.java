@@ -42,8 +42,10 @@ public class JwtSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     var userDetails =
         (OAuth2UserAuthority) authentication.getAuthorities().stream().toList().get(0);
 
-    response.sendRedirect(frontendConfig.getUrl().contains("http") ? frontendConfig.getUrl()
-        : "http://" + frontendConfig.getUrl()
+    var baseUrl = frontendConfig.getUrl().contains("http")
+        ? frontendConfig.getUrl()
+        : "http://" + frontendConfig.getUrl();
+    response.sendRedirect(baseUrl
         + "/auth/"
         + getRefreshToken(userDetails)
         + "/"
