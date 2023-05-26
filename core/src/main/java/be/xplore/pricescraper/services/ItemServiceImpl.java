@@ -4,6 +4,8 @@ import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.domain.shops.ItemPrice;
 import be.xplore.pricescraper.domain.shops.Shop;
 import be.xplore.pricescraper.domain.shops.TrackedItem;
+import be.xplore.pricescraper.domain.shops.UnitType;
+import be.xplore.pricescraper.dtos.ItemAmountDetails;
 import be.xplore.pricescraper.dtos.ItemSearchDto;
 import be.xplore.pricescraper.dtos.ShopItem;
 import be.xplore.pricescraper.exceptions.ItemNotFoundException;
@@ -237,8 +239,10 @@ public class ItemServiceImpl implements ItemService {
       log.debug("Item is already being tracked. Url: " + dbItem.get().getUrl());
       return dbItem.get();
     }
+    var amountDetails = scrapedResponse.details()
+        .orElse(new ItemAmountDetails(UnitType.not_available, 1, 1));
     var item =
-        getItem(scrapedResponse.title(), scrapedResponse.img().orElse(null), 1,
+        getItem(scrapedResponse.title(), scrapedResponse.img().orElse(null), amountDetails,
             scrapedResponse.ingredients().orElse(null));
     var trackedItem = getTrackedItem(urlToItem, item, shop, scrapedResponse.price()).orElseThrow(
         TrackItemException::new);
@@ -264,17 +268,20 @@ public class ItemServiceImpl implements ItemService {
   /**
    * Retrieve shop or create if does not exist.
    */
-  private Item getItem(String title, String img, int quantity, String ingredients) {
-    Item item = getExistingItemIfMatches(title, img, quantity, ingredients);
+  private Item getItem(String title, String img, ItemAmountDetails amountDetails,
+                       String ingredients) {
+    Item item = getExistingItemIfMatches(title, img, amountDetails, ingredients);
     if (item == null) {
-      item = addNewItem(title, img, quantity, ingredients);
+      item = addNewItem(title, img, amountDetails, ingredients);
     }
     return item;
   }
 
-  private Item getExistingItemIfMatches(String title, String img, int quantity,
+  private Item getExistingItemIfMatches(String title, String img, ItemAmountDetails amountDetails,
                                         String ingredients) {
-    Item itemToMatch = new Item(title, img, quantity, null, ingredients);
+    Item itemToMatch =
+        new Item(title, img, amountDetails.quantity(), amountDetails.type(), amountDetails.amount(),
+            ingredients);
     List<Item> potentialMatches = getPotentialMatchingItems();
     for (Item potentialMatch : potentialMatches) {
       combiner.addItems(potentialMatch, itemToMatch);
@@ -290,12 +297,14 @@ public class ItemServiceImpl implements ItemService {
     return itemRepository.findAll();
   }
 
-  private Item addNewItem(String title, String img, int quantity,
+  private Item addNewItem(String title, String img, ItemAmountDetails amountDetails,
                           String ingredients) {
     Item item = new Item();
     item.setName(title);
     item.setImage(img);
-    item.setQuantity(quantity);
+    item.setType(amountDetails.type());
+    item.setAmount(amountDetails.amount());
+    item.setQuantity(amountDetails.quantity());
     item.setIngredients(ingredients);
     item = itemRepository.save(item);
     return item;

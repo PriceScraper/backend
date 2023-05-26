@@ -1,5 +1,6 @@
 package be.xplore.pricescraper.entity.shops;
 
+import be.xplore.pricescraper.domain.shops.UnitType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -37,7 +38,8 @@ public class ItemEntity {
   private String name;
   private String image;
   private int quantity;
-  private ItemUnitEntity unit;
+  private UnitType type;
+  private double amount;
   @Column(columnDefinition = "TEXT")
   private String ingredients;
   @OneToMany(fetch = FetchType.LAZY)
