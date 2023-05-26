@@ -2,6 +2,7 @@ package be.xplore.pricescraper.matchers;
 
 
 import be.xplore.pricescraper.domain.shops.Item;
+import be.xplore.pricescraper.exceptions.MatcherNotInitializedException;
 import be.xplore.pricescraper.utils.matchers.Matcher;
 
 /**
@@ -14,15 +15,17 @@ public abstract class ItemMatcher implements Matcher {
   private Item itemA = null;
   private Item itemB = null;
 
+  void validateIsInitialized() {
+    if (!isInitialized()) {
+      throw new MatcherNotInitializedException();
+    }
+  }
+
   @Override
   public void addItems(Item a, Item b) {
     itemA = a;
     itemB = b;
     initialized = true;
-  }
-
-  protected void setInitialized(boolean initialized) {
-    this.initialized = initialized;
   }
 
   /**

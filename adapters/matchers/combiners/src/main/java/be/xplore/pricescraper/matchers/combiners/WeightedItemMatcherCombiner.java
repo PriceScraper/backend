@@ -3,12 +3,10 @@ package be.xplore.pricescraper.matchers.combiners;
 import be.xplore.pricescraper.exceptions.MatchException;
 import be.xplore.pricescraper.matchers.ItemMatcher;
 import java.util.Map;
-import org.springframework.stereotype.Component;
 
 /**
  * Weighted implementation for {@link ItemMatcherCombiner}.
  */
-@Component
 public class WeightedItemMatcherCombiner extends ItemMatcherCombiner {
 
   private static final double matchThreshold = 0.75;

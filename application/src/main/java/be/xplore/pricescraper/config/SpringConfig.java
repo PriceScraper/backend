@@ -1,7 +1,12 @@
 package be.xplore.pricescraper.config;
 
 import be.xplore.pricescraper.factories.ItemMatcherCombinerFactory;
+import be.xplore.pricescraper.matchers.IngredientMatcher;
+import be.xplore.pricescraper.matchers.TitleMatcher;
 import be.xplore.pricescraper.utils.matchers.Combiner;
+import be.xplore.pricescraper.utils.matchers.Matcher;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +26,10 @@ public class SpringConfig {
 
   @Bean
   Combiner getCombiner() {
-    return matcherCombinerFactory.makeWeightedCombiner();
+    Map<Matcher, Double> matchersWithWeights = new HashMap<>();
+    matchersWithWeights.put(new IngredientMatcher(), 0.6);
+    matchersWithWeights.put(new TitleMatcher(), 0.4);
+    return matcherCombinerFactory.makeWeightedCombiner(matchersWithWeights);
   }
 
 }

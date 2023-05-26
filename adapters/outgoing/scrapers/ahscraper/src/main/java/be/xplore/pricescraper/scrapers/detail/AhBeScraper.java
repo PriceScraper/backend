@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component;
  */
 @Component("scraper-ah.be")
 public class AhBeScraper extends ItemDetailScraper {
+  private static final String PRICE_BASE_KEY = "price-amount_integer__+e2XO";
+  private static final String PRICE_DEC_KEY = "price-amount_fractional__kjJ7u";
+
   public AhBeScraper() {
     super("https://www.ah.be/producten/product/");
   }
@@ -43,12 +46,34 @@ public class AhBeScraper extends ItemDetailScraper {
   }
 
   protected Optional<Double> getItemPrice(Document document) {
-    var base = document.getElementsByClass("price-amount_integer__+e2XO");
-    if (hasArgumentFailed(base, 1, "price-amount_integer__+e2XO")) {
+    var base = document.getElementsByClass(PRICE_BASE_KEY);
+    if (base.size() == 1) {
+      return getItemPriceFromRegularProduct(document);
+    } else {
+      return getItemPriceFromDiscountProduct(document);
+    }
+  }
+
+  private Optional<Double> getItemPriceFromDiscountProduct(Document document) {
+    var base = document.getElementsByClass(PRICE_BASE_KEY);
+    if (hasArgumentFailed(base, 2, PRICE_BASE_KEY)) {
       return Optional.empty();
     }
-    var decimals = document.getElementsByClass("price-amount_fractional__kjJ7u");
-    if (hasArgumentFailed(base, 1, "price-amount_fractional__kjJ7u")) {
+    var decimals = document.getElementsByClass(PRICE_DEC_KEY);
+    if (hasArgumentFailed(base, 2, PRICE_DEC_KEY)) {
+      return Optional.empty();
+    }
+    var result = Double.parseDouble(base.get(1).text() + "." + decimals.get(1).text());
+    return Optional.of(result);
+  }
+
+  private Optional<Double> getItemPriceFromRegularProduct(Document document) {
+    var base = document.getElementsByClass(PRICE_BASE_KEY);
+    if (hasArgumentFailed(base, 1, PRICE_BASE_KEY)) {
+      return Optional.empty();
+    }
+    var decimals = document.getElementsByClass(PRICE_DEC_KEY);
+    if (hasArgumentFailed(base, 1, PRICE_DEC_KEY)) {
       return Optional.empty();
     }
     var result = Double.parseDouble(base.get(0).text() + "." + decimals.get(0).text());

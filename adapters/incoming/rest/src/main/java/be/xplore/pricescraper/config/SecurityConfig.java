@@ -36,20 +36,20 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-    return http.cors().and().csrf().ignoringRequestMatchers("/items/track")
+    return http.cors().and().csrf().ignoringRequestMatchers("/items/track", "/healthcheck")
         .ignoringRequestMatchers("/shoppinglists/**")
-        .ignoringRequestMatchers("/logout")
+        .ignoringRequestMatchers("/recipe/**").ignoringRequestMatchers("/logout")
         .ignoringRequestMatchers("/recipe/**")
-        .ignoringRequestMatchers("/auth/**")
-        .and()
-        .authorizeHttpRequests(
-            auth -> auth.requestMatchers("/items/**").permitAll().requestMatchers("/items/track")
+        .ignoringRequestMatchers("/auth/**").and().authorizeHttpRequests(
+            auth -> auth.requestMatchers("/items/**", "/healthcheck").permitAll()
+                .requestMatchers("/items/track")
                 .authenticated().anyRequest().authenticated()).oauth2Login(this::handleSuccess)
         .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
         .logout()
         //.logoutSuccessHandler(logoutSuccessHandler())
         .invalidateHttpSession(true).clearAuthentication(true).deleteCookies("JSESSIONID")
-        .logoutSuccessUrl(frontendConfig.getUrl() + "/logout").and().build();
+        .logoutSuccessUrl((frontendConfig.getUrl().contains("http") ? frontendConfig.getUrl()
+            : "http://" + frontendConfig.getUrl()) + "/logout").and().build();
   }
 
   /**

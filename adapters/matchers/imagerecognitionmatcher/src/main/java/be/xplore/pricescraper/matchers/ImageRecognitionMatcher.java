@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.SdkBytes;
@@ -29,7 +28,6 @@ import software.amazon.awssdk.services.rekognition.model.TextDetection;
  * This is an {@link ItemMatcher} implementation.
  * The implmentation is based on image recognition.
  */
-@Component
 public class ImageRecognitionMatcher extends ItemMatcher {
 
   private static final LevenshteinDistance levenshteinDistance =
