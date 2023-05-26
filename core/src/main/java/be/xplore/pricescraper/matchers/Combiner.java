@@ -1,4 +1,4 @@
-package be.xplore.pricescraper.utils.matchers;
+package be.xplore.pricescraper.matchers;
 
 import be.xplore.pricescraper.domain.shops.Item;
 
@@ -7,6 +7,8 @@ import be.xplore.pricescraper.domain.shops.Item;
  */
 public interface Combiner {
   void addItems(Item a, Item b);
+
+  void addMatcher(Matcher m);
 
   boolean isMatching();
 }

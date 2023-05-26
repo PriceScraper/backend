@@ -13,6 +13,12 @@ public class TitleMatcher extends ItemMatcher {
       LevenshteinDistance.getDefaultInstance();
   private static final double matchThreshold = 0.75;
 
+  @Override
+  public boolean matchingIsPossible() {
+    return getItemA().getName() != null && getItemB().getName() != null
+        && !getItemA().getName().isEmpty() && !getItemB().getName().isEmpty();
+  }
+
   /**
    * Match 2 items by passing their title strings.
    * Shops often desribe product names slightly different.
@@ -52,5 +58,4 @@ public class TitleMatcher extends ItemMatcher {
   private String normalizeTitleString(String title) {
     return MatchStringUtils.normalizeString(title);
   }
-
 }

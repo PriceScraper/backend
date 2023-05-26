@@ -1,7 +1,9 @@
 package be.xplore.pricescraper.matchers.combiners;
 
+import be.xplore.pricescraper.exceptions.CombinerInitializeException;
 import be.xplore.pricescraper.exceptions.MatchException;
-import be.xplore.pricescraper.matchers.ItemMatcher;
+import be.xplore.pricescraper.matchers.Matcher;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -9,33 +11,50 @@ import java.util.Map;
  */
 public class WeightedItemMatcherCombiner extends ItemMatcherCombiner {
 
+  private final Map<Matcher, Double> weightedMatchers = new HashMap<>();
+
   private static final double matchThreshold = 0.75;
 
   protected double getMatchThreshold() {
     return matchThreshold;
   }
 
-  /**
-   * Gets combines match probability for matchers.
-   */
-  public double getMatchProbabilityInPercentage() {
-    if (getWeightSum() != 1.0) {
-      throw new MatchException("Sum of weights in match combiner should be equal to 1");
-    }
-    double percentageSum = 0;
-    for (Map.Entry<ItemMatcher, Double> m :
-        getMatchers().entrySet()) {
-      percentageSum += m.getKey().getMatchProbabilityInPercentage() * m.getValue();
-    }
-    return percentageSum;
-  }
-
-  private double getWeightSum() {
-    return getMatchers().values().stream().mapToDouble(Double::doubleValue).sum();
-  }
-
   @Override
   public boolean isMatching() {
     return getMatchProbabilityInPercentage() >= getMatchThreshold();
   }
+
+  /**
+   * Gets combines match probability for matchers.
+   */
+  public double getMatchProbabilityInPercentage() {
+    double percentageSum = 0;
+    double percentageTotal = 1.0;
+    for (Map.Entry<Matcher, Double> m :
+        weightedMatchers.entrySet()) {
+      if (!m.getKey().matchingIsPossible()) {
+        percentageTotal -= m.getValue();
+        continue;
+      }
+      percentageSum += m.getKey().getMatchProbabilityInPercentage() * m.getValue();
+    }
+    if (percentageTotal == 0.0) {
+      throw new MatchException("Unable to match, none of the matchers were applicable");
+    }
+    return percentageSum / percentageTotal;
+  }
+
+  /**
+   * Adds a weighted matcher.
+   */
+  public void addWeightToMatcher(Class<? extends Matcher> matcherClass, double weight) {
+    weightedMatchers.put(getMatcherByType(matcherClass), weight);
+  }
+
+  private Matcher getMatcherByType(Class<? extends Matcher> matcherClass) {
+    return getMatchers().stream()
+        .filter((m) -> m.getClass().isAssignableFrom(matcherClass)).findFirst()
+        .orElseThrow(CombinerInitializeException::new);
+  }
+
 }
