@@ -314,15 +314,11 @@ public class ItemServiceImpl implements ItemService {
    * Create tracked item.
    */
   private Optional<TrackedItem> getTrackedItem(String url, Item item, Shop shop, double price) {
-    var identifier = scraperService.getItemIdentifier(url);
-    if (identifier.isEmpty()) {
-      return Optional.empty();
-    }
     var trackedItem = new TrackedItem();
-    trackedItem.setUrl(identifier.get());
+    trackedItem.setUrl(url);
     trackedItem.setShop(shop);
     trackedItem.setItem(item);
-    trackedItem.setLastAttempt(Timestamp.from(Instant.MIN));
+    trackedItem.setLastAttempt(Timestamp.from(Instant.now()));
     trackedItem = trackedItemRepository.save(trackedItem);
     trackedItem.setItemPrices(new ArrayList<>());
     trackedItem.getItemPrices().add(getItemPriceForTrackedItem(price, trackedItem));
