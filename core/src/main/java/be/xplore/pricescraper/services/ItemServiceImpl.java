@@ -6,6 +6,7 @@ import be.xplore.pricescraper.domain.shops.Shop;
 import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.domain.shops.UnitType;
 import be.xplore.pricescraper.dtos.ItemAmountDetails;
+import be.xplore.pricescraper.dtos.ItemScraperSearch;
 import be.xplore.pricescraper.dtos.ItemSearchDto;
 import be.xplore.pricescraper.dtos.ShopItem;
 import be.xplore.pricescraper.exceptions.ItemNotFoundException;
@@ -351,7 +352,7 @@ public class ItemServiceImpl implements ItemService {
    */
   public List<TrackedItem> discoverNewItems(String query) {
     var start = LocalDateTime.now();
-    var potentialItems = scraperService.discoverItems(query);
+    var potentialItems = getDiscoveredItems(query);
     var trackedItems = new ArrayList<TrackedItem>();
     for (var item : potentialItems) {
       try {
@@ -363,6 +364,14 @@ public class ItemServiceImpl implements ItemService {
     }
     logDiscoveryPerformance(start, trackedItems.size(), potentialItems.size(), query);
     return trackedItems;
+  }
+
+
+  /**
+   * Step 1. Get potential items.
+   */
+  public List<ItemScraperSearch> getDiscoveredItems(String query) {
+    return scraperService.discoverItems(query);
   }
 
   /**

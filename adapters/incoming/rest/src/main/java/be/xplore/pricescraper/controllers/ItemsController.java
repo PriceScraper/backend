@@ -4,6 +4,7 @@ import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.dtos.BarcodeScanResult;
 import be.xplore.pricescraper.dtos.ItemSearchDto;
+import be.xplore.pricescraper.dtos.PotentialItemsCount;
 import be.xplore.pricescraper.dtos.TrackItem;
 import be.xplore.pricescraper.exceptions.ItemNotFoundException;
 import be.xplore.pricescraper.services.BarcodeItemService;
@@ -42,6 +43,15 @@ public class ItemsController {
   @GetMapping
   public List<ItemSearchDto> findItemsByNameLike(@RequestParam String name) {
     return itemService.findItemByNameLike(name);
+  }
+
+  /**
+   * Finds items by name that includes the given string.
+   */
+  @GetMapping("/potential")
+  public ResponseEntity<PotentialItemsCount> getPotentialCount(@RequestParam String q) {
+    var e = new PotentialItemsCount(itemService.getDiscoveredItems(q).size());
+    return ResponseEntity.ok(e);
   }
 
   /**
