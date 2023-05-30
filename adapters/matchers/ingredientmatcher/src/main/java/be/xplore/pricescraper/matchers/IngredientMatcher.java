@@ -11,7 +11,7 @@ public class IngredientMatcher extends ItemMatcher {
 
   private static final LevenshteinDistance levenshteinDistance =
       LevenshteinDistance.getDefaultInstance();
-  private static final double matchThreshold = 0.8;
+  private static final double matchThreshold = 0.7;
 
   @Override
   public boolean matchingIsPossible() {

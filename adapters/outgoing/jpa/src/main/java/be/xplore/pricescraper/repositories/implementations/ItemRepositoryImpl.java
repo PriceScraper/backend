@@ -60,9 +60,8 @@ public class ItemRepositoryImpl implements ItemRepository {
   public List<ItemSearchDto> findItemByNameWithFuzzySearchAndLimit(String nameQuery, int limit) {
     SearchSession searchSession = Search.session(entityManager);
     SearchResult<ItemEntity> result = searchSession.search(ItemEntity.class)
-        .where(f -> f.match()
-            .field("itemname")
-            .matching(nameQuery).fuzzy(2).analyzer("itemNameQuery"))
+        .where(f -> f.match().field("name")
+            .matching(nameQuery).analyzer("itemNameQuery"))
         .fetch(limit);
     List<ItemEntity> hits = result.hits().stream().distinct().toList();
     return mapToItemSearchDtos(hits);

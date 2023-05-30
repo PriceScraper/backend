@@ -12,11 +12,11 @@ public class ItemNameAnalyzer implements LuceneAnalysisConfigurer {
     context.analyzer("itemName").custom()
         .tokenizer("whitespace")
         .tokenFilter("lowercase")
-        .tokenFilter("edgeNGram").param("maxGramSize", "15").param("minGramSize", "1");
+        .tokenFilter("EdgeNGram").param("maxGramSize", "5")
+        .param("minGramSize", "4");
 
     context.analyzer("itemNameQuery").custom()
         .tokenizer("whitespace")
-        .tokenFilter("lowercase")
-        .tokenFilter("snowballPorter").param("language", "Dutch");
+        .tokenFilter("lowercase");
   }
 }

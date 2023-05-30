@@ -11,7 +11,7 @@ public class TitleMatcher extends ItemMatcher {
 
   private static final LevenshteinDistance levenshteinDistance =
       LevenshteinDistance.getDefaultInstance();
-  private static final double matchThreshold = 0.75;
+  private static final double matchThreshold = 0.7;
 
   @Override
   public boolean matchingIsPossible() {

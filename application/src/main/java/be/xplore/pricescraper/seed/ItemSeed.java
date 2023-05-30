@@ -30,7 +30,7 @@ public class ItemSeed {
     }
     log.info("Seeding items.");
     var discoverItems = new String[] {
-        "Dr. oetker ristorante margherita"
+        "Dr. oetker ristorante margherita", "Campina melk"
     };
 
     Arrays.stream(discoverItems).toList()
