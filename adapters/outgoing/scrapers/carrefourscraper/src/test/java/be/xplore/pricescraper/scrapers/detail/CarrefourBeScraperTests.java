@@ -1,10 +1,11 @@
-package be.xplore.pricescraper.scrapers;
+package be.xplore.pricescraper.scrapers.detail;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 
-import be.xplore.pricescraper.scrapers.detail.LocalDummyScraper;
+import be.xplore.pricescraper.scrapers.MockJsoupConnection;
+import be.xplore.pricescraper.scrapers.detail.CarrefourBeScraper;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -21,9 +22,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 @ExtendWith(MockitoExtension.class)
-class LocalDummyScraperTests {
+class CarrefourBeScraperTests {
 
-  private static final LocalDummyScraper scraper = new LocalDummyScraper();
+  private static final CarrefourBeScraper scraper = new CarrefourBeScraper();
 
   @Test
   void constructed() {

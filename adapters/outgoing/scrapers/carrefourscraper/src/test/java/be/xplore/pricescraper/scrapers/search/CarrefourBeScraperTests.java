@@ -1,10 +1,11 @@
-package be.xplore.pricescraper.scrapers;
+package be.xplore.pricescraper.scrapers.search;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 
-import be.xplore.pricescraper.scrapers.detail.CarrefourBeScraper;
+import be.xplore.pricescraper.config.SearchScraperConfig;
+import be.xplore.pricescraper.scrapers.MockJsoupConnection;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -21,9 +22,14 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 @ExtendWith(MockitoExtension.class)
-class CarrefourBeScraperTests {
+public class CarrefourBeScraperTests {
+  private final CarrefourBeScraper scraper;
 
-  private static final CarrefourBeScraper scraper = new CarrefourBeScraper();
+  public CarrefourBeScraperTests() {
+    var config = new SearchScraperConfig();
+    config.setItemLimit(50);
+    this.scraper = new CarrefourBeScraper(config);
+  }
 
   @Test
   void constructed() {
@@ -31,8 +37,8 @@ class CarrefourBeScraperTests {
   }
 
   @Test
-  void getItemResults() throws IOException {
-    Resource resource = new ClassPathResource("html.txt");
+  void getResults() throws IOException {
+    Resource resource = new ClassPathResource("searchPage.txt");
     File file = resource.getFile();
     BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
     String html = bufferedReader.lines().collect(Collectors.joining());
@@ -44,10 +50,8 @@ class CarrefourBeScraperTests {
       jsoup.when(() -> Jsoup.connect(any(String.class))).thenReturn(connection);
 
       var response = scraper.scrape("test");
-      assertTrue(response.isPresent());
-      assertNotNull(response.get());
-      assertNotNull(response.get().title());
-      assertTrue(response.get().price() > 0);
+      assertTrue(response.size() > 0);
+      System.out.println(response.size());
     }
   }
 }

@@ -1,6 +1,7 @@
-package be.xplore.pricescraper.scrapers;
+package be.xplore.pricescraper.scrapers.detail;
 
 
+import be.xplore.pricescraper.scrapers.ItemDetailScraper;
 import java.util.Optional;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -26,7 +27,7 @@ public class LocalDummyScraper extends ItemDetailScraper {
 
   @Override
   protected Optional<String> getItemImage(Document document) {
-    return Optional.empty();
+    return Optional.of(document.getElementsByClass("productImg").get(0).attr("src"));
   }
 
   @Override

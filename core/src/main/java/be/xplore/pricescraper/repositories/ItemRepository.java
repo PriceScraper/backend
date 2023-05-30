@@ -19,7 +19,7 @@ public interface ItemRepository {
 
   List<ItemSearchDto> findItemsByNameLike(String name);
 
-  List<Item> findItemByNameWithFuzzySearchAndLimit(String nameQuery, int limit);
+  List<ItemSearchDto> findItemByNameWithFuzzySearchAndLimit(String nameQuery, int limit);
 
   Optional<Item> findItemWithTrackedItemsById(int id);
 

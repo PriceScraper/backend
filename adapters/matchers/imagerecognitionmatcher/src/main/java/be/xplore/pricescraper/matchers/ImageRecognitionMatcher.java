@@ -41,6 +41,12 @@ public class ImageRecognitionMatcher extends ItemMatcher {
   }
 
   @Override
+  public boolean matchingIsPossible() {
+    return getItemA().getImage() != null && getItemB().getImage() != null
+        && !getItemA().getImage().isEmpty() && !getItemB().getImage().isEmpty();
+  }
+
+  @Override
   public boolean isMatching() {
     if (!isInitialized()) {
       throw new MatcherNotInitializedException();

@@ -14,11 +14,11 @@ import be.xplore.pricescraper.exceptions.RootDomainNotFoundException;
 import be.xplore.pricescraper.exceptions.ScrapeItemException;
 import be.xplore.pricescraper.exceptions.ScraperNotFoundException;
 import be.xplore.pricescraper.exceptions.TrackItemException;
+import be.xplore.pricescraper.matchers.Combiner;
 import be.xplore.pricescraper.repositories.ItemPriceRepository;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.ShopRepository;
 import be.xplore.pricescraper.repositories.TrackedItemRepository;
-import be.xplore.pricescraper.utils.matchers.Combiner;
 import jakarta.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.Duration;
@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,8 @@ public class ItemServiceImpl implements ItemService {
   private final ShopRepository shopRepository;
   private final ScraperService scraperService;
   private final Combiner combiner;
+  @Value("search.item.limit")
+  private String itemSearchLimit;
 
   /**
    * Find by key.
@@ -93,12 +96,17 @@ public class ItemServiceImpl implements ItemService {
    * If low amount of results, start discovering new items.
    */
   public List<ItemSearchDto> findItemByNameLike(String name) {
-    var res = itemRepository.findItemsByNameLike(name.strip());
-    if (res.size() > 3 || name.strip().length() < 3) {
-      return res;
+    int searchLimit;
+    try {
+      searchLimit = Integer.parseInt(itemSearchLimit);
+    } catch (NumberFormatException ignored) {
+      searchLimit = 100;
     }
-    discoverNewItems(name);
-    return itemRepository.findItemsByNameLike(name.strip());
+    var res = itemRepository.findItemByNameWithFuzzySearchAndLimit(name, searchLimit);
+    if (res.size() < 5 && name.strip().length() < 3) {
+      discoverNewItems(name);
+    }
+    return res;
   }
 
   /**
@@ -286,8 +294,7 @@ public class ItemServiceImpl implements ItemService {
     List<Item> potentialMatches = getPotentialMatchingItems();
     for (Item potentialMatch : potentialMatches) {
       combiner.addItems(potentialMatch, itemToMatch);
-      if (potentialMatch.getIngredients() != null && ingredients != null && title != null
-          && potentialMatch.getName() != null && combiner.isMatching()) {
+      if (combiner.isMatching()) {
         return potentialMatch;
       }
     }
@@ -354,15 +361,23 @@ public class ItemServiceImpl implements ItemService {
     var start = LocalDateTime.now();
     var potentialItems = getDiscoveredItems(query);
     var trackedItems = new ArrayList<TrackedItem>();
+    var itemsSkipped = 0;
+    log.info(String.format("Found %d potential items for query: %s", potentialItems.size(), query));
     for (var item : potentialItems) {
       try {
-        var res = addTrackedItem(item.url());
-        trackedItems.add(res);
+        if (trackedItemRepository.existsByUrlIgnoreCase(item.url())) {
+          log.debug("Item already in db, skipped: " + item.url());
+          itemsSkipped++;
+        } else {
+          var res = addTrackedItem(item.url());
+          trackedItems.add(res);
+        }
       } catch (Exception e) {
         log.error(e.getMessage());
       }
     }
-    logDiscoveryPerformance(start, trackedItems.size(), potentialItems.size(), query);
+    logDiscoveryPerformance(start, trackedItems.size(), potentialItems.size() - itemsSkipped,
+        query);
     return trackedItems;
   }
 

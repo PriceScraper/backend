@@ -13,6 +13,12 @@ public class IngredientMatcher extends ItemMatcher {
       LevenshteinDistance.getDefaultInstance();
   private static final double matchThreshold = 0.8;
 
+  @Override
+  public boolean matchingIsPossible() {
+    return getItemA().getIngredients() != null && getItemB().getIngredients() != null
+        && !getItemA().getIngredients().isEmpty() && !getItemB().getIngredients().isEmpty();
+  }
+
   /**
    * Match 2 items by passing their ingredient strings.
    * Shops often desribe product names slightly different,
@@ -61,5 +67,4 @@ public class IngredientMatcher extends ItemMatcher {
   private String removeLiteralIngredientsString(String ingredients) {
     return ingredients.replace("ingrediënten", "");
   }
-
 }
