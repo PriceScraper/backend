@@ -20,4 +20,6 @@ public interface TrackedItemRepository {
   long count();
 
   Page<TrackedItem> findAll(Pageable pageable);
+
+  boolean existsByUrlIgnoreCase(String url);
 }

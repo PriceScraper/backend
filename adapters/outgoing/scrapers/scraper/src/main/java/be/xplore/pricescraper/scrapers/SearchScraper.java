@@ -1,5 +1,6 @@
 package be.xplore.pricescraper.scrapers;
 
+import be.xplore.pricescraper.config.SearchScraperConfig;
 import be.xplore.pricescraper.dtos.ItemScraperSearch;
 import be.xplore.pricescraper.utils.scrapers.SearchItemsScraper;
 import java.io.IOException;
@@ -22,12 +23,14 @@ public abstract class SearchScraper extends WebScraper implements SearchItemsScr
    */
   @Getter
   protected String baseUrl;
+  protected SearchScraperConfig config;
 
   /**
    * Constructor to get the baseUrl.
    */
-  public SearchScraper(String baseUrl) {
+  public SearchScraper(String baseUrl, SearchScraperConfig config) {
     this.baseUrl = baseUrl;
+    this.config = config;
   }
 
   /**
@@ -39,6 +42,13 @@ public abstract class SearchScraper extends WebScraper implements SearchItemsScr
     var document = getDocument(urlToSearchQuery(queryValue));
     var itemElements = getItems(document);
     log.debug("Found items for " + baseUrl + ": " + itemElements.size());
+    return itemElementsToDto(itemElements);
+  }
+
+  /**
+   * Looping over items and putting them in dto.
+   */
+  protected List<ItemScraperSearch> itemElementsToDto(Elements itemElements) throws IOException {
     var foundItems = new ArrayList<ItemScraperSearch>();
     for (var itemElement : itemElements) {
       var title = getTitle(itemElement);
@@ -48,6 +58,9 @@ public abstract class SearchScraper extends WebScraper implements SearchItemsScr
       }
       log.debug("Search scraper: Found item '" + title.get() + "' at " + url.get());
       foundItems.add(new ItemScraperSearch(title.get(), getBaseUrl() + url.get()));
+    }
+    if (foundItems.size() > config.getItemLimit()) {
+      return foundItems.subList(0, config.getItemLimit() - 1);
     }
     return foundItems;
   }
