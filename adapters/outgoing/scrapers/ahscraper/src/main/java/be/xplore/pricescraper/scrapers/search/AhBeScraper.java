@@ -1,5 +1,6 @@
 package be.xplore.pricescraper.scrapers.search;
 
+import be.xplore.pricescraper.config.SearchScraperConfig;
 import be.xplore.pricescraper.scrapers.SearchScraper;
 import java.util.Optional;
 import org.jsoup.nodes.Document;
@@ -15,8 +16,8 @@ public class AhBeScraper extends SearchScraper {
   /**
    * Constructor to get the baseUrl.
    */
-  public AhBeScraper() {
-    super("https://www.ah.be");
+  public AhBeScraper(SearchScraperConfig config) {
+    super("https://www.ah.be", config);
   }
 
   @Override

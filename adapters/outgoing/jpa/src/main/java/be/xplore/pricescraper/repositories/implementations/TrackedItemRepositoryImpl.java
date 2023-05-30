@@ -82,4 +82,9 @@ public class TrackedItemRepositoryImpl implements TrackedItemRepository {
     return jpaRepository.findAll(pageable)
         .map(entity -> modelMapper.map(entity, TrackedItem.class));
   }
+
+  @Override
+  public boolean existsByUrlIgnoreCase(String url) {
+    return jpaRepository.existsByUrlIgnoreCase(url);
+  }
 }

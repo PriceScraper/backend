@@ -17,4 +17,6 @@ public interface TrackedItemJpaRepository
   Optional<TrackedItemEntity> findByUrlIgnoreCaseAndShopId(String url, int id);
 
   long count();
+
+  boolean existsByUrlIgnoreCase(String url);
 }
