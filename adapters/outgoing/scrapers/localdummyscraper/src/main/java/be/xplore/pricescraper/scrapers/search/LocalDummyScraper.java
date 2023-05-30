@@ -1,5 +1,6 @@
 package be.xplore.pricescraper.scrapers.search;
 
+import be.xplore.pricescraper.config.SearchScraperConfig;
 import be.xplore.pricescraper.scrapers.SearchScraper;
 import be.xplore.pricescraper.scrapers.config.LocalDummyConfig;
 import java.util.Optional;
@@ -18,8 +19,8 @@ public class LocalDummyScraper extends SearchScraper {
   /**
    * Constructor to get the baseUrl of web shop.
    */
-  public LocalDummyScraper(LocalDummyConfig config) {
-    super(config.getUrl());
+  public LocalDummyScraper(LocalDummyConfig config, SearchScraperConfig searchScraperConfig) {
+    super(config.getUrl(), searchScraperConfig);
   }
 
   @Override

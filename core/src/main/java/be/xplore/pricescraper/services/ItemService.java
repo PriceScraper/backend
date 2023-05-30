@@ -2,6 +2,7 @@ package be.xplore.pricescraper.services;
 
 import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.domain.shops.TrackedItem;
+import be.xplore.pricescraper.dtos.ItemScraperSearch;
 import be.xplore.pricescraper.dtos.ItemSearchDto;
 import be.xplore.pricescraper.dtos.ShopItem;
 import java.util.List;
@@ -21,6 +22,8 @@ public interface ItemService {
   Item findItemWithTrackedItemsAndLatestPricesById(int id);
 
   List<ItemSearchDto> findItemByNameLike(String name);
+
+  List<ItemScraperSearch> getDiscoveredItems(String query);
 
   void modifyTrackedItemPrice(TrackedItem trackedItem, Optional<ShopItem> shopItem);
 
