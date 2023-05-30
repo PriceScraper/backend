@@ -42,4 +42,13 @@ class TitleMatcherTests {
     assertThat(notMatched).isFalse();
   }
 
+  @Test
+  void shouldBeAbleToMatch() {
+    TitleMatcher titleMatcher = new TitleMatcher();
+    titleMatcher.addItems(itemA, itemC);
+    boolean matchingPossible =
+        titleMatcher.matchingIsPossible();
+    assertThat(matchingPossible).isTrue();
+  }
+
 }

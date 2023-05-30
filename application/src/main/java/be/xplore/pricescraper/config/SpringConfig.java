@@ -1,10 +1,10 @@
 package be.xplore.pricescraper.config;
 
 import be.xplore.pricescraper.factories.ItemMatcherCombinerFactory;
+import be.xplore.pricescraper.matchers.Combiner;
 import be.xplore.pricescraper.matchers.IngredientMatcher;
+import be.xplore.pricescraper.matchers.Matcher;
 import be.xplore.pricescraper.matchers.TitleMatcher;
-import be.xplore.pricescraper.utils.matchers.Combiner;
-import be.xplore.pricescraper.utils.matchers.Matcher;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;

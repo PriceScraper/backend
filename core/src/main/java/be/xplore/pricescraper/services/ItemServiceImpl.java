@@ -13,11 +13,11 @@ import be.xplore.pricescraper.exceptions.RootDomainNotFoundException;
 import be.xplore.pricescraper.exceptions.ScrapeItemException;
 import be.xplore.pricescraper.exceptions.ScraperNotFoundException;
 import be.xplore.pricescraper.exceptions.TrackItemException;
+import be.xplore.pricescraper.matchers.Combiner;
 import be.xplore.pricescraper.repositories.ItemPriceRepository;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.ShopRepository;
 import be.xplore.pricescraper.repositories.TrackedItemRepository;
-import be.xplore.pricescraper.utils.matchers.Combiner;
 import jakarta.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.Duration;
@@ -285,8 +285,7 @@ public class ItemServiceImpl implements ItemService {
     List<Item> potentialMatches = getPotentialMatchingItems();
     for (Item potentialMatch : potentialMatches) {
       combiner.addItems(potentialMatch, itemToMatch);
-      if (potentialMatch.getIngredients() != null && ingredients != null && title != null
-          && potentialMatch.getName() != null && combiner.isMatching()) {
+      if (combiner.isMatching()) {
         return potentialMatch;
       }
     }

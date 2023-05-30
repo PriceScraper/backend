@@ -1,8 +1,7 @@
 package be.xplore.pricescraper.factories;
 
-
-import be.xplore.pricescraper.utils.matchers.Combiner;
-import be.xplore.pricescraper.utils.matchers.Matcher;
+import be.xplore.pricescraper.matchers.Combiner;
+import be.xplore.pricescraper.matchers.Matcher;
 import java.util.Map;
 
 /**

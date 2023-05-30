@@ -1,12 +1,12 @@
-package be.xplore.pricescraper.matchers;
+package be.xplore.pricescraper.matchers.factories;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import be.xplore.pricescraper.exceptions.CombinerInitializeException;
-import be.xplore.pricescraper.matchers.factories.ItemMatcherCombinerFactoryImpl;
-import be.xplore.pricescraper.utils.matchers.Combiner;
-import be.xplore.pricescraper.utils.matchers.Matcher;
+import be.xplore.pricescraper.matchers.Combiner;
+import be.xplore.pricescraper.matchers.IngredientMatcher;
+import be.xplore.pricescraper.matchers.Matcher;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;

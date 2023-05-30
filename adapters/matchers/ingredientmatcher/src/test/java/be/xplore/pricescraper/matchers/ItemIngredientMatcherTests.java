@@ -53,4 +53,13 @@ class ItemIngredientMatcherTests {
     assertThat(notMatched).isFalse();
   }
 
+  @Test
+  void shouldBeAbleToMatch() {
+    IngredientMatcher ingredientMatcher = new IngredientMatcher();
+    ingredientMatcher.addItems(delhaizePizza1, ahPizza1);
+    boolean matchingPossible =
+        ingredientMatcher.matchingIsPossible();
+    assertThat(matchingPossible).isTrue();
+  }
+
 }

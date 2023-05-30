@@ -3,7 +3,6 @@ package be.xplore.pricescraper.matchers;
 
 import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.exceptions.MatcherNotInitializedException;
-import be.xplore.pricescraper.utils.matchers.Matcher;
 
 /**
  * This is the abstract definition for an ItemMatcher that matches equality of {@link Item}.
@@ -27,6 +26,7 @@ public abstract class ItemMatcher implements Matcher {
     itemB = b;
     initialized = true;
   }
+
 
   /**
    * Normalizes score of matching algorithm to a probability percentage that the items are matching.
