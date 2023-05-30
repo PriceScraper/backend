@@ -361,15 +361,23 @@ public class ItemServiceImpl implements ItemService {
     var start = LocalDateTime.now();
     var potentialItems = scraperService.discoverItems(query);
     var trackedItems = new ArrayList<TrackedItem>();
+    var itemsSkipped = 0;
+    log.info(String.format("Found %d potential items for query: %s", potentialItems.size(), query));
     for (var item : potentialItems) {
       try {
-        var res = addTrackedItem(item.url());
-        trackedItems.add(res);
+        if (trackedItemRepository.existsByUrlIgnoreCase(item.url())) {
+          log.debug("Item already in db, skipped: " + item.url());
+          itemsSkipped++;
+        } else {
+          var res = addTrackedItem(item.url());
+          trackedItems.add(res);
+        }
       } catch (Exception e) {
         log.error(e.getMessage());
       }
     }
-    logDiscoveryPerformance(start, trackedItems.size(), potentialItems.size(), query);
+    logDiscoveryPerformance(start, trackedItems.size(), potentialItems.size() - itemsSkipped,
+        query);
     return trackedItems;
   }
 
