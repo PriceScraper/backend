@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,8 @@ public class ItemServiceImpl implements ItemService {
   private final ShopRepository shopRepository;
   private final ScraperService scraperService;
   private final Combiner combiner;
+  @Value("search.item.limit")
+  private String itemSearchLimit;
 
   /**
    * Find by key.
@@ -92,12 +95,17 @@ public class ItemServiceImpl implements ItemService {
    * If low amount of results, start discovering new items.
    */
   public List<ItemSearchDto> findItemByNameLike(String name) {
-    var res = itemRepository.findItemsByNameLike(name.strip());
-    if (res.size() > 3 || name.strip().length() < 3) {
-      return res;
+    int searchLimit;
+    try {
+      searchLimit = Integer.parseInt(itemSearchLimit);
+    } catch (NumberFormatException ignored) {
+      searchLimit = 100;
     }
-    discoverNewItems(name);
-    return itemRepository.findItemsByNameLike(name.strip());
+    var res = itemRepository.findItemByNameWithFuzzySearchAndLimit(name, searchLimit);
+    if (res.size() < 5 && name.strip().length() < 3) {
+      discoverNewItems(name);
+    }
+    return res;
   }
 
   /**

@@ -57,24 +57,19 @@ public class ItemRepositoryImpl implements ItemRepository {
 
   @Override
   @Transactional
-  public List<Item> findItemByNameWithFuzzySearchAndLimit(String nameQuery, int limit) {
+  public List<ItemSearchDto> findItemByNameWithFuzzySearchAndLimit(String nameQuery, int limit) {
     SearchSession searchSession = Search.session(entityManager);
     SearchResult<ItemEntity> result = searchSession.search(ItemEntity.class)
         .where(f -> f.match()
             .field("itemname")
             .matching(nameQuery).fuzzy(2).analyzer("itemNameQuery"))
         .fetch(limit);
-    List<ItemEntity> hits = result.hits();
-    return mapToItems(hits);
+    List<ItemEntity> hits = result.hits().stream().distinct().toList();
+    return mapToItemSearchDtos(hits);
   }
 
-  private static List<Item> mapToItems(List<ItemEntity> entities) {
-    return entities.stream().map(
-            ie -> new Item(ie.getId(), ie.getName(), ie.getImage(), ie.getQuantity(),
-                ie.getType(), ie.getAmount(), ie.getIngredients(),
-                ie.getTrackedItems() != null
-                    ? ie.getTrackedItems().stream().map(tr ->
-                    new TrackedItem(tr.getUrl())).toList() : null))
+  private static List<ItemSearchDto> mapToItemSearchDtos(List<ItemEntity> entities) {
+    return entities.stream().map(ie -> new ItemSearchDto(ie.getId(), ie.getName(), ie.getImage()))
         .toList();
   }
 
