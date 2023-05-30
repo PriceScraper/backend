@@ -9,6 +9,7 @@ import be.xplore.pricescraper.utils.scrapers.ItemScraper;
 import be.xplore.pricescraper.utils.scrapers.SearchItemsScraper;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -61,9 +62,20 @@ public class ScraperServiceImpl implements ScraperService {
    * @return root domain
    */
   public Optional<String> getScraperRootDomain(String url) {
-    return scrapers.keySet().stream()
-        .map(key -> key.replace("scraper-", ""))
-        .filter(base -> url.toLowerCase().contains(base.toLowerCase()))
+    return scrapers.values().stream()
+        .map(base -> {
+          var b = base.getBaseUrl().toLowerCase();
+          var split = b.split("/");
+          if (Arrays.stream(split[2].split("")).filter(e -> e.equals(".")).count() > 1) {
+            var firstDotIndex = split[2].indexOf(".");
+            var value = split[2].substring(firstDotIndex + 1);
+            log.debug("Found scraper root domain: " + value);
+            return value;
+          }
+          log.debug("Found scraper root domain: " + split[2]);
+          return split[2];
+        })
+        .filter(rootDomain -> url.toLowerCase().contains(rootDomain.toLowerCase()))
         .findAny();
   }
 
