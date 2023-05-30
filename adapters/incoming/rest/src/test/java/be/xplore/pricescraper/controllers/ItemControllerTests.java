@@ -58,4 +58,10 @@ class ItemControllerTests {
     var response = itemsController.findItemByIdWithLatestPrices(1);
     assertNotNull(response);
   }
+
+  @Test
+  void findPotentialCount() {
+    var response = itemsController.getPotentialCount("someName");
+    assertNotNull(response);
+  }
 }
