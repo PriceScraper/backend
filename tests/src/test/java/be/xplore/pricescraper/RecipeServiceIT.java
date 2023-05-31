@@ -26,7 +26,7 @@ import org.springframework.test.context.ActiveProfiles;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @ActiveProfiles("test")
 @Transactional
-public class RecipeServiceIT {
+class RecipeServiceIT {
   @Autowired
   private RecipeService recipeService;
   @Autowired

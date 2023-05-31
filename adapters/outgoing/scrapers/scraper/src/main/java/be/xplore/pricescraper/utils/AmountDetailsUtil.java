@@ -14,6 +14,9 @@ public class AmountDetailsUtil {
   private static final String ITEM_NAME_REGEX_GROUP = "([a-z -.%]+)";
   private static final String ITEM_UNIT_REGEX_GROUP = "(cl|l|ml|kg|g)";
 
+  private AmountDetailsUtil() {
+  }
+
   /**
    * Execution.
    */

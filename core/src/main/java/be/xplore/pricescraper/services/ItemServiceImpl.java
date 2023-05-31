@@ -245,7 +245,7 @@ public class ItemServiceImpl implements ItemService {
       return dbItem.get();
     }
     var amountDetails = scrapedResponse.details()
-        .orElse(new ItemAmountDetails(UnitType.not_available, 1, 1));
+        .orElse(new ItemAmountDetails(UnitType.NOT_AVAILABLE, 1, 1));
     var item =
         getItem(scrapedResponse.title(), scrapedResponse.img().orElse(null), amountDetails,
             scrapedResponse.ingredients().orElse(null));

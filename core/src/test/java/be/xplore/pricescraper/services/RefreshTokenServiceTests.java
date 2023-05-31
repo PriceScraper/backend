@@ -22,7 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest(classes = {RefreshTokenServiceImpl.class})
-public class RefreshTokenServiceTests {
+class RefreshTokenServiceTests {
   private final RefreshToken validToken = new RefreshToken();
   private final RefreshToken validToken2 = new RefreshToken();
   private final RefreshToken invalidToken = new RefreshToken();
