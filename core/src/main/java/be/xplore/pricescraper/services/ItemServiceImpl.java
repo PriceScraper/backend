@@ -10,7 +10,6 @@ import be.xplore.pricescraper.dtos.ItemScraperSearch;
 import be.xplore.pricescraper.dtos.ItemSearchDto;
 import be.xplore.pricescraper.dtos.ShopItem;
 import be.xplore.pricescraper.exceptions.ItemNotFoundException;
-import be.xplore.pricescraper.exceptions.RootDomainNotFoundException;
 import be.xplore.pricescraper.exceptions.ScrapeItemException;
 import be.xplore.pricescraper.exceptions.ScraperNotFoundException;
 import be.xplore.pricescraper.exceptions.TrackItemException;
@@ -232,14 +231,11 @@ public class ItemServiceImpl implements ItemService {
    */
   @Transactional
   public TrackedItem addTrackedItem(String urlToItem) {
-    var scraperDomain = scraperService.getScraperRootDomain(urlToItem)
-        .orElseThrow(RootDomainNotFoundException::new);
+    var scraperDomain = scraperService.getScraperRootDomain(urlToItem);
     var scrapedResponse =
         scraperService.scrapeFullUrl(urlToItem).orElseThrow(ScrapeItemException::new);
     var shop = getShopFromDomain(scraperDomain);
-    var itemIdentifier =
-        scraperService.getItemIdentifier(urlToItem).orElseThrow(ScrapeItemException::new);
-    var dbItem = trackedItemRepository.findByUrlIgnoreCaseAndShopId(itemIdentifier, shop.getId());
+    var dbItem = trackedItemRepository.findByUrlIgnoreCaseAndShopId(urlToItem, shop.getId());
     if (dbItem.isPresent()) {
       log.debug("Item is already being tracked. Url: " + dbItem.get().getUrl());
       return dbItem.get();

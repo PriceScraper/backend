@@ -5,8 +5,8 @@ import be.xplore.pricescraper.dtos.ItemScraperSearch;
 import be.xplore.pricescraper.dtos.ShopItem;
 import be.xplore.pricescraper.exceptions.RootDomainNotFoundException;
 import be.xplore.pricescraper.exceptions.ScraperNotFoundException;
-import be.xplore.pricescraper.utils.scrapers.ItemScraper;
-import be.xplore.pricescraper.utils.scrapers.SearchItemsScraper;
+import be.xplore.pricescraper.scrapers.ItemScraper;
+import be.xplore.pricescraper.scrapers.SearchItemsScraper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,12 +56,27 @@ public class ScraperServiceImpl implements ScraperService {
   }
 
   /**
+   * Scrape item by full itemUrl.
+   */
+  public Optional<ShopItem> scrapeFullUrl(String itemUrl) {
+    try {
+      var rootDomain = getScraperRootDomain(itemUrl);
+      var scraper = getScraper(rootDomain);
+      return scraper.scrape(itemUrl);
+    } catch (Exception ioException) {
+      log.error(ioException.getMessage());
+      return Optional.empty();
+    }
+  }
+
+
+  /**
    * Get root domain by full url.
    *
    * @param url full url
    * @return root domain
    */
-  public Optional<String> getScraperRootDomain(String url) {
+  public String getScraperRootDomain(String url) {
     return scrapers.values().stream()
         .map(base -> {
           var b = base.getBaseUrl().toLowerCase();
@@ -76,36 +91,7 @@ public class ScraperServiceImpl implements ScraperService {
           return split[2];
         })
         .filter(rootDomain -> url.toLowerCase().contains(rootDomain.toLowerCase()))
-        .findAny();
-  }
-
-  /**
-   * Scrape item by full itemUrl.
-   */
-  public Optional<ShopItem> scrapeFullUrl(String itemUrl) {
-    try {
-      var rootDomain = getScraperRootDomain(itemUrl);
-      if (rootDomain.isEmpty()) {
-        throw new RootDomainNotFoundException("Failed to find root domain for tracked item.");
-      }
-      var scraper = getScraper(rootDomain.get());
-      return scraper.scrape(itemUrl);
-    } catch (Exception ioException) {
-      log.error(ioException.getMessage());
-      return Optional.empty();
-    }
-  }
-
-  /**
-   * Get Identifier area of full Item URL.
-   */
-  public Optional<String> getItemIdentifier(String url) {
-    var root = getScraperRootDomain(url);
-    if (root.isEmpty()) {
-      return root;
-    }
-    var scraper = getScraper(root.get());
-    return Optional.of(url.toLowerCase().replace(scraper.getBaseUrl().toLowerCase(), ""));
+        .findAny().orElseThrow(RootDomainNotFoundException::new);
   }
 
   @Override

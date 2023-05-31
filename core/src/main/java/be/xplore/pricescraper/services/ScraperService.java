@@ -23,17 +23,12 @@ public interface ScraperService {
    * @param url full url
    * @return root domain
    */
-  Optional<String> getScraperRootDomain(String url);
+  String getScraperRootDomain(String url);
 
   /**
    * Scrape item by full itemUrl.
    */
   Optional<ShopItem> scrapeFullUrl(String itemUrl);
-
-  /**
-   * Get Identifier area of full Item URL.
-   */
-  Optional<String> getItemIdentifier(String url);
 
   /**
    * Get brief item info by query.

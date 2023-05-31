@@ -1,5 +1,6 @@
 package be.xplore.pricescraper;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import be.xplore.pricescraper.exceptions.ItemNotFoundException;
@@ -36,11 +37,23 @@ class ItemServiceIT {
   @Autowired
   private ItemServiceImpl itemService;
 
+  private static final String domain =
+      "https://drive.carrefour.be";
+  private static final String item =
+      "/nl/Diepvries/Pizza-%26-quiches/Dr-Oetker%7CPizza-Ristorante-Hawaii-355-g/p/01655209";
+  private static final String testItemUrl = domain + item;
+
   @Test
   void trackItemFailure() {
     assertThatThrownBy(() -> itemService.addTrackedItem(
         "https://drive.carrefour.be/nl/itemdoesnotexist")).isInstanceOf(
         ScrapeItemException.class);
+  }
+
+  @Test
+  void shouldTrackItem() {
+    itemService.addTrackedItem(testItemUrl);
+    assertThat(trackedItemRepository.existsByUrlIgnoreCase(testItemUrl)).isTrue();
   }
 
   @Test
