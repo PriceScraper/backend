@@ -12,4 +12,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "frontend")
 public class FrontendConfig {
   private String url;
+
+  public String getUrl(boolean isSsl) {
+    return String.format("http%s://%s", isSsl ? "s" : "", url);
+  }
 }

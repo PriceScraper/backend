@@ -50,7 +50,7 @@ public class AmountDetailsUtil {
       return Optional.empty();
     }
     return Optional.of(new ItemAmountDetails(
-        UnitType.valueOf(matherQuantity1.group(3)),
+        UnitType.valueOf(matherQuantity1.group(3).toUpperCase()),
         Double.parseDouble(matherQuantity1.group(2).strip()),
         Integer.parseInt(matherQuantity1.group(6).strip())));
   }
@@ -67,7 +67,7 @@ public class AmountDetailsUtil {
       return Optional.empty();
     }
     return Optional.of(new ItemAmountDetails(
-        UnitType.valueOf(matherQuantity2.group(6)),
+        UnitType.valueOf(matherQuantity2.group(6).toUpperCase()),
         Double.parseDouble(matherQuantity2.group(5).strip()),
         Integer.parseInt(matherQuantity2.group(2).strip())));
 
@@ -82,7 +82,8 @@ public class AmountDetailsUtil {
     if (!matherNoQuantity.matches()) {
       return Optional.empty();
     }
-    return Optional.of(new ItemAmountDetails(UnitType.valueOf(matherNoQuantity.group(3)),
+    return Optional.of(new ItemAmountDetails(
+        UnitType.valueOf(matherNoQuantity.group(3).toUpperCase()),
         Double.parseDouble(matherNoQuantity.group(2).strip()), 1));
   }
 }
