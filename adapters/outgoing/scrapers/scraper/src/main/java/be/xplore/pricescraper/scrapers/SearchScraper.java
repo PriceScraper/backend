@@ -28,7 +28,7 @@ public abstract class SearchScraper extends WebScraper implements SearchItemsScr
   /**
    * Constructor to get the baseUrl.
    */
-  public SearchScraper(String baseUrl, SearchScraperConfig config) {
+  protected SearchScraper(String baseUrl, SearchScraperConfig config) {
     this.baseUrl = baseUrl;
     this.config = config;
   }

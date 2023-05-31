@@ -9,7 +9,7 @@ import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.dtos.CreateRecipeDto;
 import org.junit.jupiter.api.Test;
 
-public class RecipeTests {
+class RecipeTests {
   @Test
   void recipe() {
     var recipe = new Recipe("title", null);

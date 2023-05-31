@@ -24,7 +24,7 @@ public abstract class ItemDetailScraper extends WebScraper implements ItemScrape
   /**
    * Constructor to get the baseUrl.
    */
-  public ItemDetailScraper(String baseUrl) {
+  protected ItemDetailScraper(String baseUrl) {
     this.baseUrl = baseUrl;
   }
 
