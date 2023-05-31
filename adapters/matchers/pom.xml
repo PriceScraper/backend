@@ -17,5 +17,6 @@
         <module>combiners</module>
         <module>titlematcher</module>
         <module>matcherutils</module>
+        <module>unitmatcher</module>
     </modules>
 </project>

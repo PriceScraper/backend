@@ -5,6 +5,7 @@ import be.xplore.pricescraper.matchers.Combiner;
 import be.xplore.pricescraper.matchers.IngredientMatcher;
 import be.xplore.pricescraper.matchers.Matcher;
 import be.xplore.pricescraper.matchers.TitleMatcher;
+import be.xplore.pricescraper.matchers.UnitMatcher;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,9 @@ public class SpringConfig {
   @Bean
   Combiner getCombiner() {
     Map<Matcher, Double> matchersWithWeights = new HashMap<>();
-    matchersWithWeights.put(new IngredientMatcher(), 0.6);
-    matchersWithWeights.put(new TitleMatcher(), 0.4);
+    matchersWithWeights.put(new IngredientMatcher(), 0.4);
+    matchersWithWeights.put(new UnitMatcher(), 0.35);
+    matchersWithWeights.put(new TitleMatcher(), 0.25);
     return matcherCombinerFactory.makeWeightedCombiner(matchersWithWeights);
   }
 
