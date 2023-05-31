@@ -1,5 +1,6 @@
 package be.xplore.pricescraper.dtos;
 
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -7,5 +8,6 @@ import java.util.Optional;
  */
 public record ShopItem(String title, double price, Optional<String> img,
                        Optional<ItemAmountDetails> details,
-                       Optional<String> ingredients) {
+                       Optional<String> ingredients,
+                       Optional<Map<String, String>> nutritionValues) {
 }

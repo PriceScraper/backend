@@ -4,6 +4,7 @@ import be.xplore.pricescraper.dtos.ItemAmountDetails;
 import be.xplore.pricescraper.dtos.ShopItem;
 import be.xplore.pricescraper.utils.AmountDetailsUtil;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,11 @@ public abstract class ItemDetailScraper extends WebScraper implements ItemScrape
   protected abstract Optional<String> getItemIngredients(Document document);
 
   /**
+   * Parse nutrition value table.
+   */
+  protected abstract Optional<Map<String, String>> getNutritionValues(Document document);
+
+  /**
    * Code to fetch the item price.
    */
   protected abstract Optional<Double> getItemPrice(Document document);
@@ -79,8 +85,10 @@ public abstract class ItemDetailScraper extends WebScraper implements ItemScrape
 
     var image = getItemImage(document);
     var ingredients = getItemIngredients(document);
+    var nutritionValues = getNutritionValues(document);
     var amountDetails = getItemAmountDetails(document);
-    var item = new ShopItem(title.get(), price.get(), image, amountDetails, ingredients);
+    var item =
+        new ShopItem(title.get(), price.get(), image, amountDetails, ingredients, nutritionValues);
     log.debug("Scraped " + baseUrl + " to find item: " + item);
     return Optional.of(item);
   }

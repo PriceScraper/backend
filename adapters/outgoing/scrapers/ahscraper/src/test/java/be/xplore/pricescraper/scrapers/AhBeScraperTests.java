@@ -1,5 +1,6 @@
 package be.xplore.pricescraper.scrapers;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -47,6 +48,7 @@ class AhBeScraperTests {
       assertTrue(response.isPresent());
       assertNotNull(response.get());
       assertNotNull(response.get().title());
+      assertThat(response.get().nutritionValues().get().values()).isNotEmpty();
       assertTrue(response.get().price() > 0);
     }
   }

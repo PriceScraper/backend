@@ -1,8 +1,14 @@
 package be.xplore.pricescraper.scrapers.detail;
 
 import be.xplore.pricescraper.scrapers.ItemDetailScraper;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
 
@@ -71,5 +77,34 @@ public class CarrefourBeScraper extends ItemDetailScraper {
     var ingredientsWithoutTitle =
         Arrays.copyOfRange(ingredientsWithTitle, 1, ingredientsWithTitle.length);
     return Optional.of(String.join(", ", ingredientsWithoutTitle).trim());
+  }
+
+  @Override
+  protected Optional<Map<String, String>> getNutritionValues(Document document) {
+    Map<String, String> nutritionValues = new HashMap<>();
+    String tableValue =
+        document.getElementsByClass("encodedHtml1").get(0).attr("value");
+    List<String> allMatches = new ArrayList<>();
+    Matcher m = Pattern.compile("(<td>[a-zA-Z0-9. ]+</td>)")
+        .matcher(tableValue);
+    while (m.find()) {
+      allMatches.add(m.group());
+    }
+    if (allMatches.isEmpty()) {
+      return Optional.empty();
+    }
+    for (int j = 0; j < allMatches.size(); j++) {
+      allMatches.set(j, allMatches.get(j).replace("<td>", ""));
+      allMatches.set(j, allMatches.get(j).replace("</td>", ""));
+    }
+    for (int i = 2; i < 12; i += 2) {
+      String key = allMatches.get(i);
+      String val = allMatches.get(i + 1);
+      if (i == 2) {
+        key = key.replace("2", "");
+      }
+      nutritionValues.put(key, val);
+    }
+    return Optional.of(nutritionValues);
   }
 }
