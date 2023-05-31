@@ -21,7 +21,7 @@ public class UnitMatcherTests {
   void shouldMatch() {
     Matcher matcher = new UnitMatcher();
     matcher.addItems(itemA, itemB);
-    assertThat(matcher.isMatching()).isTrue();
+    assertThat(matcher.getMatchProbabilityInPercentage() > 0.9).isTrue();
   }
 
   @Test
