@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import be.xplore.pricescraper.domain.recipes.Recipe;
 import org.junit.jupiter.api.Test;
 
-public class RecipeTests {
+class RecipeTests {
   @Test
   void modifyRecipeItemDto() {
     var entity = new ModifyRecipeItemDto(1, 2);

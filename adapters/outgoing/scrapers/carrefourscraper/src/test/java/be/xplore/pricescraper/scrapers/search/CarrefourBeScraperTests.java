@@ -22,7 +22,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 @ExtendWith(MockitoExtension.class)
-public class CarrefourBeScraperTests {
+class CarrefourBeScraperTests {
   private final CarrefourBeScraper scraper;
 
   public CarrefourBeScraperTests() {

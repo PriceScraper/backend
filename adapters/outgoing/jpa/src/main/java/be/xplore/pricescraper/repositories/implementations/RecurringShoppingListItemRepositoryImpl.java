@@ -39,7 +39,7 @@ public class RecurringShoppingListItemRepositoryImpl implements
 
   @Override
   public List<RecurringShoppingListItem> findByUserId(long userId) {
-    return repository.findByUser_Id(userId)
+    return repository.findByUserId(userId)
         .stream()
         .map(e -> modelMapper.map(e, RecurringShoppingListItem.class))
         .toList();

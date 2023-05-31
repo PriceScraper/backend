@@ -31,8 +31,7 @@ public class ImageRecognitionMatcher extends ItemMatcher {
 
   private static final LevenshteinDistance levenshteinDistance =
       LevenshteinDistance.getDefaultInstance();
-  private static final double matchThreshold = 0.8;
-  private static final int textDetectionLimit = 2;
+  private static final int TEXT_DETECTION_LIMIT = 2;
   private final Environment env;
 
   protected ImageRecognitionMatcher(Environment env) {
@@ -43,15 +42,6 @@ public class ImageRecognitionMatcher extends ItemMatcher {
   public boolean matchingIsPossible() {
     return getItemA().getImage() != null && getItemB().getImage() != null
         && !getItemA().getImage().isEmpty() && !getItemB().getImage().isEmpty();
-  }
-
-  @Override
-  public boolean isMatching() {
-    if (!isInitialized()) {
-      throw new MatcherNotInitializedException();
-    }
-    double matchProbability = getMatchProbabilityInPercentage();
-    return matchProbability >= matchThreshold;
   }
 
   @Override
@@ -85,9 +75,9 @@ public class ImageRecognitionMatcher extends ItemMatcher {
     List<TextDetection> detectionsA = detectTextLabelsForImageFromUrl(getItemA().getImage());
     List<TextDetection> detectionsB = detectTextLabelsForImageFromUrl(getItemB().getImage());
     List<String> linesA =
-        getLineAsStringFromDetections(detectionsA.subList(0, textDetectionLimit));
+        getLineAsStringFromDetections(detectionsA.subList(0, TEXT_DETECTION_LIMIT));
     List<String> linesB =
-        getLineAsStringFromDetections(detectionsB.subList(0, textDetectionLimit));
+        getLineAsStringFromDetections(detectionsB.subList(0, TEXT_DETECTION_LIMIT));
     List<List<String>> lines = new ArrayList<>();
     lines.add(linesA);
     lines.add(linesB);
@@ -139,9 +129,9 @@ public class ImageRecognitionMatcher extends ItemMatcher {
     List<Label> detectionsA = detectImageLabels(getItemA().getImage());
     List<Label> detectionsB = detectImageLabels(getItemA().getImage());
     List<String> labelsA =
-        getLabelAsStringFromDetections(detectionsA.subList(0, textDetectionLimit));
+        getLabelAsStringFromDetections(detectionsA.subList(0, TEXT_DETECTION_LIMIT));
     List<String> labelsB =
-        getLabelAsStringFromDetections(detectionsB.subList(0, textDetectionLimit));
+        getLabelAsStringFromDetections(detectionsB.subList(0, TEXT_DETECTION_LIMIT));
     List<List<String>> labels = new ArrayList<>();
     labels.add(labelsA);
     labels.add(labelsB);

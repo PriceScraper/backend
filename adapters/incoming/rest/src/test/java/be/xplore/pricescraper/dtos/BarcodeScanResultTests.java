@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-public class BarcodeScanResultTests {
+class BarcodeScanResultTests {
   @Test
   void constructor() {
     var entity = new BarcodeScanResult(true, "title");

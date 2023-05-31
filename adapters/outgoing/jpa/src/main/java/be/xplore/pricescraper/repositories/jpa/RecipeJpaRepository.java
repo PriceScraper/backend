@@ -19,5 +19,5 @@ public interface RecipeJpaRepository extends JpaRepository<RecipeEntity, Long> {
    * Find by creator pk.
    */
 
-  List<RecipeEntity> findByCreator_Id(Long id);
+  List<RecipeEntity> findByCreatorId(Long id);
 }

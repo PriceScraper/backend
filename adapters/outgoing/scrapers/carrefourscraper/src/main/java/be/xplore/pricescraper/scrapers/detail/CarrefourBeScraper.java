@@ -11,14 +11,15 @@ import org.springframework.stereotype.Component;
  */
 @Component("scraper-carrefour.be")
 public class CarrefourBeScraper extends ItemDetailScraper {
+  private static final String MY_LISTS = "mylists";
 
   public CarrefourBeScraper() {
     super("https://drive.carrefour.be/nl/");
   }
 
   protected Optional<String> getItemTitle(Document document) {
-    var section = document.getElementById("mylists");
-    if (hasArgumentFailed(section, "mylists")) {
+    var section = document.getElementById(MY_LISTS);
+    if (hasArgumentFailed(section, MY_LISTS)) {
       return Optional.empty();
     }
     assert section != null;
@@ -26,8 +27,8 @@ public class CarrefourBeScraper extends ItemDetailScraper {
   }
 
   protected Optional<Double> getItemPrice(Document document) {
-    var section = document.getElementById("mylists");
-    if (hasArgumentFailed(section, "mylists")) {
+    var section = document.getElementById(MY_LISTS);
+    if (hasArgumentFailed(section, MY_LISTS)) {
       return Optional.empty();
     }
     assert section != null;
@@ -37,7 +38,7 @@ public class CarrefourBeScraper extends ItemDetailScraper {
   @Override
   protected Optional<String> getItemImage(Document document) {
     var inputWithDetails = document.getElementsByClass("notification-details");
-    if (inputWithDetails.size() == 0) {
+    if (inputWithDetails.isEmpty()) {
       return Optional.empty();
     }
     return Optional.of(inputWithDetails.get(0).attr("data-src"));
@@ -62,7 +63,7 @@ public class CarrefourBeScraper extends ItemDetailScraper {
     }
     var field = inputFields.get(elPosition);
     var ingredientsWithTitle = field.attr("value")
-        .replaceAll("<br>", ", ")
+        .replace("<br>", ", ")
         .replaceAll("<[a-zA-Z ='\"-:,]+>", "")
         .replaceAll("</[a-z]+>", "")
         .replace("Ingrediënten:, ", "")

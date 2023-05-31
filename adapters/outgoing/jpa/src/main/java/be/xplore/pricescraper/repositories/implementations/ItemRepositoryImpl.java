@@ -102,7 +102,7 @@ public class ItemRepositoryImpl implements ItemRepository {
   public Item save(Item item) {
     List<TrackedItemEntity> trackedItems = item.getTrackedItems() != null
         ? item.getTrackedItems().stream()
-        .map((tr) -> trackedItemRepository.getReferenceById(tr.getUrl())).toList()
+        .map(tr -> trackedItemRepository.getReferenceById(tr.getUrl())).toList()
         : null;
 
     var itemToSave =

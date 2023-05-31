@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TrackedItemJpaRepository
     extends JpaRepository<TrackedItemEntity, String> {
-  boolean existsByUrlIgnoreCaseAndShop_Id(String url, int id);
+  boolean existsByUrlIgnoreCaseAndShopId(String url, int id);
 
   Optional<TrackedItemEntity> findByUrlIgnoreCaseAndShopId(String url, int id);
 

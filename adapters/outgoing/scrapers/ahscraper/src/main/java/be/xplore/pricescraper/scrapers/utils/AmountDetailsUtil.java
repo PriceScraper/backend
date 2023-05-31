@@ -11,7 +11,10 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class AmountDetailsUtil {
-  private static final String itemUnitRegexGroup = "(cl|l|ml|kg|gram|g)";
+  private static final String ITEM_UNIT_REGEX_GROUP = "(cl|l|ml|kg|gram|g)";
+
+  private AmountDetailsUtil() {
+  }
 
   /**
    * Execution.
@@ -39,7 +42,7 @@ public class AmountDetailsUtil {
   private static Optional<ItemAmountDetails> quantityAndAmount(String title) {
     var patternWithQuantity1 =
         Pattern.compile(
-            "([0-9 ]{1,8}) x ([0-9., ]{1,8}) " + itemUnitRegexGroup);
+            "([0-9 ]{1,8}) x ([0-9., ]{1,8}) " + ITEM_UNIT_REGEX_GROUP);
     var matherQuantity1 = patternWithQuantity1.matcher(title.toLowerCase());
     if (!matherQuantity1.matches()) {
       return Optional.empty();
@@ -53,7 +56,7 @@ public class AmountDetailsUtil {
   private static Optional<ItemAmountDetails> amountOnlyV1(String title) {
     var patternWithQuantity1 =
         Pattern.compile(
-            "([0-9., ]{1,8}) " + itemUnitRegexGroup);
+            "([0-9., ]{1,8}) " + ITEM_UNIT_REGEX_GROUP);
     var matherQuantity1 = patternWithQuantity1.matcher(title.toLowerCase());
     if (!matherQuantity1.matches()) {
       return Optional.empty();
