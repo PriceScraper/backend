@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class AmountDetailsUtil {
-  private static final String itemNameRegexGroup = "([a-z -.%]+)";
+  private static final String itemNameRegexGroup = "([a-z -.%]*)";
   private static final String itemUnitRegexGroup = "(cl|l|ml|kg|g)";
 
   /**

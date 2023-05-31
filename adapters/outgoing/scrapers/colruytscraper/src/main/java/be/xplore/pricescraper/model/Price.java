@@ -5,9 +5,9 @@ import lombok.Setter;
 
 @Getter @Setter
 public class Price {
-  private float basicPrice;
+  private double basicPrice;
   private String recommendedQuantity;
-  private float measurementUnitPrice;
+  private double measurementUnitPrice;
   private String measurementUnit;
   private boolean isRedPrice;
 }
