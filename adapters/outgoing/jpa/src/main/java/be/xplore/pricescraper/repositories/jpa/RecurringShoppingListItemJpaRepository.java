@@ -9,6 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface RecurringShoppingListItemJpaRepository extends
     JpaRepository<RecurringShoppingListItemEntity, Long> {
-  List<RecurringShoppingListItemEntity> findByUser_Id(Long id);
+  List<RecurringShoppingListItemEntity> findByUserId(Long id);
 
 }

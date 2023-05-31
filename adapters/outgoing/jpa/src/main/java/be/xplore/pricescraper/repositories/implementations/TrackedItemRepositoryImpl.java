@@ -36,7 +36,7 @@ public class TrackedItemRepositoryImpl implements TrackedItemRepository {
    */
   @Override
   public boolean existsByUrlIgnoreCaseAndShopId(String url, int id) {
-    return jpaRepository.existsByUrlIgnoreCaseAndShop_Id(url, id);
+    return jpaRepository.existsByUrlIgnoreCaseAndShopId(url, id);
   }
 
   @Override
@@ -55,7 +55,7 @@ public class TrackedItemRepositoryImpl implements TrackedItemRepository {
         itemRepository.getReferenceById(trackedItem.getItem().getId()) : null;
     List<ItemPriceEntity> prices =
         trackedItem.getItemPrices() != null ? trackedItem.getItemPrices().stream()
-            .map((ip) -> itemPriceRepository.getReferenceById(ip.getId())).toList() :
+            .map(ip -> itemPriceRepository.getReferenceById(ip.getId())).toList() :
             new ArrayList<>();
     TrackedItemEntity entity =
         new TrackedItemEntity(trackedItem.getUrl(),

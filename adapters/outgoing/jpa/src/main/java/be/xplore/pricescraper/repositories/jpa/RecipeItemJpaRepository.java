@@ -12,11 +12,10 @@ public interface RecipeItemJpaRepository extends JpaRepository<RecipeItemEntity,
   /**
    * Find by recipe pk and item pk.
    */
-  Optional<RecipeItemEntity> findByRecipe_IdAndItem_Id(long id, int id1);
+  Optional<RecipeItemEntity> findByRecipeIdAndItemId(long id, int id1);
 
   /**
    * Find by recipe pk.
    */
-
-  List<RecipeItemEntity> findByRecipe_Id(long id);
+  List<RecipeItemEntity> findByRecipeId(long id);
 }

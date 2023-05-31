@@ -1,7 +1,6 @@
 package be.xplore.pricescraper;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.domain.users.ShoppingList;

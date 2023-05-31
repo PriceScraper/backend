@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import be.xplore.pricescraper.domain.shops.Item;
 import org.junit.jupiter.api.Test;
 
-public class RecurringItemTests {
+class RecurringItemTests {
   @Test
   void constructorAddRecurringItemDto() {
     var add = new AddRecurringItemDto(1, 2);

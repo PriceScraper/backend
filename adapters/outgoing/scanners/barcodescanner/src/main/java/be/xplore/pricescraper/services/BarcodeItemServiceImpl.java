@@ -42,6 +42,6 @@ public class BarcodeItemServiceImpl implements BarcodeItemService {
   }
 
   public String cleanProductName(String name) {
-    return name.replaceAll("([0-9]|[0-9]{2}|[0-9]{3})(cl|ml|l)", "").strip();
+    return name.replaceAll("([0-9,.]+)(cl|ml|l)", "").strip();
   }
 }

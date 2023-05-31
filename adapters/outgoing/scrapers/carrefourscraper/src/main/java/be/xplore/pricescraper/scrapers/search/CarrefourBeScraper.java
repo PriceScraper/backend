@@ -19,6 +19,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component("search-scraper-carrefour.be")
 public class CarrefourBeScraper extends SearchScraper {
+  private static final String ITEM_DIV = "select_item";
+
   /**
    * Constructor to get the baseUrl.
    */
@@ -33,8 +35,8 @@ public class CarrefourBeScraper extends SearchScraper {
 
   @Override
   protected Optional<String> getUrlToItem(Element element) {
-    var titleElement = element.getElementsByClass("select_item");
-    if (hasArgumentFailed(titleElement, 2, "select_item")) {
+    var titleElement = element.getElementsByClass(ITEM_DIV);
+    if (hasArgumentFailed(titleElement, 2, ITEM_DIV)) {
       return Optional.empty();
     }
     return Optional.of(titleElement.get(1).attr("href").substring(4));
@@ -42,8 +44,8 @@ public class CarrefourBeScraper extends SearchScraper {
 
   @Override
   protected Optional<String> getTitle(Element element) {
-    var titleElement = element.getElementsByClass("select_item");
-    if (hasArgumentFailed(titleElement, 2, "select_item")) {
+    var titleElement = element.getElementsByClass(ITEM_DIV);
+    if (hasArgumentFailed(titleElement, 2, ITEM_DIV)) {
       return Optional.empty();
     }
     return Optional.of(titleElement.get(1).attr("title"));
@@ -62,7 +64,7 @@ public class CarrefourBeScraper extends SearchScraper {
   @Override
   public List<ItemScraperSearch> scrape(String queryValue) throws IOException {
     var page = 0;
-    List<ItemScraperSearch> foundItems = new ArrayList<ItemScraperSearch>();
+    List<ItemScraperSearch> foundItems = new ArrayList<>();
     var sizeBefore = 0;
     do {
       sizeBefore = foundItems.size();
