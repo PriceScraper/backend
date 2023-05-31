@@ -27,5 +27,6 @@
         <module>outgoing/scrapers/localdummyscraper</module>
         <module>outgoing/scanners</module>
         <module>outgoing/scanners/barcodescanner</module>
+        <module>outgoing/scrapers/colruytscraper</module>
     </modules>
 </project>

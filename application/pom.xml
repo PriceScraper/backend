@@ -42,6 +42,12 @@
         </dependency>
         <dependency>
             <groupId>be.xplore</groupId>
+            <artifactId>colruytscraper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>be.xplore</groupId>
             <artifactId>lildscraper</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>

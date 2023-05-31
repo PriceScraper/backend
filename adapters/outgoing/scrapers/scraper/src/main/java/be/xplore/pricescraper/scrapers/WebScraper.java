@@ -13,14 +13,14 @@ import org.jsoup.select.Elements;
 @Slf4j
 public abstract class WebScraper {
   /**
-   * Basic implementation to get the HTML tree of an item detail page.
+   * Basic implementation to get the HTML tree of an item be.xplore.pricescraper.detail page.
    */
   protected Document getDocument(String url) throws IOException {
     return Jsoup.connect(url).get();
   }
 
   /**
-   * We expect a certain amount of elements within the tree search.
+   * We expect a certain amount of elements within the tree be.xplore.pricescraper.search.
    */
   protected boolean hasArgumentFailed(Elements elements, int expected, String identifier) {
     if (elements.size() != expected) {
@@ -31,7 +31,7 @@ public abstract class WebScraper {
   }
 
   /**
-   * We expect a certain amount of elements within the tree search.
+   * We expect a certain amount of elements within the tree be.xplore.pricescraper.search.
    */
   protected boolean hasArgumentFailed(Element element, String identifier) {
     if (element == null) {
