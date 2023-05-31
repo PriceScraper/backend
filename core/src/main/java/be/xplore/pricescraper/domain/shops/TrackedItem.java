@@ -1,6 +1,7 @@
 package be.xplore.pricescraper.domain.shops;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -17,7 +18,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class TrackedItem {
+public class TrackedItem implements Serializable {
   private String url;
   private Shop shop;
   @JsonIgnore
