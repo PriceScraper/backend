@@ -3,13 +3,12 @@ package be.xplore.pricescraper.repositories;
 import be.xplore.pricescraper.domain.recipes.Recipe;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.stereotype.Repository;
 
 
 /**
  * Repository interface.
  */
-@Repository
+
 public interface RecipeRepository {
   /**
    * Save entity.

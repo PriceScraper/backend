@@ -7,6 +7,7 @@ import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.repositories.implementations.ShopRepositoryImpl;
 import be.xplore.pricescraper.repositories.implementations.TrackedItemRepositoryImpl;
 import be.xplore.pricescraper.utils.ModelMapperUtil;
+import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -46,8 +47,8 @@ class TrackedItemRepositoryTests {
 
   @Test
   void findAllShouldReturnTrackedItem() {
-    Page<TrackedItem> trackedItemsPage = trackedItemRepository.findAll(Pageable.ofSize(10));
-    assertThat(trackedItemsPage.getTotalElements()).isPositive();
+    List<TrackedItem> trackedItemsPage = trackedItemRepository.findAll(10);
+    assertThat(trackedItemsPage).isNotEmpty();
   }
 
 }

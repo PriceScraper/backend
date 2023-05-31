@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.domain.users.ShoppingList;
 import be.xplore.pricescraper.domain.users.User;
-import be.xplore.pricescraper.exceptions.ShoppingListNotFoundException;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.ShoppingListRepository;
 import be.xplore.pricescraper.repositories.UserRepository;
@@ -43,13 +42,6 @@ class ShoppingListServiceIT {
   }
 
   @Test
-  void shouldReturnShoppingList() {
-    ShoppingList shoppingListSaved = shoppingListRepository.save(new ShoppingList());
-    ShoppingList shoppingList = shoppingListService.findShoppingListById(shoppingListSaved.getId());
-    assertThat(shoppingList).isNotNull();
-  }
-
-  @Test
   void shoppingListShouldBeAdded() {
     User user = new User();
     user.setUsername("test");
@@ -68,15 +60,15 @@ class ShoppingListServiceIT {
     user.setUsername("test");
     shoppingListService.createShoppingListForUser(user, new ShoppingList());
     shoppingListService.deleteShoppingListForUser(user, 0);
-    assertThatThrownBy(() -> shoppingListService.findShoppingListById(0)).isInstanceOf(
-        ShoppingListNotFoundException.class);
+    assertThat(user.getShoppingLists()).isEmpty();
   }
 
   @Test
   void shoppingListShouldContainLineWithQuantity() {
     ShoppingList shoppingListSaved = shoppingListRepository.save(new ShoppingList());
     shoppingListService.addItemToShoppingListById(shoppingListSaved.getId(), 1, 2);
-    ShoppingList shoppingList = shoppingListService.findShoppingListById(shoppingListSaved.getId());
+    ShoppingList shoppingList =
+        shoppingListRepository.getShoppingListById(shoppingListSaved.getId()).get();
     assertThat(shoppingList.getLines().get(0).getQuantity()).isEqualTo(2);
   }
 
@@ -84,7 +76,8 @@ class ShoppingListServiceIT {
   void shoppingListShouldContainItem() {
     ShoppingList shoppingListSaved = shoppingListRepository.save(new ShoppingList());
     shoppingListService.addItemToShoppingListById(shoppingListSaved.getId(), 1, 2);
-    ShoppingList shoppingList = shoppingListService.findShoppingListById(shoppingListSaved.getId());
+    ShoppingList shoppingList =
+        shoppingListRepository.getShoppingListById(shoppingListSaved.getId()).get();
     assertThat(shoppingList.getLines().get(0).getItem()).isNotNull();
   }
 
@@ -93,7 +86,8 @@ class ShoppingListServiceIT {
     ShoppingList shoppingListSaved = shoppingListRepository.save(new ShoppingList());
     shoppingListService.addItemToShoppingListById(shoppingListSaved.getId(), 1, 3);
     shoppingListService.deleteItemFromShoppingListById(shoppingListSaved.getId(), 1, 3);
-    ShoppingList shoppingList = shoppingListService.findShoppingListById(shoppingListSaved.getId());
+    ShoppingList shoppingList =
+        shoppingListRepository.getShoppingListById(shoppingListSaved.getId()).get();
     assertThat(shoppingList.getLines()).isEmpty();
   }
 
@@ -102,7 +96,8 @@ class ShoppingListServiceIT {
     ShoppingList shoppingListSaved = shoppingListRepository.save(new ShoppingList());
     shoppingListService.addItemToShoppingListById(shoppingListSaved.getId(), 1, 5);
     shoppingListService.deleteItemFromShoppingListById(shoppingListSaved.getId(), 1, 3);
-    ShoppingList shoppingList = shoppingListService.findShoppingListById(shoppingListSaved.getId());
+    ShoppingList shoppingList =
+        shoppingListRepository.getShoppingListById(shoppingListSaved.getId()).get();
     assertThat(shoppingList.getLines().get(0).getQuantity()).isEqualTo(2);
   }
 

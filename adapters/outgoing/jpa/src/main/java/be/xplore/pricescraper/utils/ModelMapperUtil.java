@@ -20,7 +20,7 @@ public class ModelMapperUtil {
   public ModelMapper modelMapper() {
     ModelMapper mapper = new ModelMapper();
     mapper.getConfiguration().setPropertyCondition(
-        context -> (!(context.getSource() instanceof PersistentCollection persistentCollection)
+        context -> (!(context.getSource() instanceof PersistentCollection)
             || ((PersistentCollection) context.getSource()).wasInitialized())
     );
     return mapper;

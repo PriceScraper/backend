@@ -10,7 +10,5 @@ import java.util.Optional;
 public interface ItemScraper {
   Optional<ShopItem> scrape(String itemIdentifier) throws IOException;
 
-  Optional<ShopItem> scrapeFromFullUrl(String url) throws IOException;
-
   String getBaseUrl();
 }

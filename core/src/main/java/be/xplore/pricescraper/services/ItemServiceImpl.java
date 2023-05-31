@@ -31,8 +31,6 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 /**
@@ -140,9 +138,7 @@ public class ItemServiceImpl implements ItemService {
    * @return the items which have the oldest price date.
    */
   private List<TrackedItem> oldestTrackedItems(int limit) {
-    var sort = Sort.by("lastAttempt").ascending();
-    var pageable = PageRequest.of(0, limit).withSort(sort);
-    return trackedItemRepository.findAll(pageable).stream().toList();
+    return trackedItemRepository.findAllSortedByOldestFirst(limit).stream().toList();
   }
 
   /**
@@ -201,7 +197,7 @@ public class ItemServiceImpl implements ItemService {
    * Set last attempt time to now.
    */
   @Transactional
-  public void modifyTrackedItemPrice(TrackedItem trackedItem, Optional<ShopItem> shopItem) {
+  private void modifyTrackedItemPrice(TrackedItem trackedItem, Optional<ShopItem> shopItem) {
     if (shopItem.isPresent()) {
       storeItemPrice(trackedItem, shopItem.get().price());
     } else {
@@ -213,7 +209,7 @@ public class ItemServiceImpl implements ItemService {
   /**
    * Set last attempt to now.
    */
-  public void setLastAttemptToNow(TrackedItem trackedItem) {
+  private void setLastAttemptToNow(TrackedItem trackedItem) {
     trackedItem.setLastAttempt(Timestamp.from(Instant.now()));
     trackedItemRepository.save(trackedItem);
   }

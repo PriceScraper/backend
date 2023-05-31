@@ -3,6 +3,7 @@ package be.xplore.pricescraper.services;
 import be.xplore.pricescraper.domain.recipes.Recipe;
 import be.xplore.pricescraper.domain.recipes.RecipeItem;
 import be.xplore.pricescraper.domain.users.User;
+import be.xplore.pricescraper.exceptions.ItemNotFoundException;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.RecipeItemRepository;
 import be.xplore.pricescraper.repositories.RecipeRepository;
@@ -80,12 +81,8 @@ public class RecipeServiceImpl implements RecipeService {
   }
 
   private void updateExistingItemInRecipe(Recipe res, int itemId, int valueChange) {
-    var item = recipeItemRepository.findItemByRecipeIdAndItemId(res.getId(), itemId);
-    if (item.isEmpty()) {
-      log.warn("Failed to find item in Recipe for id " + itemId);
-      return;
-    }
-    var entity = item.get();
+    var entity = recipeItemRepository.findItemByRecipeIdAndItemId(res.getId(), itemId)
+        .orElseThrow(ItemNotFoundException::new);
     entity.setQuantity(entity.getQuantity() + valueChange);
     if (entity.getQuantity() < 1) {
       recipeItemRepository.deleteById(entity.getId());
@@ -95,11 +92,7 @@ public class RecipeServiceImpl implements RecipeService {
   }
 
   private void addNewItemToRecipe(Recipe res, int itemId) {
-    var item = itemRepository.findById(itemId).orElse(null);
-    if (item == null) {
-      log.warn("No item found by id " + itemId);
-      return;
-    }
+    var item = itemRepository.findById(itemId).orElseThrow(ItemNotFoundException::new);
     var entity = new RecipeItem(res, item, 1);
     recipeItemRepository.save(entity);
   }

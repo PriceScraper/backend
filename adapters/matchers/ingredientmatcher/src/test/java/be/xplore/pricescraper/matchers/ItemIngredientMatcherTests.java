@@ -1,11 +1,9 @@
 package be.xplore.pricescraper.matchers;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import be.xplore.pricescraper.domain.shops.Item;
 import be.xplore.pricescraper.domain.shops.UnitType;
-import be.xplore.pricescraper.exceptions.MatcherNotInitializedException;
 import org.junit.jupiter.api.Test;
 
 
@@ -33,15 +31,8 @@ class ItemIngredientMatcherTests {
     IngredientMatcher itemIngredientMatcher = new IngredientMatcher();
     itemIngredientMatcher.addItems(delhaizePizza1, ahPizza1);
     boolean matched =
-        itemIngredientMatcher.isMatching();
+        itemIngredientMatcher.getMatchProbabilityInPercentage() > 0.7;
     assertThat(matched).isTrue();
-  }
-
-  @Test
-  void shouldNotBeInitialized() {
-    IngredientMatcher itemIngredientMatcher = new IngredientMatcher();
-    assertThatThrownBy(itemIngredientMatcher::isMatching).isInstanceOf(
-        MatcherNotInitializedException.class);
   }
 
   @Test
@@ -49,7 +40,7 @@ class ItemIngredientMatcherTests {
     IngredientMatcher itemIngredientMatcher = new IngredientMatcher();
     itemIngredientMatcher.addItems(delhaizePizza1, ahPizza2);
     boolean notMatched =
-        itemIngredientMatcher.isMatching();
+        itemIngredientMatcher.getMatchProbabilityInPercentage() > 0.7;
     assertThat(notMatched).isFalse();
   }
 

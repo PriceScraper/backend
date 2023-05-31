@@ -34,6 +34,7 @@ public class TitleMatcher extends ItemMatcher {
 
   @Override
   public double getMatchProbabilityInPercentage() {
+    validateIsInitialized();
     int score = matchitemsByTitles(getItemA().getName(), getItemB().getName());
     int maxLength = MatchStringUtils.getMaxSizeOfStrings(getItemA().getName(),
         getItemB().getName());

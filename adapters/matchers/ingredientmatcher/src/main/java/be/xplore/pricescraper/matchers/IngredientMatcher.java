@@ -37,6 +37,7 @@ public class IngredientMatcher extends ItemMatcher {
 
   @Override
   public double getMatchProbabilityInPercentage() {
+    validateIsInitialized();
     int score = matchitemsByIngredients(getItemA().getIngredients(), getItemB().getIngredients());
     int maxLength = MatchStringUtils.getMaxSizeOfStrings(getItemA().getIngredients(),
         getItemB().getIngredients());

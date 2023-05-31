@@ -10,9 +10,6 @@ import java.util.List;
  * Service for {@link ShoppingList} operations.
  */
 public interface ShoppingListService {
-
-  ShoppingList findShoppingListById(int id);
-
   void fillShoppingListWithTrackedItems(ShoppingList shoppingList);
 
   void createShoppingListForUser(User user, ShoppingList shoppingList);

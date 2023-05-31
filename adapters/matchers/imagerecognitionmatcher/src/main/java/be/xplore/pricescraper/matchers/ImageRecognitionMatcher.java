@@ -1,7 +1,6 @@
 package be.xplore.pricescraper.matchers;
 
 import be.xplore.pricescraper.exceptions.MatchException;
-import be.xplore.pricescraper.exceptions.MatcherNotInitializedException;
 import jakarta.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,6 +56,7 @@ public class ImageRecognitionMatcher extends ItemMatcher {
 
   @Override
   public double getMatchProbabilityInPercentage() {
+    validateIsInitialized();
     List<List<String>> linesFromImages = getSortedLinesFromImages();
     int total = getTotalDifferenceInCharsFromStringLists(linesFromImages);
     List<List<String>> labelsFromImages = getSortedLabelsFromImages();
