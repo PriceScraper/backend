@@ -1,11 +1,11 @@
 package be.xplore.pricescraper.scrapers.detail;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 
 import be.xplore.pricescraper.scrapers.MockJsoupConnection;
-import be.xplore.pricescraper.scrapers.detail.CarrefourBeScraper;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -48,6 +48,8 @@ class CarrefourBeScraperTests {
       assertTrue(response.isPresent());
       assertNotNull(response.get());
       assertNotNull(response.get().title());
+      assertThat(response.get().nutritionValues().get()).containsKey("Energie");
+      assertThat(response.get().nutritionValues().get().get("Energie")).endsWith("kcal");
       assertTrue(response.get().price() > 0);
     }
   }

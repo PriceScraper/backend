@@ -3,6 +3,8 @@ package be.xplore.pricescraper.scrapers.detail;
 import be.xplore.pricescraper.dtos.ItemAmountDetails;
 import be.xplore.pricescraper.scrapers.ItemDetailScraper;
 import be.xplore.pricescraper.scrapers.utils.AmountDetailsUtil;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
@@ -43,6 +45,17 @@ public class AhBeScraper extends ItemDetailScraper {
         .filter(e -> e.text().toLowerCase().startsWith("ingrediënten"))
         .findFirst();
     return ingredientsBlock.map(element -> element.text().substring(14).trim());
+  }
+
+  @Override
+  protected Optional<Map<String, String>> getNutritionValues(Document document) {
+    Map<String, String> nutritionValues = new HashMap<>();
+    document.getElementsByClass("product-info-nutrition_table__Q3m80").get(0)
+        .getElementsByTag("tbody").get(0)
+        .getElementsByTag("tr").forEach(e ->
+            nutritionValues.put(e.getElementsByTag("td").get(0).text(),
+                e.getElementsByTag("td").get(1).text()));
+    return Optional.of(nutritionValues);
   }
 
   protected Optional<Double> getItemPrice(Document document) {

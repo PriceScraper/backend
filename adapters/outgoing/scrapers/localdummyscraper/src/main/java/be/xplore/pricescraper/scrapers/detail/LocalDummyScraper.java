@@ -2,6 +2,7 @@ package be.xplore.pricescraper.scrapers.detail;
 
 
 import be.xplore.pricescraper.scrapers.ItemDetailScraper;
+import java.util.Map;
 import java.util.Optional;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -46,6 +47,11 @@ public class LocalDummyScraper extends ItemDetailScraper {
     }
     return Optional.of(String.join("", ingredients.stream().map(Element::text).toList()));
 
+  }
+
+  @Override
+  protected Optional<Map<String, String>> getNutritionValues(Document document) {
+    return Optional.empty();
   }
 
   @Override

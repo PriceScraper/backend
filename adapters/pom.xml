@@ -22,8 +22,6 @@
         <module>outgoing/scrapers/ahscraper</module>
         <module>outgoing/scrapers/scraper</module>
         <module>outgoing/scrapers/carrefourscraper</module>
-        <module>outgoing/scrapers/aldiscraper</module>
-        <module>outgoing/scrapers/lildscraper</module>
         <module>outgoing/scrapers/localdummyscraper</module>
         <module>outgoing/scanners</module>
         <module>outgoing/scanners/barcodescanner</module>
