@@ -100,8 +100,11 @@ public class ItemServiceImpl implements ItemService {
       searchLimit = 100;
     }
     var res = itemRepository.findItemByNameWithFuzzySearchAndLimit(name, searchLimit);
-    if (res.size() < 5 && name.strip().length() < 3) {
-      discoverNewItems(name);
+    if (res.size() < 5 && name.strip().length() > 2) {
+      var newItems = discoverNewItems(name);
+      if (newItems.size() > 0) {
+        return itemRepository.findItemByNameWithFuzzySearchAndLimit(name, searchLimit);
+      }
     }
     return res;
   }
