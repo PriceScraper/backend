@@ -2,7 +2,6 @@ package be.xplore.pricescraper.scrapers;
 
 import be.xplore.pricescraper.config.SearchScraperConfig;
 import be.xplore.pricescraper.dtos.ItemScraperSearch;
-import be.xplore.pricescraper.utils.scrapers.SearchItemsScraper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,7 @@ public abstract class SearchScraper extends WebScraper implements SearchItemsScr
   /**
    * Constructor to get the baseUrl.
    */
-  public SearchScraper(String baseUrl, SearchScraperConfig config) {
+  protected SearchScraper(String baseUrl, SearchScraperConfig config) {
     this.baseUrl = baseUrl;
     this.config = config;
   }

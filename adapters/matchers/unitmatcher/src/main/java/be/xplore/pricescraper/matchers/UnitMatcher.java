@@ -5,12 +5,6 @@ package be.xplore.pricescraper.matchers;
  * The implmentation is based on {@link be.xplore.pricescraper.domain.shops.Item} unit.
  */
 public class UnitMatcher extends ItemMatcher {
-  private static final double matchThreshold = 1;
-
-  @Override
-  public boolean isMatching() {
-    return getMatchProbabilityInPercentage() >= matchThreshold;
-  }
 
   @Override
   public boolean matchingIsPossible() {

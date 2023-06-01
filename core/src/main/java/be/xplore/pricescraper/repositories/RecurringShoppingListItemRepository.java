@@ -3,12 +3,10 @@ package be.xplore.pricescraper.repositories;
 import be.xplore.pricescraper.domain.users.RecurringShoppingListItem;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.stereotype.Repository;
 
 /**
  * Repository interface.
  */
-@Repository
 public interface RecurringShoppingListItemRepository {
   /**
    * Delete by primary key.

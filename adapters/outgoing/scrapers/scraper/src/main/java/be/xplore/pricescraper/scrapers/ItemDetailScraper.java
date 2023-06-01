@@ -3,7 +3,6 @@ package be.xplore.pricescraper.scrapers;
 import be.xplore.pricescraper.dtos.ItemAmountDetails;
 import be.xplore.pricescraper.dtos.ShopItem;
 import be.xplore.pricescraper.utils.AmountDetailsUtil;
-import be.xplore.pricescraper.utils.scrapers.ItemScraper;
 import java.io.IOException;
 import java.util.Optional;
 import lombok.Getter;
@@ -24,7 +23,7 @@ public abstract class ItemDetailScraper extends WebScraper implements ItemScrape
   /**
    * Constructor to get the baseUrl.
    */
-  public ItemDetailScraper(String baseUrl) {
+  protected ItemDetailScraper(String baseUrl) {
     this.baseUrl = baseUrl;
   }
 

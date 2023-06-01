@@ -22,7 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest(classes = {RecipeServiceImpl.class})
-public class RecipeServiceTests {
+class RecipeServiceTests {
   @Autowired
   private RecipeService service;
   @MockBean

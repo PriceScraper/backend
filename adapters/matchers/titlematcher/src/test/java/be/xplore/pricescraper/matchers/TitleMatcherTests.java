@@ -11,25 +11,25 @@ import org.junit.jupiter.api.Test;
 class TitleMatcherTests {
 
   private static final Item itemA =
-      new Item(1, "Halfvolle melk AH", "", 1, UnitType.ml, 300, "", null);
+      new Item(1, "Halfvolle melk AH", "", 1, UnitType.ML, 300, "", null);
   private static final Item itemB =
-      new Item(1, "Halfvolle melk", "", 1, UnitType.ml, 300, "", null);
+      new Item(1, "Halfvolle melk", "", 1, UnitType.ML, 300, "", null);
   private static final Item itemC =
-      new Item(1, "Volle melk Simple", "", 1, UnitType.ml, 300, "", null);
+      new Item(1, "Volle melk Simple", "", 1, UnitType.ML, 300, "", null);
 
   @Test
   void shouldMatchProducts() {
     TitleMatcher titleMatcher = new TitleMatcher();
     titleMatcher.addItems(itemA, itemB);
     boolean matched =
-        titleMatcher.isMatching();
+        titleMatcher.getMatchProbabilityInPercentage() > 0.7;
     assertThat(matched).isTrue();
   }
 
   @Test
   void shouldNotBeInitialized() {
     TitleMatcher titleMatcher = new TitleMatcher();
-    assertThatThrownBy(titleMatcher::isMatching).isInstanceOf(
+    assertThatThrownBy(titleMatcher::getMatchProbabilityInPercentage).isInstanceOf(
         MatcherNotInitializedException.class);
   }
 
@@ -38,7 +38,7 @@ class TitleMatcherTests {
     TitleMatcher titleMatcher = new TitleMatcher();
     titleMatcher.addItems(itemA, itemC);
     boolean notMatched =
-        titleMatcher.isMatching();
+        titleMatcher.getMatchProbabilityInPercentage() > 0.7;
     assertThat(notMatched).isFalse();
   }
 

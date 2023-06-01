@@ -1,8 +1,9 @@
 package be.xplore.pricescraper;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import be.xplore.pricescraper.exceptions.RootDomainNotFoundException;
 import be.xplore.pricescraper.repositories.ItemPriceRepository;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.scrapers.detail.CarrefourBeScraper;
@@ -28,31 +29,19 @@ class ScraperServiceIT {
   private ScraperServiceImpl scraperService;
 
   @Test
-  void getItemIdentifier() {
-    var baseUrl = "https://drive.carrefour.be/nl/";
-    var identifier =
-        "Dranken/Softdrinks/Sport--%26-gezonde-dranken/Aquarius%7CLemon-500-ml/p/06093663";
-    var response = scraperService.getItemIdentifier(baseUrl + identifier);
-    assertTrue(response.isPresent());
-    assertEquals(identifier.toLowerCase(), response.get().toLowerCase());
-  }
-
-  @Test
-  void getItemIdentifierFail() {
-    var baseUrl = "https://anUnknownDomain.be/nl/";
-    var identifier =
-        "Dranken/Softdrinks/Sport--%26-gezonde-dranken/Aquarius%7CLemon-500-ml/p/06093663";
-    var response = scraperService.getItemIdentifier(baseUrl + identifier);
-    assertTrue(response.isEmpty());
-  }
-
-  @Test
   void getScraperRootDomain() {
     var baseUrl = "https://drive.carrefour.be/nl/";
     var identifier =
         "Dranken/Softdrinks/Sport--%26-gezonde-dranken/Aquarius%7CLemon-500-ml/p/06093663";
     var response = scraperService.getScraperRootDomain(baseUrl + identifier);
-    assertTrue(response.isPresent());
-    assertEquals("carrefour.be", response.get());
+    assertThat(response).isNotNull();
+    assertThat(response).isEqualTo("carrefour.be");
+  }
+
+  @Test
+  void getScraperRootDomainShouldFail() {
+    assertThatThrownBy(
+        () -> scraperService.getScraperRootDomain("https://www.example.com")
+    ).isInstanceOf(RootDomainNotFoundException.class);
   }
 }

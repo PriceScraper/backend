@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +22,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Entity(name = "ShoppingList")
-public class ShoppingListEntity {
+public class ShoppingListEntity implements Serializable {
   @Setter
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import be.xplore.pricescraper.exceptions.ItemNotFoundException;
 import org.junit.jupiter.api.Test;
 
-public class BarcodeItemServiceImplTests {
+class BarcodeItemServiceImplTests {
   private final BarcodeItemServiceImpl service;
 
   public BarcodeItemServiceImplTests() {

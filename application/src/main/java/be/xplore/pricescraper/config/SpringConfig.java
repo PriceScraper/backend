@@ -21,12 +21,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @ConfigurationPropertiesScan("be.xplore.pricescraper.config")
 public class SpringConfig {
-
-  @Autowired
-  ItemMatcherCombinerFactory matcherCombinerFactory;
-
   @Bean
-  Combiner getCombiner() {
+  Combiner getCombiner(ItemMatcherCombinerFactory matcherCombinerFactory) {
     Map<Matcher, Double> matchersWithWeights = new HashMap<>();
     matchersWithWeights.put(new IngredientMatcher(), 0.4);
     matchersWithWeights.put(new UnitMatcher(), 0.35);

@@ -77,6 +77,8 @@ public class SecurityConfig {
     var config = new CorsConfiguration();
     config.setAllowCredentials(true);
     config.addAllowedOrigin(frontendConfig.getUrl());
+    config.addAllowedOrigin(frontendConfig.getUrl(true));
+    config.addAllowedOrigin(frontendConfig.getUrl(false));
     config.addAllowedHeader("*");
     config.addAllowedMethod("*");
     var source = new UrlBasedCorsConfigurationSource();

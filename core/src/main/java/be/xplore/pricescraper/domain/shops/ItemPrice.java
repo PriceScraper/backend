@@ -1,6 +1,7 @@
 package be.xplore.pricescraper.domain.shops;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
 import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ItemPrice {
+public class ItemPrice implements Serializable {
   private int id;
   private Instant timestamp;
   private double price;

@@ -41,7 +41,7 @@ public class LocalDummyScraper extends ItemDetailScraper {
       return Optional.empty();
     }
     var ingredients = ingredientsBlock.get(0).getElementsByTag("span");
-    if (ingredients.size() == 0) {
+    if (ingredients.isEmpty()) {
       return Optional.empty();
     }
     return Optional.of(String.join("", ingredients.stream().map(Element::text).toList()));

@@ -16,9 +16,4 @@ public class MockItemMatcher extends ItemMatcher {
     String nameB = getItemA().getName();
     return normalizeScoreToPercentageGivenRange(nameA.compareTo(nameB), 0, 300);
   }
-
-  @Override
-  public boolean isMatching() {
-    return getMatchProbabilityInPercentage() > 0.9;
-  }
 }

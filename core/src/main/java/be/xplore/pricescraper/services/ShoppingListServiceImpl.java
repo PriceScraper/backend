@@ -6,8 +6,10 @@ import be.xplore.pricescraper.domain.users.RecurringShoppingListItem;
 import be.xplore.pricescraper.domain.users.ShoppingList;
 import be.xplore.pricescraper.domain.users.ShoppingListLine;
 import be.xplore.pricescraper.domain.users.User;
+import be.xplore.pricescraper.exceptions.RecurringItemNotFoundException;
 import be.xplore.pricescraper.exceptions.ShoppingListItemNotFoundException;
 import be.xplore.pricescraper.exceptions.ShoppingListNotFoundException;
+import be.xplore.pricescraper.exceptions.UnauthorizedActionExeption;
 import be.xplore.pricescraper.repositories.RecurringShoppingListItemRepository;
 import be.xplore.pricescraper.repositories.ShoppingListRepository;
 import be.xplore.pricescraper.repositories.UserRepository;
@@ -31,7 +33,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
   private final UserRepository userRepository;
   private final RecurringShoppingListItemRepository recurringShoppingListItemRepository;
 
-  public ShoppingList findShoppingListById(int id) {
+  private ShoppingList findShoppingListById(int id) {
     return shoppingListRepository.getShoppingListById(id)
         .orElseThrow(ShoppingListNotFoundException::new);
   }
@@ -187,11 +189,11 @@ public class ShoppingListServiceImpl implements ShoppingListService {
   public void removeRecurringItem(int recurringItemId, User user) {
     var entity = recurringShoppingListItemRepository.findById(recurringItemId);
     if (entity.isEmpty()) {
-      log.debug("Could not find recurring item by id " + recurringItemId);
-      return;
+      throw new RecurringItemNotFoundException(
+          "Could not find recurring item by id " + recurringItemId);
     }
     if (!entity.get().getUser().getId().equals(user.getId())) {
-      log.warn("Attempted to remove recurring item of other user.");
+      throw new UnauthorizedActionExeption();
     }
     recurringShoppingListItemRepository.deleteById(recurringItemId);
   }

@@ -1,15 +1,12 @@
 package be.xplore.pricescraper.repositories;
 
 import be.xplore.pricescraper.domain.shops.TrackedItem;
+import java.util.List;
 import java.util.Optional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Repository;
 
 /**
  * Repository for {@link TrackedItem}.
  */
-@Repository
 public interface TrackedItemRepository {
   boolean existsByUrlIgnoreCaseAndShopId(String url, int id);
 
@@ -19,7 +16,9 @@ public interface TrackedItemRepository {
 
   long count();
 
-  Page<TrackedItem> findAll(Pageable pageable);
+  List<TrackedItem> findAll(int limit);
+
+  List<TrackedItem> findAllSortedByOldestFirst(int limit);
 
   boolean existsByUrlIgnoreCase(String url);
 }

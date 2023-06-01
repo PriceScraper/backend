@@ -11,7 +11,6 @@ public class TitleMatcher extends ItemMatcher {
 
   private static final LevenshteinDistance levenshteinDistance =
       LevenshteinDistance.getDefaultInstance();
-  private static final double matchThreshold = 0.7;
 
   @Override
   public boolean matchingIsPossible() {
@@ -25,15 +24,10 @@ public class TitleMatcher extends ItemMatcher {
    *
    * @return boolean is same item
    */
-  @Override
-  public boolean isMatching() {
-    validateIsInitialized();
-    double matchProbability = getMatchProbabilityInPercentage();
-    return matchProbability >= matchThreshold;
-  }
 
   @Override
   public double getMatchProbabilityInPercentage() {
+    validateIsInitialized();
     int score = matchitemsByTitles(getItemA().getName(), getItemB().getName());
     int maxLength = MatchStringUtils.getMaxSizeOfStrings(getItemA().getName(),
         getItemB().getName());

@@ -27,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -91,15 +90,9 @@ class ItemRepositoryTests {
   }
 
   @Test
-  void resultShouldHave2Items() {
-    var items = itemRepository.findItemsByNameLike("PIzZa");
-    assertThat(items).hasSize(2);
-  }
-
-  @Test
   void resultShouldHavePrices() {
     TrackedItem trackedItem =
-        trackedItemRepository.findAll(Pageable.ofSize(1)).get().findFirst().orElseThrow();
+        trackedItemRepository.findAll(1).stream().findFirst().orElseThrow();
     var items = itemRepository.findLatestPricesForTrackedItems(List.of(trackedItem),
         LocalDateTime.of(2022, 1, 1, 1, 1));
     assertThat(items).isNotEmpty();

@@ -14,8 +14,9 @@ import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -35,7 +36,7 @@ public class TrackedItemRepositoryImpl implements TrackedItemRepository {
    */
   @Override
   public boolean existsByUrlIgnoreCaseAndShopId(String url, int id) {
-    return jpaRepository.existsByUrlIgnoreCaseAndShop_Id(url, id);
+    return jpaRepository.existsByUrlIgnoreCaseAndShopId(url, id);
   }
 
   @Override
@@ -54,7 +55,7 @@ public class TrackedItemRepositoryImpl implements TrackedItemRepository {
         itemRepository.getReferenceById(trackedItem.getItem().getId()) : null;
     List<ItemPriceEntity> prices =
         trackedItem.getItemPrices() != null ? trackedItem.getItemPrices().stream()
-            .map((ip) -> itemPriceRepository.getReferenceById(ip.getId())).toList() :
+            .map(ip -> itemPriceRepository.getReferenceById(ip.getId())).toList() :
             new ArrayList<>();
     TrackedItemEntity entity =
         new TrackedItemEntity(trackedItem.getUrl(),
@@ -78,10 +79,24 @@ public class TrackedItemRepositoryImpl implements TrackedItemRepository {
    * Finds all {@link TrackedItem}.
    */
   @Override
-  public Page<TrackedItem> findAll(Pageable pageable) {
-    return jpaRepository.findAll(pageable)
-        .map(entity -> modelMapper.map(entity, TrackedItem.class));
+  public List<TrackedItem> findAll(int limit) {
+    return findAllByPageable(PageRequest.of(0, limit));
   }
+
+  /**
+   * Finds all {@link TrackedItem} sorted by oldest ascending.
+   */
+  @Override
+  public List<TrackedItem> findAllSortedByOldestFirst(int limit) {
+    return findAllByPageable(PageRequest.of(0, limit)
+        .withSort(Sort.by("lastAttempt").ascending()));
+  }
+
+  private List<TrackedItem> findAllByPageable(Pageable pageable) {
+    return jpaRepository.findAll(pageable).stream()
+        .map(entity -> modelMapper.map(entity, TrackedItem.class)).toList();
+  }
+
 
   @Override
   public boolean existsByUrlIgnoreCase(String url) {

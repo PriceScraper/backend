@@ -1,5 +1,6 @@
 package be.xplore.pricescraper.domain.shops;
 
+import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Item {
+public class Item implements Serializable {
   private int id;
   private String name;
   private String image;

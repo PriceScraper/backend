@@ -6,6 +6,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -23,7 +24,7 @@ import lombok.Setter;
 @Entity(name = "TrackedItem")
 @Getter
 @Setter
-public class TrackedItemEntity {
+public class TrackedItemEntity implements Serializable {
   @Id
   private String url;
   @ManyToOne

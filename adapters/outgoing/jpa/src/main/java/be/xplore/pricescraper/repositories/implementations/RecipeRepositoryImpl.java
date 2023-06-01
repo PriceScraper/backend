@@ -34,7 +34,7 @@ public class RecipeRepositoryImpl implements RecipeRepository {
    */
   @Override
   public List<Recipe> findByCreatorId(long userId) {
-    var res = repository.findByCreator_Id(userId);
+    var res = repository.findByCreatorId(userId);
     return res.stream()
         .map(e -> modelMapper.map(e, Recipe.class))
         .toList();

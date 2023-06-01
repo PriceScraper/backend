@@ -11,7 +11,6 @@ public class IngredientMatcher extends ItemMatcher {
 
   private static final LevenshteinDistance levenshteinDistance =
       LevenshteinDistance.getDefaultInstance();
-  private static final double matchThreshold = 0.7;
 
   @Override
   public boolean matchingIsPossible() {
@@ -19,24 +18,9 @@ public class IngredientMatcher extends ItemMatcher {
         && !getItemA().getIngredients().isEmpty() && !getItemB().getIngredients().isEmpty();
   }
 
-  /**
-   * Match 2 items by passing their ingredient strings.
-   * Shops often desribe product names slightly different,
-   * by checking the ingredient list we can verify that two items
-   * are the same as these should be described.
-   * accurately by the vendors.
-   *
-   * @return boolean is same item
-   */
-  @Override
-  public boolean isMatching() {
-    validateIsInitialized();
-    double matchProbability = getMatchProbabilityInPercentage();
-    return matchProbability >= matchThreshold;
-  }
-
   @Override
   public double getMatchProbabilityInPercentage() {
+    validateIsInitialized();
     int score = matchitemsByIngredients(getItemA().getIngredients(), getItemB().getIngredients());
     int maxLength = MatchStringUtils.getMaxSizeOfStrings(getItemA().getIngredients(),
         getItemB().getIngredients());

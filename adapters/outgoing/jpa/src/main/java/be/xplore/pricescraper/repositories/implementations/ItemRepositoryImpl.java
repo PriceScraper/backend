@@ -43,18 +43,6 @@ public class ItemRepositoryImpl implements ItemRepository {
     return itemEntities.stream().map(e -> modelMapper.map(e, Item.class)).toList();
   }
 
-  /**
-   * Find by name like %name%.
-   */
-  @Override
-  public List<ItemSearchDto> findItemsByNameLike(String name) {
-    var entities = itemJpaRepository.findByNameContainsIgnoreCase(name.toLowerCase());
-    return entities.stream()
-        .map(e -> modelMapper.map(e, ItemSearchDto.class))
-        .filter(e -> e.getId() > 0)
-        .toList();
-  }
-
   @Override
   @Transactional
   public List<ItemSearchDto> findItemByNameWithFuzzySearchAndLimit(String nameQuery, int limit) {
@@ -114,7 +102,7 @@ public class ItemRepositoryImpl implements ItemRepository {
   public Item save(Item item) {
     List<TrackedItemEntity> trackedItems = item.getTrackedItems() != null
         ? item.getTrackedItems().stream()
-        .map((tr) -> trackedItemRepository.getReferenceById(tr.getUrl())).toList()
+        .map(tr -> trackedItemRepository.getReferenceById(tr.getUrl())).toList()
         : null;
 
     var itemToSave =
@@ -127,7 +115,7 @@ public class ItemRepositoryImpl implements ItemRepository {
   }
 
   /**
-   * Find by key.
+   * Find by id.
    */
   @Override
   public Optional<Item> findById(int id) {

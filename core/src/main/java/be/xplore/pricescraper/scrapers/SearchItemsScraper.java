@@ -1,4 +1,4 @@
-package be.xplore.pricescraper.utils.scrapers;
+package be.xplore.pricescraper.scrapers;
 
 import be.xplore.pricescraper.dtos.ItemScraperSearch;
 import java.io.IOException;

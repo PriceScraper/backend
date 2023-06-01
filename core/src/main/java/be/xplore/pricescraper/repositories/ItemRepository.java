@@ -7,17 +7,13 @@ import be.xplore.pricescraper.dtos.ItemSearchDto;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.stereotype.Repository;
 
 /**
  * Repository for {@link Item}.
  */
-@Repository
 public interface ItemRepository {
 
   List<Item> findAll();
-
-  List<ItemSearchDto> findItemsByNameLike(String name);
 
   List<ItemSearchDto> findItemByNameWithFuzzySearchAndLimit(String nameQuery, int limit);
 

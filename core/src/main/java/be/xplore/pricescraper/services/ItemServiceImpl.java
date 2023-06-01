@@ -10,7 +10,6 @@ import be.xplore.pricescraper.dtos.ItemScraperSearch;
 import be.xplore.pricescraper.dtos.ItemSearchDto;
 import be.xplore.pricescraper.dtos.ShopItem;
 import be.xplore.pricescraper.exceptions.ItemNotFoundException;
-import be.xplore.pricescraper.exceptions.RootDomainNotFoundException;
 import be.xplore.pricescraper.exceptions.ScrapeItemException;
 import be.xplore.pricescraper.exceptions.ScraperNotFoundException;
 import be.xplore.pricescraper.exceptions.TrackItemException;
@@ -31,8 +30,6 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 /**
@@ -140,9 +137,7 @@ public class ItemServiceImpl implements ItemService {
    * @return the items which have the oldest price date.
    */
   private List<TrackedItem> oldestTrackedItems(int limit) {
-    var sort = Sort.by("lastAttempt").ascending();
-    var pageable = PageRequest.of(0, limit).withSort(sort);
-    return trackedItemRepository.findAll(pageable).stream().toList();
+    return trackedItemRepository.findAllSortedByOldestFirst(limit).stream().toList();
   }
 
   /**
@@ -201,7 +196,7 @@ public class ItemServiceImpl implements ItemService {
    * Set last attempt time to now.
    */
   @Transactional
-  public void modifyTrackedItemPrice(TrackedItem trackedItem, Optional<ShopItem> shopItem) {
+  private void modifyTrackedItemPrice(TrackedItem trackedItem, Optional<ShopItem> shopItem) {
     if (shopItem.isPresent()) {
       storeItemPrice(trackedItem, shopItem.get().price());
     } else {
@@ -213,7 +208,7 @@ public class ItemServiceImpl implements ItemService {
   /**
    * Set last attempt to now.
    */
-  public void setLastAttemptToNow(TrackedItem trackedItem) {
+  private void setLastAttemptToNow(TrackedItem trackedItem) {
     trackedItem.setLastAttempt(Timestamp.from(Instant.now()));
     trackedItemRepository.save(trackedItem);
   }
@@ -236,20 +231,17 @@ public class ItemServiceImpl implements ItemService {
    */
   @Transactional
   public TrackedItem addTrackedItem(String urlToItem) {
-    var scraperDomain = scraperService.getScraperRootDomain(urlToItem)
-        .orElseThrow(RootDomainNotFoundException::new);
+    var scraperDomain = scraperService.getScraperRootDomain(urlToItem);
     var scrapedResponse =
         scraperService.scrapeFullUrl(urlToItem).orElseThrow(ScrapeItemException::new);
     var shop = getShopFromDomain(scraperDomain);
-    var itemIdentifier =
-        scraperService.getItemIdentifier(urlToItem).orElseThrow(ScrapeItemException::new);
-    var dbItem = trackedItemRepository.findByUrlIgnoreCaseAndShopId(itemIdentifier, shop.getId());
+    var dbItem = trackedItemRepository.findByUrlIgnoreCaseAndShopId(urlToItem, shop.getId());
     if (dbItem.isPresent()) {
       log.debug("Item is already being tracked. Url: " + dbItem.get().getUrl());
       return dbItem.get();
     }
     var amountDetails = scrapedResponse.details()
-        .orElse(new ItemAmountDetails(UnitType.not_available, 1, 1));
+        .orElse(new ItemAmountDetails(UnitType.NOT_AVAILABLE, 1, 1));
     var item =
         getItem(scrapedResponse.title(), scrapedResponse.img().orElse(null), amountDetails,
             scrapedResponse.ingredients().orElse(null));

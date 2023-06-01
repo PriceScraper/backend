@@ -11,8 +11,11 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class AmountDetailsUtil {
-  private static final String itemNameRegexGroup = "([a-z -.%]+)";
-  private static final String itemUnitRegexGroup = "(cl|l|ml|kg|g)";
+  private static final String ITEM_NAME_REGEX_GROUP = "([a-z -.%]+)";
+  private static final String ITEM_UNIT_REGEX_GROUP = "(cl|l|ml|kg|g)";
+
+  private AmountDetailsUtil() {
+  }
 
   /**
    * Execution.
@@ -38,13 +41,16 @@ public class AmountDetailsUtil {
   private static Optional<ItemAmountDetails> withQuantityV1(String title) {
     var patternWithQuantity1 =
         Pattern.compile(
-            itemNameRegexGroup + "([0-9. ]{1,8})" + itemUnitRegexGroup + "( ?)x( ?)([0-9 ]{1,8})");
+            ITEM_NAME_REGEX_GROUP
+                + "([0-9. ]{1,8})"
+                + ITEM_UNIT_REGEX_GROUP
+                + "( ?)x( ?)([0-9 ]{1,8})");
     var matherQuantity1 = patternWithQuantity1.matcher(title.toLowerCase());
     if (!matherQuantity1.matches()) {
       return Optional.empty();
     }
     return Optional.of(new ItemAmountDetails(
-        UnitType.valueOf(matherQuantity1.group(3)),
+        UnitType.valueOf(matherQuantity1.group(3).toUpperCase()),
         Double.parseDouble(matherQuantity1.group(2).strip()),
         Integer.parseInt(matherQuantity1.group(6).strip())));
   }
@@ -52,13 +58,16 @@ public class AmountDetailsUtil {
   private static Optional<ItemAmountDetails> withQuantityV2(String title) {
     var patternWithQuantity2 =
         Pattern.compile(
-            itemNameRegexGroup + "([0-9 ]{1,8})( ?)x( ?)([0-9. ]{1,8})" + itemUnitRegexGroup + "?");
+            ITEM_NAME_REGEX_GROUP
+                + "([0-9 ]{1,8})( ?)x( ?)([0-9. ]{1,8})"
+                + ITEM_UNIT_REGEX_GROUP
+                + "?");
     var matherQuantity2 = patternWithQuantity2.matcher(title.toLowerCase());
     if (!matherQuantity2.matches()) {
       return Optional.empty();
     }
     return Optional.of(new ItemAmountDetails(
-        UnitType.valueOf(matherQuantity2.group(6)),
+        UnitType.valueOf(matherQuantity2.group(6).toUpperCase()),
         Double.parseDouble(matherQuantity2.group(5).strip()),
         Integer.parseInt(matherQuantity2.group(2).strip())));
 
@@ -66,12 +75,15 @@ public class AmountDetailsUtil {
 
   private static Optional<ItemAmountDetails> withoutQuantity(String title) {
     var patternNoQuantity =
-        Pattern.compile(itemNameRegexGroup + "([0-9 .]{1,8})" + itemUnitRegexGroup);
+        Pattern.compile(ITEM_NAME_REGEX_GROUP
+            + "([0-9 .]{1,8})"
+            + ITEM_UNIT_REGEX_GROUP);
     var matherNoQuantity = patternNoQuantity.matcher(title.toLowerCase());
     if (!matherNoQuantity.matches()) {
       return Optional.empty();
     }
-    return Optional.of(new ItemAmountDetails(UnitType.valueOf(matherNoQuantity.group(3)),
+    return Optional.of(new ItemAmountDetails(
+        UnitType.valueOf(matherNoQuantity.group(3).toUpperCase()),
         Double.parseDouble(matherNoQuantity.group(2).strip()), 1));
   }
 }

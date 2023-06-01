@@ -1,5 +1,6 @@
 package be.xplore.pricescraper;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import be.xplore.pricescraper.exceptions.ItemNotFoundException;
@@ -18,12 +19,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
 @Import(IntegrationConfig.class)
 @SpringBootTest(classes = {ItemServiceImpl.class, ItemScraper.class,
     ScraperServiceImpl.class, CarrefourBeScraper.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @ActiveProfiles("test")
+@TestPropertySource(properties = "spring.datasource.url=jdbc:h2:mem:~/itemServiceITDB;DB_CLOSE_DELAY=-1")
 class ItemServiceIT {
   @Autowired
   private ItemRepository itemRepository;
@@ -36,11 +39,23 @@ class ItemServiceIT {
   @Autowired
   private ItemServiceImpl itemService;
 
+  private static final String domain =
+      "https://drive.carrefour.be";
+  private static final String item =
+      "/nl/Diepvries/Pizza-%26-quiches/Dr-Oetker%7CPizza-Ristorante-Hawaii-355-g/p/01655209";
+  private static final String testItemUrl = domain + item;
+
   @Test
   void trackItemFailure() {
     assertThatThrownBy(() -> itemService.addTrackedItem(
         "https://drive.carrefour.be/nl/itemdoesnotexist")).isInstanceOf(
         ScrapeItemException.class);
+  }
+
+  @Test
+  void shouldTrackItem() {
+    itemService.addTrackedItem(testItemUrl);
+    assertThat(trackedItemRepository.existsByUrlIgnoreCase(testItemUrl)).isTrue();
   }
 
   @Test

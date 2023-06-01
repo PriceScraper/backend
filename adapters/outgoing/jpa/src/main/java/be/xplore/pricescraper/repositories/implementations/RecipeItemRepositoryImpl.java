@@ -32,14 +32,14 @@ public class RecipeItemRepositoryImpl implements RecipeItemRepository {
 
   @Override
   public List<RecipeItem> findItemsByRecipeId(long id) {
-    return repository.findByRecipe_Id(id).stream()
+    return repository.findByRecipeId(id).stream()
         .map(e -> modelMapper.map(e, RecipeItem.class))
         .toList();
   }
 
   @Override
   public Optional<RecipeItem> findItemByRecipeIdAndItemId(long id, int itemId) {
-    return repository.findByRecipe_IdAndItem_Id(id, itemId)
+    return repository.findByRecipeIdAndItemId(id, itemId)
         .map(e -> modelMapper.map(e, RecipeItem.class));
   }
 }

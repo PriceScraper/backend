@@ -12,6 +12,4 @@ public interface Matcher {
 
   double getMatchProbabilityInPercentage();
 
-  boolean isMatching();
-
 }

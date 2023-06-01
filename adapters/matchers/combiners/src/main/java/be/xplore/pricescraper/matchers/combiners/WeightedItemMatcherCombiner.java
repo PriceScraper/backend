@@ -13,10 +13,10 @@ public class WeightedItemMatcherCombiner extends ItemMatcherCombiner {
 
   private final Map<Matcher, Double> weightedMatchers = new HashMap<>();
 
-  private static final double matchThreshold = 0.75;
+  private static final double MATCH_THRESHOLD = 0.75;
 
   protected double getMatchThreshold() {
-    return matchThreshold;
+    return MATCH_THRESHOLD;
   }
 
   @Override
@@ -53,7 +53,7 @@ public class WeightedItemMatcherCombiner extends ItemMatcherCombiner {
 
   private Matcher getMatcherByType(Class<? extends Matcher> matcherClass) {
     return getMatchers().stream()
-        .filter((m) -> m.getClass().isAssignableFrom(matcherClass)).findFirst()
+        .filter(m -> m.getClass().isAssignableFrom(matcherClass)).findFirst()
         .orElseThrow(CombinerInitializeException::new);
   }
 
