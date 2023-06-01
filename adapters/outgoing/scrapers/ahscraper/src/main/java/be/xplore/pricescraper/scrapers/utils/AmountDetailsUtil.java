@@ -88,7 +88,7 @@ public class AmountDetailsUtil {
     if (val.equals("gram")) {
       val = "g";
     }
-    return UnitType.valueOf(val);
+    return UnitType.valueOf(val.toUpperCase());
   }
 
   private static double parseDouble(String val) {
