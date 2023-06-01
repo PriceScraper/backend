@@ -48,7 +48,13 @@
         </dependency>
         <dependency>
             <groupId>be.xplore</groupId>
-            <artifactId>imagerecognitionmatcher</artifactId>
+            <artifactId>titlematcher</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>be.xplore</groupId>
+            <artifactId>unitmatcher</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

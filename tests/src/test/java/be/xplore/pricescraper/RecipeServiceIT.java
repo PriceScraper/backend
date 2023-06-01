@@ -1,12 +1,17 @@
 package be.xplore.pricescraper;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import be.xplore.pricescraper.repositories.RecipeItemRepository;
+import be.xplore.pricescraper.domain.recipes.Recipe;
+import be.xplore.pricescraper.domain.shops.Item;
+import be.xplore.pricescraper.domain.users.User;
+import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.RecipeRepository;
+import be.xplore.pricescraper.repositories.UserRepository;
 import be.xplore.pricescraper.scrapers.ItemScraper;
 import be.xplore.pricescraper.scrapers.detail.CarrefourBeScraper;
 import be.xplore.pricescraper.services.ItemServiceImpl;
@@ -32,7 +37,9 @@ class RecipeServiceIT {
   @Autowired
   private RecipeRepository recipeRepository;
   @Autowired
-  private RecipeItemRepository recipeItemRepository;
+  private ItemRepository itemRepository;
+  @Autowired
+  private UserRepository userRepository;
 
   @Test
   void add() {
@@ -91,5 +98,15 @@ class RecipeServiceIT {
     assertNotNull(addResponse);
     var countAfter = recipeService.getByFilter(searchQuery).size();
     assertEquals(countBefore, countAfter);
+  }
+
+  @Test
+  void itemShouldBeAdded() {
+    User user = userRepository.save(new User("test", "", ""));
+    Recipe recipe = recipeService.add("test recept", user);
+    Item item = itemRepository.save(new Item());
+    recipeService.addItemToRecipe(recipe.getId(), item.getId(), user);
+    recipe = recipeService.get(recipe.getId()).get();
+    assertThat(recipe.getItems()).isNotEmpty();
   }
 }

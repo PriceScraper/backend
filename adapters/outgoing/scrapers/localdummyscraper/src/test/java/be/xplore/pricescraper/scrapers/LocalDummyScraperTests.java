@@ -1,7 +1,7 @@
 package be.xplore.pricescraper.scrapers;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 
 import be.xplore.pricescraper.scrapers.detail.LocalDummyScraper;
@@ -31,7 +31,7 @@ class LocalDummyScraperTests {
   }
 
   @Test
-  void getItemResults() throws IOException {
+  void shouldReturnItemResults() throws IOException {
     Resource resource = new ClassPathResource("html.txt");
     File file = resource.getFile();
     BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
@@ -44,10 +44,29 @@ class LocalDummyScraperTests {
       jsoup.when(() -> Jsoup.connect(any(String.class))).thenReturn(connection);
 
       var response = scraper.scrape("test");
-      assertTrue(response.isPresent());
-      assertNotNull(response.get());
-      assertNotNull(response.get().title());
-      assertTrue(response.get().price() > 0);
+      assertThat(response).isPresent();
+      assertThat(response.get()).isNotNull();
+      assertThat(response.get().title()).isNotNull();
+      assertThat(response.get().price()).isPositive();
     }
   }
+
+  @Test
+  void shouldReturnEmptyResultsForIncorrectHtml() throws IOException {
+    Resource resource = new ClassPathResource("html-incorrect.txt");
+    File file = resource.getFile();
+    BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+    String html = bufferedReader.lines().collect(Collectors.joining());
+    Document doc = Jsoup.parse(html);
+    MockJsoupConnection connection = new MockJsoupConnection(doc);
+
+    try (MockedStatic<Jsoup> jsoup = Mockito.mockStatic(Jsoup.class)) {
+
+      jsoup.when(() -> Jsoup.connect(any(String.class))).thenReturn(connection);
+
+      var response = scraper.scrape("test");
+      assertThat(response).isEmpty();
+    }
+  }
+
 }
