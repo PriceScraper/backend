@@ -9,13 +9,13 @@ import org.junit.jupiter.api.Test;
 public class UnitMatcherTests {
 
   private static final Item itemA =
-      new Item(1, "Pizza salami", "", 1, UnitType.KG, 1, "", null);
+      new Item("Pizza salami", "", 1, UnitType.KG, 1, "", null);
   private static final Item itemB =
-      new Item(1, "Pizza salami", "", 1, UnitType.G, 1000, "", null);
+      new Item("Pizza salami", "", 1, UnitType.G, 1000, "", null);
   private static final Item itemC =
-      new Item(1, "Pizza salami", "", 1, UnitType.G, 100, "", null);
+      new Item("Pizza salami", "", 1, UnitType.G, 100, "", null);
   private static final Item itemD =
-      new Item(1, "Pizza salami", "", 1, UnitType.ML, 100, "", null);
+      new Item("Pizza salami", "", 1, UnitType.ML, 100, "", null);
 
   @Test
   void shouldMatch() {

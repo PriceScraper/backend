@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -247,7 +248,8 @@ public class ItemServiceImpl implements ItemService {
         .orElse(new ItemAmountDetails(UnitType.NOT_AVAILABLE, 1, 1));
     var item =
         getItem(scrapedResponse.title(), scrapedResponse.img().orElse(null), amountDetails,
-            scrapedResponse.ingredients().orElse(null));
+            scrapedResponse.ingredients().orElse(null),
+            scrapedResponse.nutritionValues().orElse(null));
     var trackedItem = getTrackedItem(urlToItem, item, shop, scrapedResponse.price()).orElseThrow(
         TrackItemException::new);
     addTrackedItemToItem(item, trackedItem);
@@ -273,19 +275,19 @@ public class ItemServiceImpl implements ItemService {
    * Retrieve shop or create if does not exist.
    */
   private Item getItem(String title, String img, ItemAmountDetails amountDetails,
-                       String ingredients) {
-    Item item = getExistingItemIfMatches(title, img, amountDetails, ingredients);
+                       String ingredients, Map<String, String> nutritionValues) {
+    Item item = getExistingItemIfMatches(title, img, amountDetails, ingredients, nutritionValues);
     if (item == null) {
-      item = addNewItem(title, img, amountDetails, ingredients);
+      item = addNewItem(title, img, amountDetails, ingredients, nutritionValues);
     }
     return item;
   }
 
   private Item getExistingItemIfMatches(String title, String img, ItemAmountDetails amountDetails,
-                                        String ingredients) {
+                                        String ingredients, Map<String, String> nutritionValues) {
     Item itemToMatch =
         new Item(title, img, amountDetails.quantity(), amountDetails.type(), amountDetails.amount(),
-            ingredients);
+            ingredients, nutritionValues);
     List<Item> potentialMatches = getPotentialMatchingItems();
     for (Item potentialMatch : potentialMatches) {
       combiner.addItems(potentialMatch, itemToMatch);
@@ -301,7 +303,7 @@ public class ItemServiceImpl implements ItemService {
   }
 
   private Item addNewItem(String title, String img, ItemAmountDetails amountDetails,
-                          String ingredients) {
+                          String ingredients, Map<String, String> nutritionValues) {
     Item item = new Item();
     item.setName(title);
     item.setImage(img);
@@ -309,6 +311,7 @@ public class ItemServiceImpl implements ItemService {
     item.setAmount(amountDetails.amount());
     item.setQuantity(amountDetails.quantity());
     item.setIngredients(ingredients);
+    item.setNutritionValues(nutritionValues);
     item = itemRepository.save(item);
     return item;
   }

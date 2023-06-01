@@ -12,16 +12,16 @@ import java.util.Map;
 public class WeightedItemMatcherCombiner extends ItemMatcherCombiner {
 
   private final Map<Matcher, Double> weightedMatchers = new HashMap<>();
-
-  private static final double MATCH_THRESHOLD = 0.75;
-
-  protected double getMatchThreshold() {
-    return MATCH_THRESHOLD;
-  }
+  private static final double MATCH_THRESHOLD = 0.8;
 
   @Override
   public boolean isMatching() {
-    return getMatchProbabilityInPercentage() >= getMatchThreshold();
+    double matchPercentage = getMatchProbabilityInPercentage();
+    return matchPercentage >= getMatchThreshold();
+  }
+
+  private double getMatchThreshold() {
+    return MATCH_THRESHOLD;
   }
 
   /**

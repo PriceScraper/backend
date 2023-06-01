@@ -33,7 +33,7 @@ class ItemServiceTests {
       new TrackedItem("1_2", new Shop(), null);
   private static final List<TrackedItem> trackedItems = List.of(trackedItem1, trackedItem2);
   private static final Item itemFromRepository =
-      new Item(1, "Pizza hawai", "", 1, UnitType.KG, 0.5, "zout, peper", trackedItems);
+      new Item(1, "Pizza hawai", "", 1, UnitType.KG, 0.5, "zout, peper", null, trackedItems);
   private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
   private static final ItemPrice price1 =
       new ItemPrice(1, Instant.from(

@@ -48,6 +48,7 @@ class CarrefourBeScraperTests {
       assertTrue(response.isPresent());
       assertNotNull(response.get());
       assertNotNull(response.get().title());
+      System.out.println(response.get().nutritionValues().get().entrySet());
       assertThat(response.get().nutritionValues().get()).containsKey("Energie");
       assertThat(response.get().nutritionValues().get().get("Energie")).endsWith("kcal");
       assertTrue(response.get().price() > 0);

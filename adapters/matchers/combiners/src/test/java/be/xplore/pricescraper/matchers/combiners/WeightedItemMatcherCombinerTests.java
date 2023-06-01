@@ -13,12 +13,13 @@ class WeightedItemMatcherCombinerTests {
   private static final WeightedItemMatcherCombiner combiner =
       new WeightedItemMatcherCombiner();
 
-  private static final Item itemA = new Item("aaaaa", "", 1, UnitType.KG, 1, "");
+  private static final Item itemA = new Item("aaaaa", "", 1,
+      UnitType.KG, 1, "", null);
   private static final Item itemB = new Item("aaaab", "", 1,
-      UnitType.KG, 1, "");
+      UnitType.KG, 1, "", null);
 
   private static final Item itemC = new Item("", "", 1,
-      UnitType.KG, 1, "");
+      UnitType.KG, 1, "", null);
 
   @Test
   void combinerShouldHaveMatchPercentage() {

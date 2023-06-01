@@ -108,7 +108,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     var itemToSave =
         new ItemEntity(item.getId(), item.getName(), item.getImage(), item.getQuantity(),
             item.getType(), item.getAmount(),
-            item.getIngredients(),
+            item.getIngredients(), item.getNutritionValues(),
             trackedItems);
     var savedEntity = itemJpaRepository.saveAndFlush(itemToSave);
     return modelMapper.map(savedEntity, Item.class);

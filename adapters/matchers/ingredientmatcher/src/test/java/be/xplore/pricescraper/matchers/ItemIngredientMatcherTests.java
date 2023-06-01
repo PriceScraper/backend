@@ -19,11 +19,11 @@ class ItemIngredientMatcherTests {
   private static final String ahOtherPizzaIngredients =
       "Ingrediënten: TARWEBLOEM, 15% gezeefde tomaten, 12% MOZZARELLA KAAS, 12% GOUDA KAAS, water, 7,7% tomatenconcentraat, raapzaadolie, bakkersgist, suiker, zout, oregano, basilicum, paprika, peterselie. Kan bevatten: SOJA, MOSTERD. Geschikt voor vegetariërs (gebruikte kaas bevat vegetarisch stremsel).";
   private static final Item delhaizePizza1 =
-      new Item(1, "Pizza salami", "", 1, UnitType.KG, 1, delhaizePizzaIngredients, null);
+      new Item("Pizza salami", "", 1, UnitType.KG, 1, delhaizePizzaIngredients, null);
   private static final Item ahPizza1 =
-      new Item(1, "Pizza salami", "", 1, UnitType.KG, 1, ahPizzaIngredients, null);
+      new Item("Pizza salami", "", 1, UnitType.KG, 1, ahPizzaIngredients, null);
   private static final Item ahPizza2 =
-      new Item(1, "Pizza margherita", "", 1, UnitType.KG, 1, ahOtherPizzaIngredients, null);
+      new Item("Pizza margherita", "", 1, UnitType.KG, 1, ahOtherPizzaIngredients, null);
 
 
   @Test
