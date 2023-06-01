@@ -199,7 +199,7 @@ public class ItemServiceImpl implements ItemService {
    * Set last attempt time to now.
    */
   @Transactional
-  private void modifyTrackedItemPrice(TrackedItem trackedItem, Optional<ShopItem> shopItem) {
+  public void modifyTrackedItemPrice(TrackedItem trackedItem, Optional<ShopItem> shopItem) {
     if (shopItem.isPresent()) {
       storeItemPrice(trackedItem, shopItem.get().price());
     } else {
