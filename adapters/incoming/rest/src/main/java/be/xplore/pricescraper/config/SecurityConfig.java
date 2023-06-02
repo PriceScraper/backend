@@ -76,8 +76,8 @@ public class SecurityConfig {
    */
   @Bean
   public CorsFilter corsFilter() {
-    log.debug("FRONTEND URL");
-    log.debug(frontendConfig.getUrl());
+    log.info("FRONTEND URL");
+    log.info(frontendConfig.getUrl());
     var config = new CorsConfiguration();
     config.setAllowCredentials(true);
     config.addAllowedOrigin(frontendConfig.getUrl());
