@@ -101,7 +101,6 @@ public class CarrefourBeScraper extends ItemDetailScraper {
 
   private Optional<Map<String, String>> getNutritionValuesByMatches(List<String> allMatches) {
     try {
-
       Map<String, String> nutritionValues = new HashMap<>();
       for (int j = 0; j < allMatches.size(); j++) {
         allMatches.set(j, allMatches.get(j).replace("<td>", ""));
