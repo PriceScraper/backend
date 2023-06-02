@@ -39,12 +39,19 @@ public class NutritionValueMatcher extends ItemMatcher {
   private int getEqualValuesCount(List<List<String>> matchingKeys) {
     int equalValues = 0;
     for (List<String> keys : matchingKeys) {
-      if (MatchStringUtils.normalizeString(getItemA().getNutritionValues().get(keys.get(0)))
+      if (normalizeEnergyValue(
+          MatchStringUtils.normalizeString(getItemA().getNutritionValues().get(keys.get(0))))
           .equals(
-              MatchStringUtils.normalizeString(getItemB().getNutritionValues().get(keys.get(1))))) {
+              normalizeEnergyValue(MatchStringUtils.normalizeString(
+                  getItemB().getNutritionValues().get(keys.get(1)))))) {
         equalValues++;
       }
     }
     return equalValues;
   }
+
+  private String normalizeEnergyValue(String energyValue) {
+    return energyValue.replaceAll("([()/]|[0-9]k[jJ])", "");
+  }
+
 }
