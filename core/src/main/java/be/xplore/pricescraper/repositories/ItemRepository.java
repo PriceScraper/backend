@@ -27,4 +27,6 @@ public interface ItemRepository {
   Item save(Item item);
 
   Optional<Item> findById(int id);
+
+  List<ItemSearchDto> findItemByNameLike(String name);
 }

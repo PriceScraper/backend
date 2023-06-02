@@ -122,4 +122,11 @@ public class ItemRepositoryImpl implements ItemRepository {
     Optional<ItemEntity> entity = itemJpaRepository.findById(id);
     return entity.map(userEntity -> modelMapper.map(userEntity, Item.class));
   }
+
+  @Override
+  public List<ItemSearchDto> findItemByNameLike(String name) {
+    return itemJpaRepository.findByNameContainsIgnoreCase(name).stream()
+        .map(e -> new ItemSearchDto(e.getId(), e.getName(), e.getImage()))
+        .toList();
+  }
 }

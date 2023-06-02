@@ -46,8 +46,6 @@ public class ItemServiceImpl implements ItemService {
   private final ShopRepository shopRepository;
   private final ScraperService scraperService;
   private final Combiner combiner;
-  @Value("search.item.limit")
-  private String itemSearchLimit;
 
   /**
    * Find by key.
@@ -94,17 +92,11 @@ public class ItemServiceImpl implements ItemService {
    * If low amount of results, start discovering new items.
    */
   public List<ItemSearchDto> findItemByNameLike(String name) {
-    int searchLimit;
-    try {
-      searchLimit = Integer.parseInt(itemSearchLimit);
-    } catch (NumberFormatException ignored) {
-      searchLimit = 100;
-    }
-    var res = itemRepository.findItemByNameWithFuzzySearchAndLimit(name, searchLimit);
+    var res = itemRepository.findItemByNameLike(name);
     if (res.size() < 5 && name.strip().length() > 2) {
       var newItems = discoverNewItems(name);
       if (newItems.size() > 0) {
-        return itemRepository.findItemByNameWithFuzzySearchAndLimit(name, searchLimit);
+        return itemRepository.findItemByNameLike(name);
       }
     }
     return res;

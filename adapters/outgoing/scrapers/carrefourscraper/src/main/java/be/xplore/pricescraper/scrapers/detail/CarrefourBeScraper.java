@@ -100,27 +100,32 @@ public class CarrefourBeScraper extends ItemDetailScraper {
   }
 
   private Optional<Map<String, String>> getNutritionValuesByMatches(List<String> allMatches) {
-    Map<String, String> nutritionValues = new HashMap<>();
-    for (int j = 0; j < allMatches.size(); j++) {
-      allMatches.set(j, allMatches.get(j).replace("<td>", ""));
-      allMatches.set(j, allMatches.get(j).replace("</td>", ""));
+    try {
+
+      Map<String, String> nutritionValues = new HashMap<>();
+      for (int j = 0; j < allMatches.size(); j++) {
+        allMatches.set(j, allMatches.get(j).replace("<td>", ""));
+        allMatches.set(j, allMatches.get(j).replace("</td>", ""));
+      }
+      int i = 0;
+      while (i < allMatches.size()) {
+        String key = allMatches.get(i);
+        String val;
+        if (key.toLowerCase().contains("referentie")) {
+          break;
+        }
+        val = allMatches.get(i + 1);
+        if (key.equalsIgnoreCase("energie2")) {
+          key = key.replace("2", "");
+        }
+        if (!val.toLowerCase().contains("kj")) {
+          nutritionValues.put(key, val);
+        }
+        i += 2;
+      }
+      return Optional.of(nutritionValues);
+    } catch(IndexOutOfBoundsException exception) {
+      return Optional.empty();
     }
-    int i = 0;
-    while (i < allMatches.size()) {
-      String key = allMatches.get(i);
-      String val = "";
-      if (key.toLowerCase().contains("referentie")) {
-        break;
-      }
-      val = allMatches.get(i + 1);
-      if (key.equalsIgnoreCase("energie2")) {
-        key = key.replace("2", "");
-      }
-      if (!val.toLowerCase().contains("kj")) {
-        nutritionValues.put(key, val);
-      }
-      i += 2;
-    }
-    return Optional.of(nutritionValues);
   }
 }
