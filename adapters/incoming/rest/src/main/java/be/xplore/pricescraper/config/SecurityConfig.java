@@ -4,6 +4,7 @@ import be.xplore.pricescraper.utils.security.JwtRequestFilter;
 import be.xplore.pricescraper.utils.security.JwtSuccessHandler;
 import java.util.function.Consumer;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,6 +26,7 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
+@Slf4j
 public class SecurityConfig {
   private final JwtSuccessHandler jwtSuccessHandler;
   private final FrontendConfig frontendConfig;
@@ -74,6 +76,8 @@ public class SecurityConfig {
    */
   @Bean
   public CorsFilter corsFilter() {
+    log.debug("FRONTEND URL");
+    log.debug(frontendConfig.getUrl());
     var config = new CorsConfiguration();
     config.setAllowCredentials(true);
     config.addAllowedOrigin(frontendConfig.getUrl());
