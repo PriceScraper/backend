@@ -18,5 +18,6 @@
         <module>titlematcher</module>
         <module>matcherutils</module>
         <module>unitmatcher</module>
+        <module>nutritionvaluematcher</module>
     </modules>
 </project>

@@ -81,11 +81,14 @@ public class CarrefourBeScraper extends ItemDetailScraper {
 
   @Override
   protected Optional<Map<String, String>> getNutritionValues(Document document) {
-    Map<String, String> nutritionValues = new HashMap<>();
+    var elementsFound = document.getElementsByClass("encodedHtml1");
+    if (elementsFound.isEmpty()) {
+      return Optional.empty();
+    }
     String tableValue =
-        document.getElementsByClass("encodedHtml1").get(0).attr("value");
+        elementsFound.get(0).attr("value");
     List<String> allMatches = new ArrayList<>();
-    Matcher m = Pattern.compile("(<td>[a-zA-Z0-9. ]+</td>)")
+    Matcher m = Pattern.compile("(<td>.*?</td>)")
         .matcher(tableValue);
     while (m.find()) {
       allMatches.add(m.group());
@@ -93,17 +96,30 @@ public class CarrefourBeScraper extends ItemDetailScraper {
     if (allMatches.isEmpty()) {
       return Optional.empty();
     }
+    return getNutritionValuesByMatches(allMatches);
+  }
+
+  private Optional<Map<String, String>> getNutritionValuesByMatches(List<String> allMatches) {
+    Map<String, String> nutritionValues = new HashMap<>();
     for (int j = 0; j < allMatches.size(); j++) {
       allMatches.set(j, allMatches.get(j).replace("<td>", ""));
       allMatches.set(j, allMatches.get(j).replace("</td>", ""));
     }
-    for (int i = 2; i < 12; i += 2) {
+    int i = 0;
+    while (i < allMatches.size()) {
       String key = allMatches.get(i);
-      String val = allMatches.get(i + 1);
-      if (i == 2) {
+      String val = "";
+      if (key.toLowerCase().contains("referentie")) {
+        break;
+      }
+      val = allMatches.get(i + 1);
+      if (key.equalsIgnoreCase("energie2")) {
         key = key.replace("2", "");
       }
-      nutritionValues.put(key, val);
+      if (!val.toLowerCase().contains("kj")) {
+        nutritionValues.put(key, val);
+      }
+      i += 2;
     }
     return Optional.of(nutritionValues);
   }
