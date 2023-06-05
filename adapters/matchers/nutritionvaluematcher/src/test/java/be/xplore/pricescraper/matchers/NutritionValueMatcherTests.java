@@ -10,35 +10,45 @@ import org.junit.jupiter.api.Test;
 class NutritionValueMatcherTests {
 
   private static final Item itemA =
-      new Item("Halfvolle melk AH", "", 1, UnitType.ML, 300, "", null);
+      new Item("Halfvolle melk", "", 1, UnitType.ML, 300, "",
+          new HashMap<>());
   private static final Item itemB =
-      new Item("Halfvolle melk", "", 1, UnitType.ML, 300, "", null);
+      new Item("Halfvolle melk", "", 1, UnitType.ML, 300, "",
+          new HashMap<>());
+  private static final Item itemC =
+      new Item("Halfvolle melk", "", 1, UnitType.ML, 300, "",
+          new HashMap<>());
+  private static final Item itemD =
+      new Item("Halfvolle melk", "", 1, UnitType.ML, 300, "",
+          new HashMap<>());
 
   static {
-    itemA.setNutritionValues(new HashMap<>());
     itemA.getNutritionValues().put("energie", "87kcal");
     itemA.getNutritionValues().put("vetten", "1g");
     itemA.getNutritionValues().put("proteïnen", "7g");
     itemA.getNutritionValues().put("koolhydraten", "18g");
-    itemB.setNutritionValues(new HashMap<>());
+
     itemB.getNutritionValues().put("Energie", "87 kcal");
     itemB.getNutritionValues().put("vetten", "1 g");
     itemB.getNutritionValues().put("Proteïnen", "7g");
     itemB.getNutritionValues().put("Koolhydraten", "24g");
+
+    itemC.getNutritionValues().put("Energie", "76 kJ/18 kcal");
+    itemD.getNutritionValues().put("energie", " 76 kJ (18 kcal)");
   }
 
   @Test
   void shouldMatch() {
     Matcher matcher = new NutritionValueMatcher();
     matcher.addItems(itemA, itemB);
-    assertThat(matcher.getMatchProbabilityInPercentage()).isGreaterThan(0.74);
+    assertThat(matcher.getMatchProbabilityInPercentage()).isEqualTo(0.75);
   }
 
   @Test
-  void shouldNotMatch() {
+  void energyShouldMatch() {
     Matcher matcher = new NutritionValueMatcher();
-    matcher.addItems(itemA, itemB);
-    assertThat(matcher.getMatchProbabilityInPercentage()).isLessThan(0.76);
+    matcher.addItems(itemC, itemD);
+    assertThat(matcher.getMatchProbabilityInPercentage()).isEqualTo(1.0);
   }
 
 }

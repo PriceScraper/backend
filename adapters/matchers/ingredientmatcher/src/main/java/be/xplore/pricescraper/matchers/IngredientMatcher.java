@@ -43,12 +43,12 @@ public class IngredientMatcher extends ItemMatcher {
   }
 
   private String normalizeIngredientsString(String ingredients) {
-    ingredients = removeLiteralIngredientsString(ingredients);
     ingredients = MatchStringUtils.normalizeString(ingredients);
+    ingredients = removeLiteralIngredientsString(ingredients);
     return ingredients;
   }
 
   private String removeLiteralIngredientsString(String ingredients) {
-    return ingredients.replace("ingrediënten", "");
+    return ingredients.replace("ingrediënt", "");
   }
 }

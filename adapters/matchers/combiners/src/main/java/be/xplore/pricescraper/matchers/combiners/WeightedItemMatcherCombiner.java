@@ -12,7 +12,7 @@ import java.util.Map;
 public class WeightedItemMatcherCombiner extends ItemMatcherCombiner {
 
   private final Map<Matcher, Double> weightedMatchers = new HashMap<>();
-  private static final double MATCH_THRESHOLD = 0.8;
+  private static final double MATCH_THRESHOLD = 0.7;
 
   @Override
   public boolean isMatching() {
