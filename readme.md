@@ -26,6 +26,19 @@ Create a list of items to find the cheapest supermarket for your needs.
 
 ### Usage
 
+#### Set up environment variables
+
+1. Set variables for GitHub OAuth2 usage:
+    - GITHUBCLIENTID
+    - GITHUBCLIENTSECRET
+3. When deploying, set variables for:
+   - AWS:
+     - AWS_ACCESS_KEY_ID
+     - AWS_SECRET_ACCESS_KEY
+   - frontend.url
+   - dummy-webshop.url
+   - jwt.secret
+
 #### Running the project
 
 > mvnw.cmd spring-boot:run
