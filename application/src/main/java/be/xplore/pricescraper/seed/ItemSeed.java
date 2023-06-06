@@ -31,6 +31,8 @@ public class ItemSeed {
     log.info("Seeding items.");
     var discoverItems = new String[] {
         "Dr. oetker pizza", "Tomatenpuree",
+        "spekblokjes", "parmigiano",
+        "linguine", "water", "spinaci", "tonno",
         "Grand' Italia", "wortel",
         "gehakt", "stella artois",
         "jupiler", "courgette",
