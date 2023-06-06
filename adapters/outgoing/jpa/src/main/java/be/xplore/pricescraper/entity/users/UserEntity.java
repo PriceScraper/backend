@@ -1,6 +1,5 @@
 package be.xplore.pricescraper.entity.users;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,7 +38,6 @@ public class UserEntity implements UserDetails {
   @Column()
   private String avatar;
   @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
-  @JsonIgnore
   private List<ShoppingListEntity> shoppingLists;
 
   @Override
