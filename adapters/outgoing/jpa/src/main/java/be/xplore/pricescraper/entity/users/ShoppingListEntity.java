@@ -9,7 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,5 +31,5 @@ public class ShoppingListEntity implements Serializable {
   private String title;
   @Setter
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-  private List<ShoppingListLineEntity> lines;
+  private Set<ShoppingListLineEntity> lines;
 }
