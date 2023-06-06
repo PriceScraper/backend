@@ -61,12 +61,6 @@
         </dependency>
         <dependency>
             <groupId>be.xplore</groupId>
-            <artifactId>imagerecognitionmatcher</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>be.xplore</groupId>
             <artifactId>titlematcher</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
@@ -74,6 +68,12 @@
         <dependency>
             <groupId>be.xplore</groupId>
             <artifactId>unitmatcher</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>be.xplore</groupId>
+            <artifactId>matcherutils</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
@@ -152,6 +152,8 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
+                        <exclude>**/*Seed*</exclude>
+                        <exclude>**/ImageRecognition*</exclude>
                         <exclude>**/*Mock*</exclude>
                     </excludes>
                 </configuration>
