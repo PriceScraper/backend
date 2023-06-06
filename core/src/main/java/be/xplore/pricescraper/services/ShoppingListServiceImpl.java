@@ -15,6 +15,7 @@ import be.xplore.pricescraper.repositories.ShoppingListRepository;
 import be.xplore.pricescraper.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +35,10 @@ public class ShoppingListServiceImpl implements ShoppingListService {
   private final RecurringShoppingListItemRepository recurringShoppingListItemRepository;
 
   private ShoppingList findShoppingListById(int id) {
-    return shoppingListRepository.getShoppingListById(id)
+    ShoppingList shoppingList = shoppingListRepository.getShoppingListById(id)
         .orElseThrow(ShoppingListNotFoundException::new);
+    shoppingList.setLines(new ArrayList<>(new LinkedHashSet<>(shoppingList.getLines())));
+    return shoppingList;
   }
 
   /**
@@ -115,6 +118,7 @@ public class ShoppingListServiceImpl implements ShoppingListService {
       shoppingList.setLines(new ArrayList<>());
     }
     addItemToShoppingListLines(shoppingList.getLines(), itemId, quantity);
+
     shoppingListRepository.save(shoppingList);
   }
 

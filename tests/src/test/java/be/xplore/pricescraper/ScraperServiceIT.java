@@ -3,7 +3,10 @@ package be.xplore.pricescraper;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import be.xplore.pricescraper.domain.shops.Shop;
+import be.xplore.pricescraper.domain.shops.TrackedItem;
 import be.xplore.pricescraper.exceptions.RootDomainNotFoundException;
+import be.xplore.pricescraper.exceptions.ScraperNotFoundException;
 import be.xplore.pricescraper.repositories.ItemPriceRepository;
 import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.scrapers.detail.CarrefourBeScraper;
@@ -43,5 +46,16 @@ class ScraperServiceIT {
     assertThatThrownBy(
         () -> scraperService.getScraperRootDomain("https://www.example.com")
     ).isInstanceOf(RootDomainNotFoundException.class);
+  }
+
+  @Test
+  void scrapeTrackedItemShouldFail() {
+    TrackedItem trackedItem = new TrackedItem();
+    Shop shop = new Shop();
+    shop.setUrl("");
+    trackedItem.setShop(shop);
+    assertThatThrownBy(
+        () -> scraperService.scrapeTrackedItem(trackedItem)
+    ).isInstanceOf(ScraperNotFoundException.class);
   }
 }
