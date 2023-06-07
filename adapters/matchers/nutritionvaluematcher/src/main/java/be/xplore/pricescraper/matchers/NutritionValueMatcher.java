@@ -3,6 +3,7 @@ package be.xplore.pricescraper.matchers;
 import be.xplore.pricescraper.matchers.utils.MatchStringUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This is an {@link ItemMatcher} implementation.
@@ -13,7 +14,9 @@ public class NutritionValueMatcher extends ItemMatcher {
   public boolean matchingIsPossible() {
     return getItemA().getNutritionValues() != null && getItemB().getNutritionValues() != null
         && !getItemA().getNutritionValues().entrySet().isEmpty()
-        && !getItemB().getNutritionValues().entrySet().isEmpty();
+        && !getItemB().getNutritionValues().entrySet().isEmpty()
+        && !getItemA().getNutritionValues().keySet().stream().allMatch(Objects::isNull)
+        && !getItemB().getNutritionValues().keySet().stream().allMatch(Objects::isNull);
   }
 
   @Override
@@ -26,6 +29,8 @@ public class NutritionValueMatcher extends ItemMatcher {
 
   private List<List<String>> getMatchingKeys() {
     List<List<String>> matchingKeys = new ArrayList<>();
+    getItemA().getNutritionValues().keySet().removeIf(Objects::isNull);
+    getItemB().getNutritionValues().keySet().removeIf(Objects::isNull);
     getItemA().getNutritionValues().keySet().forEach(
         keyA ->
             getItemB().getNutritionValues().keySet().stream().filter(

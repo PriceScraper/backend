@@ -10,4 +10,4 @@ ENTRYPOINT java -jar -XX:MaxRAM=800m \
                  -Dspring.security.oauth2.client.registration.github.clientSecret="$(cat ./GITHUBCLIENTSECRET)" \
                  -Daws_access_key_id="$(cat ./AWS_ACCESS_KEY_ID)" \
                  -Daws_secret_access_key="$(cat ./AWS_SECRET_ACCESS_KEY)" \
-                 -Dfrontend.url=pricescraper-frontend.s3-website-eu-west-1.amazonaws.com ./app.jar
+                 -Dfrontend.url=pricescraper.bavodaniels.be ./app.jar
