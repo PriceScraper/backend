@@ -6,17 +6,26 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+/**
+ * Seeding a range of items too make sure out database is filled.
+ */
 @Component
 @Slf4j
 @AllArgsConstructor
 public class ItemSeed implements Seed {
   private final ItemService itemService;
 
+  /**
+   * Seed executor.
+   */
   public void execute() {
     log.info("Discovering pre-defined items.");
     var discoverItems = new String[] {
-        "Dr. oetker pizza", "spinaci", "tonno", "spekblokjes",
-        "linguine", "parmigiano", "Barilla", "water"
+        "Dr. oetker pizza", "Dr. oetker", "spinaci", "tonno",
+        "linguine", "parmigiano", "Barilla",
+        "water", "fruit", "groenten",
+        "spekblokjes", "chocolade", "jupiler",
+        "stella artois", "bananen", "pizza"
     };
 
     Arrays.stream(discoverItems).toList()

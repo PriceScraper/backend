@@ -6,15 +6,21 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+/**
+ * Seeding a user to link with other Seed data.
+ */
 @Component
 @Slf4j
 @AllArgsConstructor
 public class UserSeed implements Seed {
   private final UserRepository userRepository;
 
+  /**
+   * Seed executor.
+   */
   @Override
   public void execute() {
-    if(userRepository.findByUsernameAndProvider("Bob", "Seed").isPresent()) {
+    if (userRepository.findByUsernameAndProvider("Bob", "Seed").isPresent()) {
       log.info("User repository has already been seeded.");
       return;
     }

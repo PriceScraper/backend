@@ -1,10 +1,7 @@
 package be.xplore.pricescraper.seed;
 
-import be.xplore.pricescraper.domain.recipes.Recipe;
-import be.xplore.pricescraper.domain.recipes.RecipeItem;
 import be.xplore.pricescraper.domain.users.User;
 import be.xplore.pricescraper.dtos.ItemSearchDto;
-import be.xplore.pricescraper.repositories.ItemRepository;
 import be.xplore.pricescraper.repositories.UserRepository;
 import be.xplore.pricescraper.services.ItemService;
 import be.xplore.pricescraper.services.RecipeService;
@@ -13,6 +10,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+/**
+ * Seeding a recipe.
+ */
 @Component
 @Slf4j
 @AllArgsConstructor
@@ -21,14 +21,17 @@ public class RecipeSeed implements Seed {
   private UserRepository userRepository;
   private RecipeService recipeService;
 
+  /**
+   * Seed executor.
+   */
   @Override
   public void execute() {
     var user = getUser();
-    if(user == null) {
+    if (user == null) {
       log.warn("Failed to seed recipes, no user found.");
       return;
     }
-    if(!recipeService.getByCreator(user).isEmpty()) {
+    if (!recipeService.getByCreator(user).isEmpty()) {
       log.info("Recipe repository has already been seeded.");
       return;
     }
