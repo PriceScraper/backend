@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AmountDetailsUtil {
   private static final String ITEM_NAME_REGEX_GROUP = "([a-z -.%]+)";
-  private static final String ITEM_UNIT_REGEX_GROUP = "(cl|l|ml|kg|g)";
+  private static final String ITEM_UNIT_REGEX_GROUP = "(cl|l|ml|kg|g|gr|gram)";
 
   private AmountDetailsUtil() {
   }
@@ -50,7 +50,7 @@ public class AmountDetailsUtil {
       return Optional.empty();
     }
     return Optional.of(new ItemAmountDetails(
-        UnitType.valueOf(matherQuantity1.group(3).toUpperCase()),
+        stringToType(matherQuantity1.group(3)),
         Double.parseDouble(matherQuantity1.group(2).strip()),
         Integer.parseInt(matherQuantity1.group(6).strip())));
   }
@@ -67,7 +67,7 @@ public class AmountDetailsUtil {
       return Optional.empty();
     }
     return Optional.of(new ItemAmountDetails(
-        UnitType.valueOf(matherQuantity2.group(6).toUpperCase()),
+        stringToType(matherQuantity2.group(6)),
         Double.parseDouble(matherQuantity2.group(5).strip()),
         Integer.parseInt(matherQuantity2.group(2).strip())));
 
@@ -83,7 +83,18 @@ public class AmountDetailsUtil {
       return Optional.empty();
     }
     return Optional.of(new ItemAmountDetails(
-        UnitType.valueOf(matherNoQuantity.group(3).toUpperCase()),
+        stringToType(matherNoQuantity.group(3)),
         Double.parseDouble(matherNoQuantity.group(2).strip()), 1));
+  }
+
+  private static UnitType stringToType(String val) {
+    val = val.toLowerCase();
+    if (val.equals("gram")) {
+      val = "g";
+    }
+    if (val.equals("gr")) {
+      val = "g";
+    }
+    return UnitType.valueOf(val.toUpperCase());
   }
 }
