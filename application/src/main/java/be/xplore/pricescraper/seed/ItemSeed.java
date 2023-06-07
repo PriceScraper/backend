@@ -4,39 +4,19 @@ import be.xplore.pricescraper.services.ItemService;
 import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.annotation.Profile;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-/**
- * Seed of items.
- */
-@Profile("!test")
-@AllArgsConstructor
-@Slf4j
 @Component
-public class ItemSeed {
+@Slf4j
+@AllArgsConstructor
+public class ItemSeed implements Seed {
   private final ItemService itemService;
 
-  /**
-   * Executing seed.
-   */
-  @EventListener(ApplicationReadyEvent.class)
-  public void seedItems() {
-    if (itemService.trackedItemsCount() > 0) {
-      log.info("Not seeding because db is not empty.");
-      return;
-    }
-    log.info("Seeding items.");
+  public void execute() {
+    log.info("Discovering pre-defined items.");
     var discoverItems = new String[] {
-        "Dr. oetker pizza", "Tomatenpuree",
-        "spekblokjes", "parmigiano",
-        "linguine", "water", "spinaci", "tonno",
-        "Grand' Italia", "wortel",
-        "gehakt", "stella artois",
-        "jupiler", "courgette",
-        "spek", "selder", "olijfolie"
+        "Dr. oetker pizza", "spinaci", "tonno", "spekblokjes",
+        "linguine", "parmigiano", "Barilla", "water"
     };
 
     Arrays.stream(discoverItems).toList()
@@ -48,5 +28,10 @@ public class ItemSeed {
             log.error(e.getMessage() + " while discovering query " + i);
           }
         });
+  }
+
+  @Override
+  public int priority() {
+    return 2;
   }
 }
