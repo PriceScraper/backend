@@ -5,7 +5,7 @@ RUN --mount=type=secret,id=AWS_ACCESS_KEY_ID \
     --mount=type=secret,id=GITHUBCLIENTSECRET \
     --mount=type=secret,id=GITHUBCLIENTID \
     cat /run/secrets/GITHUBCLIENTID > ./GITHUBCLIENTID && cat /run/secrets/GITHUBCLIENTSECRET > ./GITHUBCLIENTSECRET && cat /run/secrets/AWS_ACCESS_KEY_ID > ./AWS_ACCESS_KEY_ID && cat /run/secrets/AWS_SECRET_ACCESS_KEY > ./AWS_SECRET_ACCESS_KEY
-ENTRYPOINT java -jar -XX:MaxRAM=800m \
+ENTRYPOINT java -jar \
                  -Dspring.security.oauth2.client.registration.github.clientId="$(cat ./GITHUBCLIENTID)" \
                  -Dspring.security.oauth2.client.registration.github.clientSecret="$(cat ./GITHUBCLIENTSECRET)" \
                  -Daws_access_key_id="$(cat ./AWS_ACCESS_KEY_ID)" \
