@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 /**
  * Scraper for our dummy website running on port :9000.
  */
-@Component("scraper-localhost:9000")
+@Component("scraper-q91pg5kgq322k.eu-west-3.cs.amazonlightsail.com")
 public class LocalDummyScraper extends ItemDetailScraper {
   public LocalDummyScraper(LocalDummyConfig config) {
     super(config.getUrl());
@@ -39,10 +39,10 @@ public class LocalDummyScraper extends ItemDetailScraper {
       return Optional.empty();
     }
     var ingredientsBlock = infoBlock.get(0).getElementsByTag("div");
-    if (hasArgumentFailed(ingredientsBlock, 1, "div")) {
+    if (hasArgumentFailed(ingredientsBlock, 2, "div")) {
       return Optional.empty();
     }
-    var ingredients = ingredientsBlock.get(0).getElementsByTag("span");
+    var ingredients = ingredientsBlock.get(1).getElementsByTag("span");
     if (ingredients.isEmpty()) {
       return Optional.empty();
     }

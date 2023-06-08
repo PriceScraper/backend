@@ -30,6 +30,8 @@ public class LocalDummyScraper extends SearchScraper {
 
   @Override
   protected Optional<String> getUrlToItem(Element element) {
+    log.debug(
+        "LocalDummy, url to item: " + element.getElementsByClass("card-link").get(0).attr("href"));
     return Optional.of(element.getElementsByClass("card-link").get(0).attr("href"));
   }
 

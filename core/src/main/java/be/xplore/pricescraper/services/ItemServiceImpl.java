@@ -362,7 +362,7 @@ public class ItemServiceImpl implements ItemService {
           trackedItems.add(res);
         }
       } catch (Exception e) {
-        log.error(e.getMessage());
+        log.error("Exception thrown for " + item.url() + ", error: " + e.getMessage());
       }
     }
     logDiscoveryPerformance(start, trackedItems.size(), potentialItems.size() - itemsSkipped,
