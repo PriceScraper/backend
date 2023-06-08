@@ -2,6 +2,7 @@ package be.xplore.pricescraper.scrapers.detail;
 
 
 import be.xplore.pricescraper.scrapers.ItemDetailScraper;
+import be.xplore.pricescraper.scrapers.config.LocalDummyConfig;
 import java.util.Map;
 import java.util.Optional;
 import org.jsoup.nodes.Document;
@@ -13,8 +14,8 @@ import org.springframework.stereotype.Component;
  */
 @Component("scraper-localhost:9000")
 public class LocalDummyScraper extends ItemDetailScraper {
-  public LocalDummyScraper() {
-    super("http://localhost:9000/p/");
+  public LocalDummyScraper(LocalDummyConfig config) {
+    super(config.getUrl());
   }
 
   @Override
