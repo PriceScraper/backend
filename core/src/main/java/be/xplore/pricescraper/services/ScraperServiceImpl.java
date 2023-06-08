@@ -63,7 +63,7 @@ public class ScraperServiceImpl implements ScraperService {
       var rootDomain = getScraperRootDomain(itemUrl);
       var scraper = getScraper(rootDomain);
       return scraper.scrape(itemUrl);
-    } catch (Exception ioException) {
+    } catch (IOException ioException) {
       log.error(ioException.getMessage());
       return Optional.empty();
     }

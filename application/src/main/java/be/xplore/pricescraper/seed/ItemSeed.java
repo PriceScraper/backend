@@ -21,7 +21,7 @@ public class ItemSeed implements Seed {
   public void execute() {
     log.info("Discovering pre-defined items.");
     var discoverItems = new String[] {
-        "Dr. oetker pizza", "Dr. oetker", "spinaci", "tonno",
+        "spinaci", "tonno", "Dr. oetker pizza", "Dr. oetker",
         "linguine", "parmigiano", "Barilla",
         "water", "fruit", "groenten",
         "spekblokjes", "chocolade", "jupiler",
