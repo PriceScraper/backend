@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 
+import be.xplore.pricescraper.scrapers.config.LocalDummyConfig;
 import be.xplore.pricescraper.scrapers.detail.LocalDummyScraper;
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,7 +24,13 @@ import org.springframework.core.io.Resource;
 @ExtendWith(MockitoExtension.class)
 class LocalDummyScraperTests {
 
-  private static final LocalDummyScraper scraper = new LocalDummyScraper();
+  private final LocalDummyScraper scraper;
+
+  private LocalDummyScraperTests() {
+    var config = new LocalDummyConfig();
+    config.setUrl("https://localhost:9000/p/");
+    this.scraper = new LocalDummyScraper(config);
+  }
 
   @Test
   void constructed() {
