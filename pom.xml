@@ -40,9 +40,9 @@
             ${project.basedir}/../../../report/target/site/jacoco-aggregate/jacoco.xml,
             ${project.basedir}/../../../../report/target/site/jacoco-aggregate/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
-        <sonar.jacoco.excludes>**/*Mock*</sonar.jacoco.excludes>
-        <sonar.jacoco.excludes>**/ImageRecognition*</sonar.jacoco.excludes>
-        <sonar.jacoco.excludes>**/*Seed*</sonar.jacoco.excludes>
+        <sonar.coverage.exclusions>
+            **/ImageRecognitionMatcher,**/*Mock*,**/*Config,**/*Seed,**/test/java/**,**/dto/**,**/dtos/**,**/exceptions/**
+        </sonar.coverage.exclusions>
     </properties>
     <dependencyManagement>
         <dependencies>
